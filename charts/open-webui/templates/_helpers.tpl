@@ -7,7 +7,7 @@ ollama
 
 {{- define "externalHostUrls" -}}
 {{- if .Values.externalHosts }}
-{{- join ";" .Values.externalHosts }}
+{{- join ";" .Values.externalHosts | trimSuffix "/" }}
 {{- end }}
 {{- end }}
 
@@ -22,9 +22,14 @@ ollama
 {{- define "ollamaBaseUrls" -}}
 {{- $ollamaLocalUrl := include "ollamaLocalUrl" . }}
 {{- $externalHostUrls := include "externalHostUrls" . }}
-{{- printf "%s;%s" $externalHostUrls $ollamaLocalUrl -}}
+{{- if and .Values.ollama.enabled .Values.externalHosts }}
+{{- printf "%s;%s" $externalHostUrls $ollamaLocalUrl }}
+{{- else if .Values.ollama.enabled }}
+{{- printf "%s" $ollamaLocalUrl }}
+{{- else if .Values.externalHosts }}
+{{- printf "%s" $externalHostUrls }}
 {{- end }}
-
+{{- end }}
 
 {{- define "chart.name" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
