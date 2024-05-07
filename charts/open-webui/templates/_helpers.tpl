@@ -5,13 +5,26 @@
 ollama
 {{- end -}}
 
-{{- define "ollama.url" -}}
-{{- if .Values.ollama.externalHost }}
-{{- printf .Values.externalHost }}
-{{- else }}
-{{- printf "http://%s.%s.svc.cluster.local:%d" (include "ollama.name" .) (.Release.Namespace) (.Values.ollama.service.port | int) }}
+{{- define "externalHostUrls" -}}
+{{- if .Values.externalHosts }}
+{{- join ";" .Values.externalHosts }}
 {{- end }}
 {{- end }}
+
+{{- define "ollamaLocalUrl" -}}
+{{- if .Values.ollama.enabled -}}
+{{- $clusterDomain := .Values.clusterDomain }}
+{{- $ollamaServicePort := .Values.ollama.service.port | toString }}
+{{- printf "http://open-webui-%s.%s.svc.%s:%s" (include "ollama.name" .) (.Release.Namespace) $clusterDomain $ollamaServicePort }}
+{{- end }}
+{{- end }}
+
+{{- define "ollamaBaseUrls" -}}
+{{- $ollamaLocalUrl := include "ollamaLocalUrl" . }}
+{{- $externalHostUrls := include "externalHostUrls" . }}
+{{- printf "%s;%s" $externalHostUrls $ollamaLocalUrl -}}
+{{- end }}
+
 
 {{- define "chart.name" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}

@@ -40,8 +40,8 @@ spec:
         - name: data
           mountPath: /app/backend/data
         env:
-        - name: OLLAMA_BASE_URL
-          value: {{ include "ollama.url" . | quote }}
+        - name: OLLAMA_BASE_URLS
+          value: {{ include "ollamaBaseUrls" . | quote }}
         tty: true
       {{- with .Values.nodeSelector }}
       nodeSelector:

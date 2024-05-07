@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -9,8 +9,9 @@ Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 ## Source Code
 
 * <https://github.com/open-webui/helm-charts>
-* <https://hub.docker.com/r/ollama/ollama>
 * <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
+* <https://github.com/otwld/ollama-helm/>
+* <https://hub.docker.com/r/ollama/ollama>
 
 ## Installing
 
@@ -27,11 +28,19 @@ Now you can install the chart:
 helm upgrade --install open-webui open-webui/open-webui
 ```
 
+## Requirements
+
+| Repository | Name | Version |
+|------------|------|---------|
+| https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | annotations | object | `{}` |  |
+| clusterDomain | string | `"cluster.local"` | Value of cluster domain |
+| externalHosts | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
 | image.tag | string | `""` |  |
@@ -43,7 +52,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | ingress.tls | bool | `false` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
-| ollama.enabled | bool | `false` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
+| ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |
