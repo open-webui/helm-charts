@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -8,7 +8,7 @@ Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
 ## Source Code
 
-* <https://github.com/open-webui/open-webui/tree/main/kubernetes/helm>
+* <https://github.com/open-webui/helm-charts>
 * <https://hub.docker.com/r/ollama/ollama>
 * <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
 
@@ -31,61 +31,37 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| annotations | object | `{}` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
+| image.tag | string | `""` |  |
+| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
+| ingress.class | string | `""` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.existingSecret | string | `""` |  |
+| ingress.host | string | `""` |  |
+| ingress.tls | bool | `false` |  |
 | nameOverride | string | `""` |  |
-| ollama.annotations | object | `{}` |  |
-| ollama.externalHost | string | `""` |  |
-| ollama.gpu.enabled | bool | `false` | Enable additional ENV values to help Ollama discover GPU usage |
-| ollama.image.pullPolicy | string | `"Always"` |  |
-| ollama.image.repository | string | `"ollama/ollama"` |  |
-| ollama.image.tag | string | `"latest"` |  |
-| ollama.nodeSelector | object | `{}` |  |
-| ollama.persistence.accessModes[0] | string | `"ReadWriteOnce"` |  |
-| ollama.persistence.annotations | object | `{}` |  |
-| ollama.persistence.enabled | bool | `true` |  |
-| ollama.persistence.existingClaim | string | `""` |  |
-| ollama.persistence.selector | object | `{}` |  |
-| ollama.persistence.size | string | `"30Gi"` |  |
-| ollama.persistence.storageClass | string | `""` |  |
-| ollama.podAnnotations | object | `{}` |  |
-| ollama.replicaCount | int | `1` |  |
-| ollama.resources | object | `{}` |  |
-| ollama.runtimeClassName | string | `""` | If using a special runtime container such as nvidia, set it here. |
-| ollama.service.annotations | object | `{}` |  |
-| ollama.service.containerPort | int | `11434` |  |
-| ollama.service.port | int | `80` |  |
-| ollama.service.type | string | `"ClusterIP"` |  |
-| ollama.tolerations[0].effect | string | `"NoSchedule"` |  |
-| ollama.tolerations[0].key | string | `"nvidia.com/gpu"` |  |
-| ollama.tolerations[0].operator | string | `"Exists"` |  |
-| webui.annotations | object | `{}` |  |
-| webui.image.pullPolicy | string | `"Always"` |  |
-| webui.image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
-| webui.image.tag | string | `""` |  |
-| webui.ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
-| webui.ingress.class | string | `""` |  |
-| webui.ingress.enabled | bool | `false` |  |
-| webui.ingress.existingSecret | string | `""` |  |
-| webui.ingress.host | string | `""` |  |
-| webui.ingress.tls | bool | `false` |  |
-| webui.nodeSelector | object | `{}` |  |
-| webui.persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
-| webui.persistence.annotations | object | `{}` |  |
-| webui.persistence.enabled | bool | `true` |  |
-| webui.persistence.existingClaim | string | `""` |  |
-| webui.persistence.selector | object | `{}` |  |
-| webui.persistence.size | string | `"2Gi"` |  |
-| webui.persistence.storageClass | string | `""` |  |
-| webui.podAnnotations | object | `{}` |  |
-| webui.replicaCount | int | `1` |  |
-| webui.resources | object | `{}` |  |
-| webui.service.annotations | object | `{}` |  |
-| webui.service.containerPort | int | `8080` |  |
-| webui.service.labels | object | `{}` |  |
-| webui.service.loadBalancerClass | string | `""` |  |
-| webui.service.nodePort | string | `""` |  |
-| webui.service.port | int | `80` |  |
-| webui.service.type | string | `"ClusterIP"` |  |
-| webui.tolerations | list | `[]` |  |
+| nodeSelector | object | `{}` |  |
+| ollama.enabled | bool | `false` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
+| persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
+| persistence.annotations | object | `{}` |  |
+| persistence.enabled | bool | `true` |  |
+| persistence.existingClaim | string | `""` |  |
+| persistence.selector | object | `{}` |  |
+| persistence.size | string | `"2Gi"` |  |
+| persistence.storageClass | string | `""` |  |
+| podAnnotations | object | `{}` |  |
+| replicaCount | int | `1` |  |
+| resources | object | `{}` |  |
+| service.annotations | object | `{}` |  |
+| service.containerPort | int | `8080` |  |
+| service.labels | object | `{}` |  |
+| service.loadBalancerClass | string | `""` |  |
+| service.nodePort | string | `""` |  |
+| service.port | int | `80` |  |
+| service.type | string | `"ClusterIP"` |  |
+| tolerations | list | `[]` |  |
 
 ----------------------------------------------
 

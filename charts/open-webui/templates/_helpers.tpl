@@ -1,14 +1,13 @@
 {{- define "open-webui.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end -}}
-
 {{- define "ollama.name" -}}
 ollama
 {{- end -}}
 
 {{- define "ollama.url" -}}
 {{- if .Values.ollama.externalHost }}
-{{- printf .Values.ollama.externalHost }}
+{{- printf .Values.externalHost }}
 {{- else }}
 {{- printf "http://%s.%s.svc.cluster.local:%d" (include "ollama.name" .) (.Release.Namespace) (.Values.ollama.service.port | int) }}
 {{- end }}

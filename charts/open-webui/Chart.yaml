@@ -1,6 +1,6 @@
 apiVersion: v2
 name: open-webui
-version: 1.0.1
+version: 2.0.0
 appVersion: "latest"
 
 home: https://www.openwebui.com/
@@ -14,8 +14,15 @@ keywords:
 
 sources:
 - https://github.com/open-webui/helm-charts
-- https://hub.docker.com/r/ollama/ollama
 - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+- https://github.com/otwld/ollama-helm/
+- https://hub.docker.com/r/ollama/ollama
 
 annotations:
   licenses: MIT
+
+dependencies:
+  - name: ollama
+    repository: https://otwld.github.io/ollama-helm/
+    version: ">=0.24.0"
+    condition: ollama.enabled

@@ -12,16 +12,16 @@ ollama:
   gpu:
     enabled: false
 
-webui:
-  resources:
-    requests:
-      cpu: "500m"
-      memory: "500Mi"
-    limits:
-      cpu: "1000m"
-      memory: "1Gi"
-  ingress:
-    enabled: true
-    host: open-webui.minikube.local
-  service:
-    type: NodePort
+
+resources:
+  requests:
+    cpu: "500m"
+    memory: "500Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
+ingress:
+  enabled: true
+  host: open-webui.minikube.local
+service:
+  type: NodePort
