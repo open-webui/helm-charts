@@ -5,6 +5,9 @@ metadata:
   name: {{ include "ollama.name" . }}
   labels:
     {{- include "ollama.labels" . | nindent 4 }}
+    {{- with .Values.ollama.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- with .Values.ollama.service.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
