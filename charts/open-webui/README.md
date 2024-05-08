@@ -40,7 +40,6 @@ helm upgrade --install open-webui open-webui/open-webui
 |-----|------|---------|-------------|
 | annotations | object | `{}` |  |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| externalHosts | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
 | image.tag | string | `""` |  |
@@ -53,6 +52,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
+| ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |

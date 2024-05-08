@@ -3,9 +3,21 @@ nameOverride: ""
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   enabled: true
+  # Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
+  # ollama:
+  #   gpu:
+  #     enabled: true
+  #     type: 'nvidia'
+  #     number: 1
+  #   models: 
+  #     - llama3
+  # runtimeClassName: nvidia
+  # persistentVolume:
+  #   enabled: true
+
 
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
-externalHosts: []
+ollamaUrls: []
 
 # -- Value of cluster domain
 clusterDomain: cluster.local

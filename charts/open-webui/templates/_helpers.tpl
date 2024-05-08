@@ -5,9 +5,9 @@
 ollama
 {{- end -}}
 
-{{- define "externalHostUrls" -}}
-{{- if .Values.externalHosts }}
-{{- join ";" .Values.externalHosts | trimSuffix "/" }}
+{{- define "ollamaUrls" -}}
+{{- if .Values.ollamaUrls }}
+{{- join ";" .Values.ollamaUrls | trimSuffix "/" }}
 {{- end }}
 {{- end }}
 
@@ -21,13 +21,13 @@ ollama
 
 {{- define "ollamaBaseUrls" -}}
 {{- $ollamaLocalUrl := include "ollamaLocalUrl" . }}
-{{- $externalHostUrls := include "externalHostUrls" . }}
-{{- if and .Values.ollama.enabled .Values.externalHosts }}
-{{- printf "%s;%s" $externalHostUrls $ollamaLocalUrl }}
+{{- $ollamaUrls := include "ollamaUrls" . }}
+{{- if and .Values.ollama.enabled .Values.ollamaUrls }}
+{{- printf "%s;%s" $ollamaUrls $ollamaLocalUrl }}
 {{- else if .Values.ollama.enabled }}
 {{- printf "%s" $ollamaLocalUrl }}
-{{- else if .Values.externalHosts }}
-{{- printf "%s" $externalHostUrls }}
+{{- else if .Values.ollamaUrls }}
+{{- printf "%s" $ollamaUrls }}
 {{- end }}
 {{- end }}
 
