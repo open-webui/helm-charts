@@ -42,6 +42,12 @@ spec:
         env:
         - name: OLLAMA_BASE_URL
           value: {{ include "ollama.url" . | quote }}
+        {{- with .Values.webui.extraEnvVars }}
+        {{- range . }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
+        {{- end }}
         tty: true
       {{- with .Values.webui.nodeSelector }}
       nodeSelector:

@@ -48,6 +48,12 @@ spec:
           - name: NVIDIA_DRIVER_CAPABILITIES
             value: compute,utility
         {{- end }}
+          {{- with .Values.ollama.extraEnvVars }}
+          {{- range . }}
+          - name: {{ .name }}
+            value: {{ .value | quote }}
+          {{- end }}
+          {{- end }}
         {{- with .Values.ollama.resources }}
         resources: {{- toYaml . | nindent 10 }}
         {{- end }}
@@ -56,6 +62,10 @@ spec:
           mountPath: /root/.ollama
       {{- with .Values.ollama.nodeSelector }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.ollama.affinity }}
+      affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.ollama.tolerations }}

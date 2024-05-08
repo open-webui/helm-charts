@@ -26,6 +26,7 @@ ollama:
   - key: nvidia.com/gpu
     operator: Exists
     effect: NoSchedule
+  affinity: {}
   service:
     type: ClusterIP
     annotations: {}
@@ -35,6 +36,12 @@ ollama:
   gpu:
     # -- Enable additional ENV values to help Ollama discover GPU usage
     enabled: false
+  ## @param chat.extraEnvVars Extra environment variables
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  extraEnvVars: []
 
 webui:
   annotations: {}
@@ -65,6 +72,9 @@ webui:
     selector: {}
     annotations: {}
   nodeSelector: {}
+  # @param chat.affinity Affinity for pod assignment
+  # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  affinity: {}
   tolerations: []
   service:
     type: ClusterIP
@@ -74,3 +84,9 @@ webui:
     nodePort: ""
     labels: {}
     loadBalancerClass: ""
+  ## @param chat.extraEnvVars Extra environment variables
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  extraEnvVars: []
