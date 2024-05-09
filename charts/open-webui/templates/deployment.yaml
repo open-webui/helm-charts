@@ -42,12 +42,19 @@ spec:
         env:
         - name: OLLAMA_BASE_URLS
           value: {{ include "ollamaBaseUrls" . | quote }}
-        {{- with .Values.extraEnv }}
-          {{- toYaml . | nindent 12 }}
+        {{- with .Values.extraEnvVars }}
+        {{- range . }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- end }}
         {{- end }}
         tty: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.affinity }}
