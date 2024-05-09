@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "charts/*/Chart.yaml"
 
 jobs:
   release:
@@ -25,6 +27,10 @@ jobs:
         uses: azure/setup-helm@v4
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Add Dependency Repos
+        run: |
+          helm repo add ollama https://otwld.github.io/ollama-helm/
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
