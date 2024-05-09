@@ -9,7 +9,7 @@ ollama:
   #     enabled: true
   #     type: 'nvidia'
   #     number: 1
-  #   models: 
+  #   models:
   #     - llama3
   # runtimeClassName: nvidia
   # persistentVolume:
@@ -49,8 +49,16 @@ persistence:
   storageClass: ""
   selector: {}
   annotations: {}
+
+# -- Node labels for pod assignment.
 nodeSelector: {}
+
+# -- Tolerations for pod assignment
 tolerations: []
+
+# -- Affinity for pod assignment
+affinity: {}
+
 service:
   type: ClusterIP
   annotations: {}
@@ -58,4 +66,9 @@ service:
   containerPort: 8080
   nodePort: ""
   labels: {}
-  loadBalancerClass: "" 
+  loadBalancerClass: ""
+
+# -- Additional environments variables on the output Deployment definition.
+extraEnvVars: []
+#  - name: OLLAMA_DEBUG
+#    value: "1"
