@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 2.0.2](https://img.shields.io/badge/Version-2.0.2-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -38,8 +38,10 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
+| extraEnvVars | list | `[]` | Additional environments variables on the output Deployment definition. |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
 | image.tag | string | `""` |  |
@@ -50,7 +52,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | ingress.host | string | `""` |  |
 | ingress.tls | bool | `false` |  |
 | nameOverride | string | `""` |  |
-| nodeSelector | object | `{}` |  |
+| nodeSelector | object | `{}` | Node labels for pod assignment. |
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
@@ -70,7 +72,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | service.nodePort | string | `""` |  |
 | service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |
-| tolerations | list | `[]` |  |
+| tolerations | list | `[]` | Tolerations for pod assignment |
 
 ----------------------------------------------
 
