@@ -15,7 +15,6 @@ ollama:
   # persistentVolume:
   #   enabled: true
 
-
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
 ollamaUrls: []
 
@@ -45,7 +44,7 @@ persistence:
   existingClaim: ""
   # -- If using multiple replicas, you must update accessModes to ReadWriteMany
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   storageClass: ""
   selector: {}
   annotations: {}
@@ -69,6 +68,11 @@ service:
   loadBalancerClass: ""
 
 # -- Additional environments variables on the output Deployment definition.
-extraEnvVars: []
-#  - name: OLLAMA_DEBUG
-#    value: "1"
+extraEnvVars:
+  - name: OPENAI_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: openai-api-key
+        key: api-key
+  - name: OLLAMA_DEBUG
+    value: "1"
