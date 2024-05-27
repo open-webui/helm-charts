@@ -1,6 +1,6 @@
 apiVersion: v2
 name: open-webui
-version: 2.0.2
+version: 2.1.0
 appVersion: "latest"
 
 home: https://www.openwebui.com/
@@ -8,15 +8,15 @@ icon: https://raw.githubusercontent.com/open-webui/open-webui/main/static/favico
 
 description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋"
 keywords:
-- llm
-- chat
-- web-ui
+  - llm
+  - chat
+  - web-ui
 
 sources:
-- https://github.com/open-webui/helm-charts
-- https://github.com/open-webui/open-webui/pkgs/container/open-webui
-- https://github.com/otwld/ollama-helm/
-- https://hub.docker.com/r/ollama/ollama
+  - https://github.com/open-webui/helm-charts
+  - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+  - https://github.com/otwld/ollama-helm/
+  - https://hub.docker.com/r/ollama/ollama
 
 annotations:
   licenses: MIT
@@ -26,7 +26,6 @@ dependencies:
     repository: https://otwld.github.io/ollama-helm/
     version: ">=0.24.0"
     import-values:
-      
       - child: service
         parent: ollama.service
     condition: ollama.enabled
