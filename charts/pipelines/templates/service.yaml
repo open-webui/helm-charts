@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "pipelines.name" . }}
+  labels:
+    {{- include "pipelines.labels" . | nindent 4 }}
+    {{- with .Values.service.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    {{- include "pipelines.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.service.port }}
+    targetPort: http
+    {{- if .Values.service.nodePort }}
+    nodePort: {{ .Values.service.nodePort | int }}
+    {{- end }}
+  {{- if .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ .Values.service.loadBalancerClass | quote }}
+  {{- end }}
+  
