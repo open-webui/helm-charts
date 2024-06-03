@@ -1,17 +1,15 @@
-# open-webui
+# pipelines
 
-![Version: 2.0.2](https://img.shields.io/badge/Version-2.0.2-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.0.1](https://img.shields.io/badge/Version-0.0.1-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
-Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
+Pipelines: UI-Agnostic OpenAI API Plugin Framework
 
-**Homepage:** <https://www.openwebui.com/>
+**Homepage:** <https://github.com/open-webui/pipelines>
 
 ## Source Code
 
 * <https://github.com/open-webui/helm-charts>
-* <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
-* <https://github.com/otwld/ollama-helm/>
-* <https://hub.docker.com/r/ollama/ollama>
+* <https://github.com/open-webui/pipelines/pkgs/container/pipelines>
 
 ## Installing
 
@@ -25,14 +23,8 @@ helm repo update
 Now you can install the chart:
 
 ```shell
-helm upgrade --install open-webui open-webui/open-webui
+helm upgrade --install open-webui open-webui/pipelines
 ```
-
-## Requirements
-
-| Repository | Name | Version |
-|------------|------|---------|
-| https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
 
@@ -41,20 +33,19 @@ helm upgrade --install open-webui open-webui/open-webui
 | affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| extraEnvVars | list | `[]` | Additional environments variables on the output Deployment definition. |
+| extraEnvVars | list | `[{"name":"PIPELINES_URLS","value":"https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"}]` | Additional environments variables on the output Deployment definition. These are used to pull initial Pipeline files, and help configure Pipelines with required values (e.g. Langfuse API keys) |
+| extraEnvVars[0] | object | `{"name":"PIPELINES_URLS","value":"https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"}` | Example pipeline to pull and load on deployment startup, see current pipelines here: https://github.com/open-webui/pipelines/blob/main/examples |
 | image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
-| image.tag | string | `""` |  |
+| image.repository | string | `"ghcr.io/open-webui/pipelines"` |  |
+| image.tag | string | `"main"` |  |
 | ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
 | ingress.class | string | `""` |  |
-| ingress.enabled | bool | `false` |  |
+| ingress.enabled | bool | `true` |  |
 | ingress.existingSecret | string | `""` |  |
 | ingress.host | string | `""` |  |
 | ingress.tls | bool | `false` |  |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
-| ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
-| ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |
@@ -66,11 +57,11 @@ helm upgrade --install open-webui open-webui/open-webui
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service.annotations | object | `{}` |  |
-| service.containerPort | int | `8080` |  |
+| service.containerPort | int | `9099` |  |
 | service.labels | object | `{}` |  |
 | service.loadBalancerClass | string | `""` |  |
 | service.nodePort | string | `""` |  |
-| service.port | int | `80` |  |
+| service.port | int | `9099` |  |
 | service.type | string | `"ClusterIP"` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 

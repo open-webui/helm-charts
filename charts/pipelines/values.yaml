@@ -53,16 +53,19 @@ service:
 extraEnvVars:
   # -- Example pipeline to pull and load on deployment startup, see current pipelines here: https://github.com/open-webui/pipelines/blob/main/examples
   - name: PIPELINES_URLS
-    value: "https://github.com/open-webui/pipelines/blob/main/examples/langfuse_filter_pipeline.py"  
-  - name: LANGFUSE_PUBLIC_KEY
-    valueFrom:
-      secretKeyRef: 
-        name: langfuse-keys
-        key: public-key
-  - name: LANGFUSE_SECRET_KEY
-    valueFrom:
-      secretKeyRef: 
-        name: langfuse-keys
-        key: secret-key
-  - name: LANGFUSE_HOST
-    value: https://us.cloud.langfuse.com
+    value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"
+  # -- Langfuse example, including values used in Langfuse filter to connect
+  # - name: PIPELINES_URLS
+  #   value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/langfuse_filter_pipeline.py"  
+  # - name: LANGFUSE_PUBLIC_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: langfuse-keys
+  #       key: public-key
+  # - name: LANGFUSE_SECRET_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: langfuse-keys
+  #       key: secret-key
+  # - name: LANGFUSE_HOST
+  #   value: https://us.cloud.langfuse.com
