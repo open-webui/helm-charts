@@ -1,0 +1,71 @@
+nameOverride: ""
+
+# -- Value of cluster domain
+clusterDomain: cluster.local
+
+annotations: {}
+podAnnotations: {}
+replicaCount: 1
+image:
+  repository: ghcr.io/open-webui/pipelines
+  tag: main
+  pullPolicy: Always
+resources: {}
+ingress:
+  enabled: true
+  class: ""
+  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
+  # nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations: {}
+  host: ""
+  tls: false
+  existingSecret: ""
+persistence:
+  enabled: true
+  size: 2Gi
+  existingClaim: ""
+  # -- If using multiple replicas, you must update accessModes to ReadWriteMany
+  accessModes:
+    - ReadWriteOnce
+  storageClass: ""
+  selector: {}
+  annotations: {}
+
+# -- Node labels for pod assignment.
+nodeSelector: {}
+
+# -- Tolerations for pod assignment
+tolerations: []
+
+# -- Affinity for pod assignment
+affinity: {}
+
+service:
+  type: ClusterIP
+  annotations: {}
+  port: 9099
+  containerPort: 9099
+  nodePort: ""
+  labels: {}
+  loadBalancerClass: ""
+
+# -- Additional environments variables on the output Deployment definition. These are used to pull initial Pipeline files, and help configure Pipelines with required values (e.g. Langfuse API keys)
+extraEnvVars:
+  # -- Example pipeline to pull and load on deployment startup, see current pipelines here: https://github.com/open-webui/pipelines/blob/main/examples
+  - name: PIPELINES_URLS
+    value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"
+  # -- Langfuse example, including values used in Langfuse filter to connect
+  # - name: PIPELINES_URLS
+  #   value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/langfuse_filter_pipeline.py"  
+  # - name: LANGFUSE_PUBLIC_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: langfuse-keys
+  #       key: public-key
+  # - name: LANGFUSE_SECRET_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: langfuse-keys
+  #       key: secret-key
+  # - name: LANGFUSE_HOST
+  #   value: https://us.cloud.langfuse.com

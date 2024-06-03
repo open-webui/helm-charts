@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "pipelines.name" . }}
+  labels:
+    {{- include "pipelines.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "pipelines.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "pipelines.labels" . | nindent 8 }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      enableServiceLinks: false
+      automountServiceAccountToken: false
+      containers:
+      - name: {{ .Chart.Name }}
+        {{- with .Values.image }}
+        image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
+        imagePullPolicy: {{ .pullPolicy }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.containerPort }}
+        {{- with .Values.resources }}
+        resources: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        volumeMounts:
+        - name: data
+          mountPath: /app/backend/data
+        env:
+        {{- if .Values.extraEnvVars }}
+          {{- toYaml .Values.extraEnvVars | nindent 8 }}
+        {{- end }}
+        tty: true
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+      {{- else if not .Values.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+      {{- else if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "pipelines.name" . }}
+      {{- end }}
