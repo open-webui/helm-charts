@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 2.0.2](https://img.shields.io/badge/Version-2.0.2-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 3.0.0](https://img.shields.io/badge/Version-3.0.0-informational?style=flat-square) ![AppVersion: 0.2.2](https://img.shields.io/badge/AppVersion-0.2.2-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -32,6 +32,7 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://helm.openwebui.com | pipelines | >=0.0.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
@@ -41,10 +42,8 @@ helm upgrade --install open-webui open-webui/open-webui
 | affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| extraEnvVars | list | `[]` | Additional environments variables on the output Deployment definition. |
-| image.pullPolicy | string | `"Always"` |  |
-| image.repository | string | `"ghcr.io/open-webui/open-webui"` |  |
-| image.tag | string | `""` |  |
+| extraEnvVars | string | `nil` | Additional environments variables on the output Deployment definition. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
+| image | object | `{"pullPolicy":"Always","repository":"ghcr.io/open-webui/open-webui","tag":"latest"}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui/pkgs/container/open-webui |
 | ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
@@ -54,24 +53,22 @@ helm upgrade --install open-webui open-webui/open-webui
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
+| ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
+| openaiBaseApiUrl | string | `""` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |
-| persistence.existingClaim | string | `""` |  |
+| persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
 | persistence.selector | object | `{}` |  |
 | persistence.size | string | `"2Gi"` |  |
 | persistence.storageClass | string | `""` |  |
+| pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
+| pipelines.extraEnvVars[0] | object | `{"name":"PIPELINES_API_KEY","value":"0p3n-w3bu!"}` | This is a default password that can and should be updated on your production deployment, and should be stored in a K8s secret |
 | podAnnotations | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
-| service.annotations | object | `{}` |  |
-| service.containerPort | int | `8080` |  |
-| service.labels | object | `{}` |  |
-| service.loadBalancerClass | string | `""` |  |
-| service.nodePort | string | `""` |  |
-| service.port | int | `80` |  |
-| service.type | string | `"ClusterIP"` |  |
+| service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 
 ----------------------------------------------
