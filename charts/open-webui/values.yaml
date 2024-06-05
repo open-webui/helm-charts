@@ -3,7 +3,9 @@ nameOverride: ""
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   enabled: true
-  # Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
+  # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
+  fullnameOverride: "open-webui-ollama"
+  # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
   # ollama:
   #   gpu:
   #     enabled: true
@@ -15,6 +17,18 @@ ollama:
   # persistentVolume:
   #   enabled: true
 
+pipelines:
+  # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
+  enabled: true 
+  extraEnvVars:
+  # -- This is a default password that can and should be updated on your production deployment, and should be stored in a K8s secret
+  - name: PIPELINES_API_KEY
+    value: "0p3n-w3bu!"
+    # valueFrom:
+    #   secretKeyRef:
+    #     name: pipelines-api-key
+    #     key: api-key
+
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
 ollamaUrls: []
 
@@ -24,9 +38,10 @@ clusterDomain: cluster.local
 annotations: {}
 podAnnotations: {}
 replicaCount: 1
+# -- Open WebUI image tags can be found here: https://github.com/open-webui/open-webui/pkgs/container/open-webui
 image:
   repository: ghcr.io/open-webui/open-webui
-  tag: ""
+  tag: "latest"
   pullPolicy: Always
 resources: {}
 ingress:
@@ -41,6 +56,7 @@ ingress:
 persistence:
   enabled: true
   size: 2Gi
+  # -- Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one
   existingClaim: ""
   # -- If using multiple replicas, you must update accessModes to ReadWriteMany
   accessModes:
@@ -58,6 +74,7 @@ tolerations: []
 # -- Affinity for pod assignment
 affinity: {}
 
+# -- Service values to expose Open WebUI pods to cluster
 service:
   type: ClusterIP
   annotations: {}
@@ -67,7 +84,10 @@ service:
   labels: {}
   loadBalancerClass: ""
 
-# -- Additional environments variables on the output Deployment definition.
+# -- OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank
+openaiBaseApiUrl: ""
+
+# -- Additional environments variables on the output Deployment definition. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/
 extraEnvVars:
   # - name: OPENAI_API_KEY
   #   valueFrom:
