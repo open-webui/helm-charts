@@ -1,5 +1,9 @@
 apiVersion: apps/v1
+{{- if .Values.persistence.enabled }}
+kind: StatefulSet
+{{- else }}
 kind: Deployment
+{{- end }}
 metadata:
   name: {{ include "open-webui.name" . }}
   labels:
