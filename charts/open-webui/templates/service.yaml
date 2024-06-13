@@ -26,4 +26,10 @@ spec:
   {{- if .Values.service.loadBalancerClass }}
   loadBalancerClass: {{ .Values.service.loadBalancerClass | quote }}
   {{- end }}
+  {{- if and (eq .Values.service.type "ClusterIP") (.Values.service.clusterIP) }}
+  clusterIP: {{ .Values.service.clusterIP }}
+  {{- end }}
+  {{- if and (eq .Values.service.type "loadBalancer") (.Values.service.loadBalancerIP) }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
   
