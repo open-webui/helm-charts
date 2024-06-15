@@ -8,9 +8,10 @@
 1. **Fork the repository** and create your branch from `main`.
 2. **Make your changes** and ensure they follow the guidelines below.
 3. **Test your changes** locally to ensure everything works as expected. This should include deploying your updates to a live Kubernetes cluster (whether local or remote).
-4. **Commit your changes** using a descriptive commit message that follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-5. **Push your changes** to your forked repository.
-6. **Create a Pull Request** and provide a detailed description of your changes. Please consider dropping us your redacted `values.yaml` file used during your testing in the PR so we can make sure we see consistent results. 
+4. **Run helm-docs** to ensure that the README is updated with the latest changes. 
+5. **Commit your changes** using a descriptive commit message that follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+6. **Push your changes** to your forked repository.
+7. **Create a Pull Request** and provide a detailed description of your changes. Please consider dropping us your redacted `values.yaml` file used during your testing in the PR so we can make sure we see consistent results. 
 
 ## Guidelines
 
