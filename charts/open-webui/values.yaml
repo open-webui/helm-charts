@@ -20,14 +20,8 @@ ollama:
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
   enabled: true 
-  extraEnvVars:
-  # -- This is a default password that can and should be updated on your production deployment, and should be stored in a K8s secret
-  - name: PIPELINES_API_KEY
-    value: "0p3n-w3bu!"
-    # valueFrom:
-    #   secretKeyRef:
-    #     name: pipelines-api-key
-    #     key: api-key
+  # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
+  extraEnvVars: []
 
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
 ollamaUrls: []
@@ -89,6 +83,13 @@ openaiBaseApiUrl: ""
 
 # -- Additional environments variables on the output Deployment definition. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/
 extraEnvVars:
+  # -- Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines
+  - name: OPENAI_API_KEY
+    value: "0p3n-w3bu!"
+  # valueFrom:
+  #   secretKeyRef:
+  #     name: pipelines-api-key
+  #     key: api-key
   # - name: OPENAI_API_KEY
   #   valueFrom:
   #     secretKeyRef:
