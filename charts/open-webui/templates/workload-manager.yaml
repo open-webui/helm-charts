@@ -14,6 +14,9 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  {{- if .Values.persistence.enabled }}
+  serviceName: {{ include "open-webui.name" . }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "open-webui.selectorLabels" . | nindent 6 }}
