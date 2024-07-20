@@ -19,7 +19,7 @@ ollama:
 
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
-  enabled: true 
+  enabled: true
   # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
   extraEnvVars: []
 
@@ -97,3 +97,28 @@ extraEnvVars:
   #       key: api-key
   # - name: OLLAMA_DEBUG
   #   value: "1"
+
+# -- Configure pod security context
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
+podSecurityContext:
+  {}
+  # fsGroupChangePolicy: Always
+  # sysctls: []
+  # supplementalGroups: []
+  # fsGroup: 1001
+
+# -- Configure container security context
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
+containerSecurityContext:
+  {}
+  # runAsUser: 1001
+  # runAsGroup: 1001
+  # runAsNonRoot: true
+  # privileged: false
+  # allowPrivilegeEscalation: false
+  # readOnlyRootFilesystem: false
+  # capabilities:
+  #   drop:
+  #     - ALL
+  # seccompProfile:
+  #   type: "RuntimeDefault"
