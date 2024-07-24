@@ -29,6 +29,16 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      initContainers:
+      - name: copy-app-data
+        {{- with .Values.image }}
+        image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
+        imagePullPolicy: {{ .pullPolicy }}
+        {{- end }}
+        command: ['sh', '-c', 'cp -R /app/backend/data/* /tmp/app-data/']
+        volumeMounts:
+        - name: data
+          mountPath: /tmp/app-data
       enableServiceLinks: false
       automountServiceAccountToken: false
       {{- with .Values.podSecurityContext }}
