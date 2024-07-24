@@ -41,6 +41,10 @@ spec:
           mountPath: /tmp/app-data
       enableServiceLinks: false
       automountServiceAccountToken: false
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         {{- with .Values.image }}
@@ -52,6 +56,10 @@ spec:
           containerPort: {{ .Values.service.containerPort }}
         {{- with .Values.resources }}
         resources: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
         - name: data

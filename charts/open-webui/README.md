@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 3.0.9](https://img.shields.io/badge/Version-3.0.9-informational?style=flat-square) ![AppVersion: v0.3.8](https://img.shields.io/badge/AppVersion-v0.3.8-informational?style=flat-square)
+![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![AppVersion: v0.3.8](https://img.shields.io/badge/AppVersion-v0.3.8-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -42,9 +42,10 @@ helm upgrade --install open-webui open-webui/open-webui
 | affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
+| containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Additional environments variables on the output Deployment definition. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
-| image | object | `{"pullPolicy":"Always","repository":"ghcr.io/open-webui/open-webui","tag":"latest"}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui/pkgs/container/open-webui |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":"latest"}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui/pkgs/container/open-webui |
 | ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
@@ -67,6 +68,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
 | pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
 | podAnnotations | object | `{}` |  |
+| podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
