@@ -36,6 +36,10 @@ spec:
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
         command: ['sh', '-c', 'cp -R /app/backend/data/* /tmp/app-data/']
+        {{- with .Values.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         - name: data
           mountPath: /tmp/app-data
