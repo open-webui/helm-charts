@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 3.1.0](https://img.shields.io/badge/Version-3.1.0-informational?style=flat-square) ![AppVersion: v0.3.8](https://img.shields.io/badge/AppVersion-v0.3.8-informational?style=flat-square)
+![Version: 3.1.3](https://img.shields.io/badge/Version-3.1.3-informational?style=flat-square) ![AppVersion: 0.3.9](https://img.shields.io/badge/AppVersion-0.3.9-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -73,6 +73,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | resources | object | `{}` |  |
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
 | tolerations | list | `[]` | Tolerations for pod assignment |
+| topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
 
 ----------------------------------------------
 
