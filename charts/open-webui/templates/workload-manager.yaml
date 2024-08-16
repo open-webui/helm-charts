@@ -35,7 +35,7 @@ spec:
         image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
-        command: ['sh', '-c', 'cp -R /app/backend/data/* /tmp/app-data/']
+        command: ['sh', '-c', 'cp -R -n /app/backend/data/* /tmp/app-data/']
         {{- with .Values.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
