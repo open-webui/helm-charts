@@ -1,6 +1,6 @@
 # pipelines
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
+![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
 Pipelines: UI-Agnostic OpenAI API Plugin Framework
 
@@ -38,6 +38,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/open-webui/pipelines"` |  |
 | image.tag | string | `"main"` |  |
+| imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `true` |  |
