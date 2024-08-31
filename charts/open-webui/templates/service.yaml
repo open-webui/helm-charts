@@ -29,7 +29,7 @@ spec:
   {{- if and (eq .Values.service.type "ClusterIP") (.Values.service.clusterIP) }}
   clusterIP: {{ .Values.service.clusterIP }}
   {{- end }}
- r{{- if and (eq .Values.service.type "LoadBalancer") (.Values.service.loadBalancerIP) }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (.Values.service.loadBalancerIP) }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
   
