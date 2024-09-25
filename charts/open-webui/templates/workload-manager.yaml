@@ -73,8 +73,13 @@ spec:
         - name: data
           mountPath: /app/backend/data
         env:
+        {{ if .Values.ollama.enabled }}
         - name: OLLAMA_BASE_URLS
           value: {{ include "ollamaBaseUrls" . | quote }}
+        {{ else }}
+        - name: ENABLE_OLLAMA_API
+          value: "False"
+        {{- end }}
         {{ if .Values.pipelines.enabled }}
         - name: OPENAI_API_BASE_URL
           value: {{ include "pipelines.serviceEndpoint" . }}
