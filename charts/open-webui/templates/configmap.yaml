@@ -1,0 +1,22 @@
+{{- if or .Values.extraEnvVars .Values.ollama.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "open-webui.name" . }}-env
+  labels:
+    {{- include "open-webui.labels" . | nindent 4 }}
+data:
+  {{- if .Values.ollama.enabled }}
+  OLLAMA_BASE_URLS: {{ include "ollamaBaseUrls" . | quote }}
+  {{- else }}
+  ENABLE_OLLAMA_API: "False"
+  {{- end }}
+  {{- if .Values.pipelines.enabled }}
+  OPENAI_API_BASE_URL: {{ include "pipelines.serviceEndpoint" . }}
+  {{- else if .Values.openaiBaseApiUrl }}
+  OPENAI_API_BASE_URL: {{ .Values.openaiBaseApiUrl | quote }}
+  {{- end }}
+  {{- range .Values.extraEnvVars }}
+  {{ .name }}: {{ .value | quote }}
+  {{- end }}
+{{- end }}
