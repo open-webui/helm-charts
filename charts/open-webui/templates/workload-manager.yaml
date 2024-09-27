@@ -72,10 +72,22 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /app/backend/data
-        {{- if or .Values.extraEnvVars .Values.ollama.enabled }}
-        envFrom:
-        - configMapRef:
-            name: {{ include "open-webui.name" . }}-env
+        env:
+        {{- if or .Values.ollamaUrls .Values.ollama.enabled }}
+        - name: "OLLAMA_BASE_URLS"
+          value: {{ include "ollamaBaseUrls" . | quote }}
+        {{- else }}
+        - name: "ENABLE_OLLAMA_API"
+          value: "False"
+        {{- end }}
+        - name: "OPENAI_API_BASE_URL"
+        {{- if .Values.pipelines.enabled }}
+          value: {{ include "pipelines.serviceEndpoint" . }}
+        {{- else if .Values.openaiBaseApiUrl }}
+          value: {{ .Values.openaiBaseApiUrl | quote }}
+        {{- end }}
+        {{- if .Values.extraEnvVars }}
+          {{- toYaml .Values.extraEnvVars | nindent 8 }}
         {{- end }}
         tty: true
       {{- with .Values.nodeSelector }}
