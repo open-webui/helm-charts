@@ -48,7 +48,7 @@ spec:
         - name: data
           mountPath: /tmp/app-data
         {{- with .Values.volumeMounts.initContainer }}
-          {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
       enableServiceLinks: false
       automountServiceAccountToken: false
@@ -76,7 +76,7 @@ spec:
         - name: data
           mountPath: /app/backend/data
         {{- with .Values.volumeMounts.container }}
-          {{- toYaml . | nindent 10 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
         {{- if or .Values.ollamaUrls .Values.ollama.enabled }}
@@ -126,5 +126,5 @@ spec:
           claimName: {{ include "open-webui.name" . }}
       {{- end }}
       {{- with .Values.volumes }}
-        {{- toYaml . | nindent 8 }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}
