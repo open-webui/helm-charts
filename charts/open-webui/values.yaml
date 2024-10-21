@@ -93,7 +93,7 @@ service:
 openaiBaseApiUrl: ""
 
 # -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/
-extraEnvVars: 
+extraEnvVars:
   # -- Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines
   - name: OPENAI_API_KEY
     value: "0p3n-w3bu!"
@@ -108,6 +108,25 @@ extraEnvVars:
   #       key: api-key
   # - name: OLLAMA_DEBUG
   #   value: "1"
+
+# -- Configure container volume mounts
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/>
+volumeMounts:
+  initContainer: []
+  # - name: ""
+  #   mountPath: ""
+  container: []
+  # - name: ""
+  #   mountPath: ""
+
+# -- Configure pod volumes
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/>
+volumes: []
+# - name: ""
+#   configMap:
+#     name: ""
+# - name: ""
+#   emptyDir: {}
 
 # -- Configure pod security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>

@@ -47,6 +47,9 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /tmp/app-data
+        {{- with .Values.volumeMounts.initContainer }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       enableServiceLinks: false
       automountServiceAccountToken: false
       {{- with .Values.podSecurityContext }}
@@ -72,6 +75,9 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /app/backend/data
+        {{- with .Values.volumeMounts.container }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
         env:
         {{- if or .Values.ollamaUrls .Values.ollama.enabled }}
         - name: "OLLAMA_BASE_URLS"
@@ -118,4 +124,7 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: {{ include "open-webui.name" . }}
+      {{- end }}
+      {{- with .Values.volumes }}
+      {{- toYaml . | nindent 6 }}
       {{- end }}

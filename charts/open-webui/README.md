@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 3.2.0](https://img.shields.io/badge/Version-3.2.0-informational?style=flat-square) ![AppVersion: 0.3.24](https://img.shields.io/badge/AppVersion-0.3.24-informational?style=flat-square)
+![Version: 3.4.0](https://img.shields.io/badge/Version-3.4.0-informational?style=flat-square) ![AppVersion: 0.3.32](https://img.shields.io/badge/AppVersion-0.3.32-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -75,6 +75,8 @@ helm upgrade --install open-webui open-webui/open-webui
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
+| volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
+| volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 
 ----------------------------------------------
 
