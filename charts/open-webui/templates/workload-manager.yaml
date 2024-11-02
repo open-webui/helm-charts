@@ -47,6 +47,9 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /tmp/app-data
+          {{- if .Values.persistence.subPath }}
+          subPath: {{ .Values.persistence.subPath }}
+          {{- end }}
         {{- with .Values.volumeMounts.initContainer }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -75,6 +78,9 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /app/backend/data
+          {{- if .Values.persistence.subPath }}
+          subPath: {{ .Values.persistence.subPath }}
+          {{- end }}
         {{- with .Values.volumeMounts.container }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
