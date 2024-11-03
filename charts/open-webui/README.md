@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 3.4.0](https://img.shields.io/badge/Version-3.4.0-informational?style=flat-square) ![AppVersion: 0.3.32](https://img.shields.io/badge/AppVersion-0.3.32-informational?style=flat-square)
+![Version: 3.5.0](https://img.shields.io/badge/Version-3.5.0-informational?style=flat-square) ![AppVersion: 0.3.35](https://img.shields.io/badge/AppVersion-0.3.35-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -66,6 +66,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | persistence.selector | object | `{}` |  |
 | persistence.size | string | `"2Gi"` |  |
 | persistence.storageClass | string | `""` |  |
+| persistence.subPath | string | `""` | Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty. |
 | pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
 | pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
 | podAnnotations | object | `{}` |  |
