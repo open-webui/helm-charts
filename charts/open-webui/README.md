@@ -75,7 +75,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
-| tika.enabled | bool | `false` |  |
+| tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
 | volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
