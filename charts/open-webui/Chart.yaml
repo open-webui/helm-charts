@@ -1,6 +1,6 @@
 apiVersion: v2
 name: open-webui
-version: 3.5.1
+version: 3.6.0
 appVersion: "0.3.35"
 
 home: https://www.openwebui.com/
@@ -36,3 +36,7 @@ dependencies:
       - child: service
         parent: pipelines.service
     condition: pipelines.enabled
+  - name: tika
+    repository: https://apache.jfrog.io/artifactory/tika
+    version: ">=2.9.0"
+    condition: tika.enabled

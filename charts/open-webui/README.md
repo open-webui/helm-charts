@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 3.5.1](https://img.shields.io/badge/Version-3.5.1-informational?style=flat-square) ![AppVersion: 0.3.35](https://img.shields.io/badge/AppVersion-0.3.35-informational?style=flat-square)
+![Version: 3.6.0](https://img.shields.io/badge/Version-3.6.0-informational?style=flat-square) ![AppVersion: 0.3.35](https://img.shields.io/badge/AppVersion-0.3.35-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -32,6 +32,7 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Repository | Name | Version |
 |------------|------|---------|
+| https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
 | https://helm.openwebui.com | pipelines | >=0.0.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
@@ -74,6 +75,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
+| tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
 | volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
