@@ -1,42 +1,38 @@
 apiVersion: v2
 name: open-webui
 version: 3.6.0
-appVersion: "0.3.35"
-
+appVersion: 0.3.36
 home: https://www.openwebui.com/
-icon: https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
-
-description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋"
+icon: >-
+  https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
+description: 'Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋'
 keywords:
   - llm
   - chat
   - web-ui
-
 sources:
   - https://github.com/open-webui/helm-charts
   - https://github.com/open-webui/open-webui/pkgs/container/open-webui
   - https://github.com/otwld/ollama-helm/
   - https://hub.docker.com/r/ollama/ollama
-
 annotations:
   licenses: MIT
-
 dependencies:
   - name: ollama
     repository: https://otwld.github.io/ollama-helm/
-    version: ">=0.24.0"
+    version: '>=0.24.0'
     import-values:
       - child: service
         parent: ollama.service
     condition: ollama.enabled
   - name: pipelines
     repository: https://helm.openwebui.com
-    version: ">=0.0.1"
+    version: '>=0.0.1'
     import-values:
       - child: service
         parent: pipelines.service
     condition: pipelines.enabled
   - name: tika
     repository: https://apache.jfrog.io/artifactory/tika
-    version: ">=2.9.0"
+    version: '>=2.9.0'
     condition: tika.enabled
