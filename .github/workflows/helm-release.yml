@@ -34,6 +34,9 @@ jobs:
       - name: Get version
         id: get_version
         run: |
+          echo "DEBUG: Working path"
+          pwd
+          cat charts/open-webui/Chart.yaml | ./yq -r  '.version'
           echo "VERSION=$(cat charts/open-webui/Chart.yaml | ./yq -r  '.version')" >> $GITHUB_OUTPUT
           echo "DEBUG: Version"
           echo $VERSION
