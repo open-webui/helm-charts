@@ -34,14 +34,7 @@ jobs:
       - name: Get version
         id: get_version
         run: |
-          echo "DEBUG: Working path"
-          pwd
-          cat charts/open-webui/Chart.yaml | ./yq -r  '.version'
           echo "VERSION=$(cat charts/open-webui/Chart.yaml | ./yq -r  '.version')" >> $GITHUB_OUTPUT
-          echo "DEBUG: GITHUB_OUTPUT"
-          echo $GITHUB_OUTPUT
-          echo "DEBUG: Version"
-          echo $VERSION
 
       - name: Commit Chart.yaml
         uses: stefanzweifel/git-auto-commit-action@v4
