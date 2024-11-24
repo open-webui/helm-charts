@@ -41,7 +41,7 @@ spec:
         {{- end }}
         command: ['sh', '-c', 'cp -R -n /app/backend/data/* /tmp/app-data/']
         {{- with .Values.containerSecurityContext }}
-        {{- with .Values.copy-app-data.resources }}
+        {{- with .Values.copyAppData.resources }}
         resources: {{- toYaml . | nindent 10 }}
         {{- end }}
         securityContext:
@@ -58,7 +58,7 @@ spec:
         {{- end }}
       enableServiceLinks: false
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
-      {{- if .Values.serviceAccount.create }}
+      {{- if .Values.serviceAccount.enable }}
       serviceAccountName: {{ .Values.serviceAccount.name | default (include "open-webui.name" .) }}
       {{- end }}
       {{- with .Values.podSecurityContext }}
