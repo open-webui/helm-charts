@@ -17,6 +17,9 @@ spec:
   tls:
     - hosts:
       - {{ .Values.ingress.host | quote }}
+      {{- range .Values.ingress.additionalHosts }}
+      - {{ . | quote }}
+      {{- end }}
       secretName: {{ default (printf "%s-tls" .Release.Name) .Values.ingress.existingSecret }}
   {{- end }}
   rules:
@@ -30,4 +33,16 @@ spec:
             name: {{ include "open-webui.name" . }}
             port:
               name: http
+  {{- range .Values.ingress.additionalHosts }}
+  - host: {{ . | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "open-webui.name" $ }}
+            port:
+              name: http
+  {{- end }}
 {{- end }}
