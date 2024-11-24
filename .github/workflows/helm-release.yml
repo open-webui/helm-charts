@@ -8,42 +8,42 @@ on:
       - "charts/**"
 
 jobs:
-  semantic-release:
-    runs-on: ubuntu-latest
-    steps:
-      # Checkout repo
-      - name: Checkout
-        uses: actions/checkout@v4
+  # semantic-release:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Checkout repo
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 'lts/*'
-      - name: Install dependencies
-        run: npm install
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 'lts/*'
+  #     - name: Install dependencies
+  #       run: npm install
+  #     - name: Release
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       run: npx semantic-release
 
-      - name: Install yq
-        run: |
-          wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq &&\
-          chmod +x yq
+  #     - name: Install yq
+  #       run: |
+  #         wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq &&\
+  #         chmod +x yq
 
-      - name: Get version
-        id: get_version
-        run: |
-          echo "VERSION=$(cat charts/open-webui/Chart.yaml | ./yq -r  '.version')" >> $GITHUB_OUTPUT
+  #     - name: Get version
+  #       id: get_version
+  #       run: |
+  #         echo "VERSION=$(cat charts/open-webui/Chart.yaml | ./yq -r  '.version')" >> $GITHUB_OUTPUT
 
-      - name: Commit Chart.yaml
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: 'chore(release) bump version to ${{ steps.get_version.outputs.VERSION }}'
-          file_pattern: 'charts/open-webui/Chart.yaml'
+  #     - name: Commit Chart.yaml
+  #       uses: stefanzweifel/git-auto-commit-action@v4
+  #       with:
+  #         commit_message: 'chore(release) bump version to ${{ steps.get_version.outputs.VERSION }}'
+  #         file_pattern: 'charts/open-webui/Chart.yaml'
 
   release:
-    needs: semantic-release
+    #needs: semantic-release
     permissions:
       contents: write
       packages: write
