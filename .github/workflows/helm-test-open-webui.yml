@@ -1,0 +1,52 @@
+name: Check Open WebUI Helm Charts (open-webui)
+
+on:
+  pull_request:
+    paths:
+      - "charts/open-webui/**"
+  push:
+    paths:
+      - "charts/open-webui/**"
+
+jobs:
+  lint-chart:
+    name: Lint Helm Chart
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Lint open-webui Helm Chart
+        run: |
+          helm lint ./charts/open-webui
+
+  test-deploy:
+    name: Test Chart Deployment
+    runs-on: ubuntu-latest
+    needs: lint-chart
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Set up KinD Cluster
+        uses: helm/kind-action@v1
+
+      - name: Template open-webui Helm Chart
+        run: |
+          helm template open-webui ./charts/open-webui \
+            --namespace test-namespace --create-namespace > open-webui.yaml
+
+      - name: Verify open-webui
+        run: |
+          kubectl apply -f open-webui.yaml
