@@ -41,11 +41,11 @@ spec:
         {{- end }}
         command: ['sh', '-c', 'cp -R -n /app/backend/data/* /tmp/app-data/']
         {{- with .Values.containerSecurityContext }}
-        {{- with .Values.copyAppData.resources }}
-        resources: {{- toYaml . | nindent 10 }}
-        {{- end }}
         securityContext:
           {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.copyAppData.resources }}
+        resources: {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
         - name: data
