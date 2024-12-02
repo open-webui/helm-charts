@@ -27,7 +27,11 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       enableServiceLinks: false
-      automountServiceAccountToken: false
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken | default false }}
+      {{- if .Values.serviceAccount.enable }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipelines.name" .) }}
+      {{- end }}
+
       containers:
       - name: {{ .Chart.Name }}
         {{- with .Values.image }}
