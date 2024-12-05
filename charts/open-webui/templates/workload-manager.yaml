@@ -6,6 +6,7 @@ kind: Deployment
 {{- end }}
 metadata:
   name: {{ include "open-webui.name" . }}
+  namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
   {{- with .Values.annotations }}
