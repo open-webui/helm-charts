@@ -49,4 +49,6 @@ jobs:
 
       - name: Verify open-webui
         run: |
-          kubectl apply -f open-webui.yaml
+          kubectl create namespace test-namespace
+          kubectl apply --namespace test-namespace -f open-webui.yaml
+          kubectl wait --namespace test-namespace pod/open-webui-0 --for=condition=Ready --timeout=600s
