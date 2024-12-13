@@ -21,6 +21,15 @@ spec:
   selector:
     matchLabels:
       {{- include "open-webui.selectorLabels" . | nindent 6 }}
+  {{- if .Values.strategy }}
+  {{- if .Values.persistence.enabled }}
+  updateStrategy:
+    {{- toYaml .Values.strategy | nindent 4 }}
+  {{- else }}
+  strategy:
+    {{- toYaml .Values.strategy | nindent 4 }}
+  {{- end }}
+  {{- end }}
   template:
     metadata:
       labels:
