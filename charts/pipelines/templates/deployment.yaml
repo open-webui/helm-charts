@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "pipelines.name" . }}
+  namespace: {{ include "pipelines.namespace" . }}
   labels:
     {{- include "pipelines.labels" . | nindent 4 }}
   {{- with .Values.annotations }}
@@ -17,6 +18,9 @@ spec:
     metadata:
       labels:
         {{- include "pipelines.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -31,7 +35,6 @@ spec:
       {{- if .Values.serviceAccount.enable }}
       serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipelines.name" .) }}
       {{- end }}
-
       containers:
       - name: {{ .Chart.Name }}
         {{- with .Values.image }}
