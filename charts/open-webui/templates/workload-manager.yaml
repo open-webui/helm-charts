@@ -66,6 +66,9 @@ spec:
           {{- if .Values.persistence.subPath }}
           subPath: {{ .Values.persistence.subPath }}
           {{- end }}
+          {{- if .Values.persistence.subPathExpr }}
+          subPath: {{ .Values.persistence.subPathExpr }}
+          {{- end }}
         {{- with .Values.volumeMounts.initContainer }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -99,6 +102,9 @@ spec:
           mountPath: /app/backend/data
           {{- if .Values.persistence.subPath }}
           subPath: {{ .Values.persistence.subPath }}
+          {{- end }}
+          {{- if .Values.persistence.subPathExpr }}
+          subPath: {{ .Values.persistence.subPathExpr }}
           {{- end }}
         {{- with .Values.volumeMounts.container }}
         {{- toYaml . | nindent 8 }}

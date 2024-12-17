@@ -81,6 +81,9 @@ persistence:
   existingClaim: ""
   # -- Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty.
   subPath: ""
+  # -- Using subdirectory with expanded environment variables. Useful when using multiple replicas. In this case, do not use a subPath.
+  subPathExpr: ""
+  # subPathExpr: '$(POD_NAME)'
   # -- If using multiple replicas, you must update accessModes to ReadWriteMany
   accessModes:
     - ReadWriteOnce
