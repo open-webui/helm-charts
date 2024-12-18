@@ -28,6 +28,8 @@ jobs:
     name: Test Chart Deployment
     runs-on: ubuntu-latest
     needs: lint-chart
+    env:
+      NAMESPACE: test-namespace
 
     steps:
       - name: Checkout Code
@@ -45,10 +47,22 @@ jobs:
       - name: Template open-webui Helm Chart
         run: |
           helm template open-webui ./charts/open-webui \
-            --namespace test-namespace --create-namespace > open-webui.yaml
+            --namespace "$NAMESPACE" > open-webui.yaml
+
+      - name: Ensure test namespace
+        run: |
+          # Create the namespace
+          kubectl create namespace "$NAMESPACE"
+
+          # Wait for the namespace to be ready
+          for i in {1..30}; do
+            kubectl get namespace "$NAMESPACE" --no-headers && break || sleep 2
+            echo "Waiting for namespace '$NAMESPACE' to become available..."
+          done
+
+          echo "Namespace '$NAMESPACE' is now available."
 
       - name: Verify open-webui
         run: |
-          kubectl create namespace test-namespace
           kubectl apply --namespace test-namespace -f open-webui.yaml
           kubectl wait --namespace test-namespace pod/open-webui-0 --for=condition=Ready --timeout=600s
