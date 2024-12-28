@@ -59,6 +59,37 @@ imagePullSecrets: []
 # imagePullSecrets:
 # - name: myRegistryKeySecretName
 
+# -- Probe for liveness of the Open WebUI container
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
+livenessProbe: {}
+# livenessProbe:
+#   httpGet:
+#     path: /health
+#     port: http
+#   failureThreshold: 1
+#   periodSeconds: 10
+
+# -- Probe for readiness of the Open WebUI container
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
+readinessProbe: {}
+# readinessProbe:
+#   httpGet:
+#     path: /health/db
+#     port: http
+#   failureThreshold: 1
+#   periodSeconds: 10
+
+# -- Probe for startup of the Open WebUI container
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
+startupProbe: {}
+# startupProbe:
+#   httpGet:
+#     path: /health
+#     port: http
+#   initialDelaySeconds: 30
+#   periodSeconds: 5
+#   failureThreshold: 20
+
 resources: {}
 
 copyAppData:
