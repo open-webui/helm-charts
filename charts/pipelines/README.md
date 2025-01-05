@@ -1,6 +1,6 @@
 # pipelines
 
-![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
+![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
 Pipelines: UI-Agnostic OpenAI API Plugin Framework
 
@@ -46,6 +46,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | ingress.host | string | `""` |  |
 | ingress.tls | bool | `false` |  |
 | nameOverride | string | `""` |  |
+| namespaceOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
@@ -55,6 +56,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | persistence.size | string | `"2Gi"` |  |
 | persistence.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` |  |
+| podLabels | object | `{}` |  |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | service.annotations | object | `{}` |  |
@@ -64,6 +66,8 @@ helm upgrade --install open-webui open-webui/pipelines
 | service.nodePort | string | `""` |  |
 | service.port | int | `9099` |  |
 | service.type | string | `"ClusterIP"` |  |
+| serviceAccount.automountServiceAccountToken | bool | `false` |  |
+| serviceAccount.enable | bool | `true` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 
 ----------------------------------------------
