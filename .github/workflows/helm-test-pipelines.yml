@@ -1,6 +1,7 @@
 name: Check Open WebUI Helm Charts (pipelines)
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - "charts/pipelines/**"
@@ -49,5 +50,7 @@ jobs:
 
       - name: Verify pipelines
         run: |
-          kubectl apply -f pipelines.yaml
-
+          kubectl create namespace test-namespace
+          kubectl apply --namespace test-namespace -f pipelines.yaml
+          PIPELINE_POD=$(kubectl get --namespace test-namespace pod -L app.kubernetes.io/component=pipelines -o jsonpath='{.items[*].metadata.name}')
+          kubectl wait --namespace test-namespace pod/${PIPELINE_POD} --for=condition=Ready --timeout=600s
