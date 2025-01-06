@@ -2,7 +2,7 @@
 
 ![Version: 0.0.4](https://img.shields.io/badge/Version-0.0.4-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
-Pipelines: UI-Agnostic OpenAI API Plugin Framework
+Pipelines: UI-Agnostic OpenAI API Plugin Framework 🚀
 
 **Homepage:** <https://github.com/open-webui/pipelines>
 
