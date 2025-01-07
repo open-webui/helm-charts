@@ -32,6 +32,43 @@ tika:
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
 ollamaUrls: []
 
+websocket:
+  # -- Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT`
+  enabled: false
+  # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
+  manager: redis
+  # -- Specifies the URL of the Redis instance for websocket communication
+  url: redis://websocket-redis:6379/0
+  # -- Deploys a redis
+  redis:
+    # -- Enable redis installation
+    enabled: true
+    # -- Redis name
+    name: websocket-redis
+    # -- Redis labels
+    labels: {}
+    # -- Redis annotations
+    annotations: {}
+    # -- Redis image
+    image:
+      repository: redis
+      tag: 7.4.2-alpine3.21
+      pullPolicy: IfNotPresent
+    # -- Redis service
+    service:
+      # -- Redis container/target port
+      containerPort: 6379
+      # -- Redis service type
+      type: ClusterIP
+      # -- Redis service labels
+      labels: {}
+      # -- Redis service annotations
+      annotations: {}
+      # -- Redis service port
+      port: 6379
+      # -- Redis service node port
+      nodePort: ""
+
 # -- Value of cluster domain
 clusterDomain: cluster.local
 
