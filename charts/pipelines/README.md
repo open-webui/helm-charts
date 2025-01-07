@@ -35,6 +35,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
 | extraEnvVars | list | `[{"name":"PIPELINES_URLS","value":"https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"}]` | Additional environments variables on the output Deployment definition. These are used to pull initial Pipeline files, and help configure Pipelines with required values (e.g. Langfuse API keys) |
 | extraEnvVars[0] | object | `{"name":"PIPELINES_URLS","value":"https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"}` | Example pipeline to pull and load on deployment startup, see current pipelines here: https://github.com/open-webui/pipelines/blob/main/examples |
+| extraResources | list | `[]` | Extra resources to deploy with Open WebUI Pipelines |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/open-webui/pipelines"` |  |
 | image.tag | string | `"main"` |  |
