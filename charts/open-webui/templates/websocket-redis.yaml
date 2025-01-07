@@ -16,25 +16,27 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "websocket.redis.selectorLabels" . | nindent 4 }}
+      {{- include "websocket.redis.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "websocket.redis.labels" . | nindent 4 }}
+        {{- include "websocket.redis.labels" . | nindent 8 }}
     spec:
       containers:
       - name: {{ .Values.websocket.redis.name }}
         image: "{{ .Values.websocket.redis.image.repository }}:{{ .Values.websocket.redis.image.tag }}"
         imagePullPolicy: {{ .Values.websocket.redis.image.pullPolicy }}
+        {{- with .Values.websocket.redis.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.websocket.redis.args }}
+        args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         ports:
         - name: http
-          containerPort: {{ .Values.websocket.redis.port }}
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-          readOnlyRootFilesystem: true
+          containerPort: {{ .Values.websocket.redis.service.containerPort }}
 ---
 apiVersion: v1
 kind: Service
