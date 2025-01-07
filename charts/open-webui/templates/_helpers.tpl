@@ -159,7 +159,7 @@ Create selector labels to include on chart all websocket resources
 */}}
 {{- define "websocket.redis.selectorLabels" -}}
 {{ include "base.selectorLabels" . }}
-app.kubernetes.io/component: {{ .Valueswebsocket.redis.name }}
+app.kubernetes.io/component: {{ .Values.websocket.redis.name }}
 {{- end }}
 
 {{/*
