@@ -37,6 +37,10 @@ spec:
         ports:
         - name: http
           containerPort: {{ .Values.websocket.redis.service.containerPort }}
+        {{- with .Values.websocket.redis.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
 ---
 apiVersion: v1
 kind: Service
