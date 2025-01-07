@@ -9,10 +9,10 @@ metadata:
     {{- with .Values.websocket.redis.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.websocket.redis.annotations }}
   annotations:
+    {{- with .Values.websocket.redis.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
 spec:
   selector:
     matchLabels:
@@ -52,10 +52,10 @@ metadata:
     {{- with .Values.websocket.redis.labels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.websocket.redis.service.annotations }}
   annotations:
+    {{- with .Values.websocket.redis.service.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
 spec:
   selector:
     {{- include "websocket.redis.selectorLabels" . | nindent 4 }}
