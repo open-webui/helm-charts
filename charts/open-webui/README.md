@@ -80,7 +80,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 | redis-cluster.enabled | bool | `false` | Enable Redis installation |
 | redis-cluster.fullnameOverride | string | `"open-webui-redis"` | Redis cluster name (recommended to be 'open-webui-redis') |
-| redis-cluster.auth.enabled | bool | `false` | Enable Redis authentication |
+| redis-cluster.auth.enabled | bool | `false` | Enable Redis authentication. For your security, we strongly suggest that you switch to 'true' |
 | redis-cluster.replica.replicaCount | int | `3` | Number of Redis replica instances |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
