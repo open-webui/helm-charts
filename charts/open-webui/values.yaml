@@ -37,7 +37,7 @@ websocket:
   enabled: false
   # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
   manager: redis
-  # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://<host>:<port>/<db>`
+  # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
   url: redis://open-webui-redis:6379/0
   # -- Deploys a redis
   redis:
@@ -74,6 +74,22 @@ websocket:
       port: 6379
       # -- Redis service node port. Valid only when type is `NodePort`
       nodePort: ""
+
+# -- Deploys a Redis cluster with subchart 'redis' from bitnami
+redis-cluster:
+  # -- Enable Redis installation
+  enabled: false
+  # -- Redis cluster name (recommended to be 'open-webui-redis')
+  # - In this case, redis url will be 'redis://open-webui-redis-headless:6379/0' or 'redis://[:<password>@]open-webui-redis-headless:6379/0'
+  fullnameOverride: open-webui-redis
+  # -- Redis Authentication
+  auth:
+    # -- Enable Redis authentication (disabled by default)
+    enabled: false
+  # -- Replica configuration for the Redis cluster
+  replica:
+    # -- Number of Redis replica instances
+    replicaCount: 3
 
 # -- Value of cluster domain
 clusterDomain: cluster.local
