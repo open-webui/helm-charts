@@ -1,0 +1,77 @@
+{{- `
+🎉 Welcome to Open WebUI!!
+  ___                    __        __   _     _   _ ___ 
+ / _ \ _ __   ___ _ __  \ \      / /__| |__ | | | |_ _|
+| | | | '_ \ / _ \ '_ \  \ \ /\ / / _ \ '_ \| | | || | 
+| |_| | |_) |  __/ | | |  \ V  V /  __/ |_) | |_| || | 
+ \___/| .__/ \___|_| |_|   \_/\_/ \___|_.__/ \___/|___|
+      |_|                                               
+` }}
+v{{ .Chart.AppVersion }} - building the best open-source AI user interface.
+ - Chart Version: v{{ .Chart.Version }}
+ - Project URL 1: {{ .Chart.Home }}
+ - Project URL 2: https://github.com/open-webui/open-webui
+ - Documentation: https://docs.openwebui.com/
+ - Chart URL: https://github.com/open-webui/helm-charts
+
+Open WebUI is a web-based user interface that works with Ollama, OpenAI, Claude 3, Gemini and more.
+This interface allows you to easily interact with local AI models.
+
+1. Deployment Information:
+  - Chart Name: {{ .Chart.Name }}
+  - Release Name: {{ .Release.Name }}
+  - Namespace: {{ .Release.Namespace }}
+
+2. Access the Application:
+{{- if contains "ClusterIP" .Values.service.type }}
+  Access via ClusterIP service:
+
+    export LOCAL_PORT=8080
+    export POD_NAME=$(kubectl get pods -n {{ .Release.Namespace }} -l "app.kubernetes.io/component={{ include "open-webui.name" . }}" -o jsonpath="{.items[0].metadata.name}")
+    export CONTAINER_PORT=$(kubectl get pod -n {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
+    kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME $LOCAL_PORT:$CONTAINER_PORT
+    echo "Visit http://127.0.0.1:$LOCAL_PORT to use your application"
+
+  Then, access the application at: http://127.0.0.1:$LOCAL_PORT or http://localhost:8080
+
+{{- else if contains "NodePort" .Values.service.type }}
+  Access via NodePort service:
+    export NODE_PORT=$(kubectl get -n {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "open-webui.name" . }})
+    export NODE_IP=$(kubectl get nodes -o jsonpath="{.items[0].status.addresses[0].address}")
+    echo http://$NODE_IP:$NODE_PORT
+
+{{- else if contains "LoadBalancer" .Values.service.type }}
+  Access via LoadBalancer service:
+  NOTE: It may take a few minutes for the LoadBalancer IP to be available.
+  NOTE: The external address format depends on your cloud provider:
+    - AWS: Will return a hostname (e.g., xxx.elb.amazonaws.com)
+    - GCP/Azure: Will return an IP address
+  You can watch the status by running:
+
+    kubectl get -n {{ .Release.Namespace }} svc {{ include "open-webui.name" . }} --watch
+    export EXTERNAL_IP=$(kubectl get -n {{ .Release.Namespace }} svc {{ include "open-webui.name" . }} -o jsonpath="{.status.loadBalancer.ingress[0].hostname:-.status.loadBalancer.ingress[0].ip}")
+    echo http://$EXTERNAL_IP:{{ .Values.service.port }}
+{{- end }}
+
+{{- if .Values.ingress.enabled }}
+
+  Ingress is enabled. Access the application at: http{{ if .Values.ingress.tls }}s{{ end }}://{{ .Values.ingress.host }}
+{{- end }}
+
+3. Useful Commands:
+  - Check deployment status:
+      helm status {{ .Release.Name }} -n {{ .Release.Namespace }}
+  
+  - Get detailed information:
+      helm get all {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+  - View logs:
+    {{- if .Values.persistence.enabled }}
+      kubectl logs -f statefulset/{{ include "open-webui.name" . }} -n {{ .Release.Namespace }}
+    {{- else }}
+      kubectl logs -f deployment/{{ include "open-webui.name" . }} -n {{ .Release.Namespace }}
+    {{- end }}
+
+4. Cleanup:
+  - Uninstall the deployment:
+      helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
