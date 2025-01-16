@@ -30,6 +30,8 @@
 
 - **Issues**: If you find any issues or have suggestions for improvements, please create a new issue in the repository before working on a Pull Request.
 
+- **Actions Updates**: If your Pull Request includes adding a new chart dependency, ensure to make the necessary updates to Github Actions to add the chart repo dependency, or else the release run will fail.
+
 ## Getting Help
 
 If you need any help or have questions about contributing, feel free to reach out to the maintainers of the repository.
