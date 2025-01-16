@@ -5,6 +5,55 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.4
+    created: "2025-01-16T21:39:28.428776417Z"
+    dependencies:
+    - condition: ollama.enabled
+      import-values:
+      - child: service
+        parent: ollama.service
+      name: ollama
+      repository: https://otwld.github.io/ollama-helm/
+      version: '>=0.24.0'
+    - condition: pipelines.enabled
+      import-values:
+      - child: service
+        parent: pipelines.service
+      name: pipelines
+      repository: https://helm.openwebui.com
+      version: '>=0.0.1'
+    - condition: tika.enabled
+      name: tika
+      repository: https://apache.jfrog.io/artifactory/tika
+      version: '>=2.9.0'
+    - alias: redis-cluster
+      condition: redis-cluster.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: '>=20.6.2'
+    description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions
+      \U0001F44B"
+    digest: ee6e582bb7b3aa6bb80dbe0d0bdbe26ca4cefbc6d832863afd4cad02f7626e68
+    home: https://www.openwebui.com/
+    icon: https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
+    keywords:
+    - llm
+    - chat
+    - web-ui
+    - open-webui
+    name: open-webui
+    sources:
+    - https://github.com/open-webui/helm-charts
+    - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+    - https://github.com/otwld/ollama-helm/
+    - https://hub.docker.com/r/ollama/ollama
+    - https://charts.bitnami.com/bitnami
+    urls:
+    - open-webui-5.4.0.tgz
+    version: 5.4.0
+  - annotations:
+      licenses: MIT
+    apiVersion: v2
+    appVersion: 0.5.4
     created: "2025-01-14T16:32:41.837843097Z"
     dependencies:
     - condition: ollama.enabled
@@ -2311,4 +2360,4 @@ entries:
     urls:
     - pipelines-0.0.1.tgz
     version: 0.0.1
-generated: "2025-01-14T16:32:41.838060501Z"
+generated: "2025-01-16T21:39:28.42897528Z"
