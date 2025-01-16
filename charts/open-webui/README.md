@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.1.1](https://img.shields.io/badge/Version-5.1.1-informational?style=flat-square) ![AppVersion: 0.5.4](https://img.shields.io/badge/AppVersion-0.5.4-informational?style=flat-square)
+![Version: 5.4.0](https://img.shields.io/badge/Version-5.4.0-informational?style=flat-square) ![AppVersion: 0.5.4](https://img.shields.io/badge/AppVersion-0.5.4-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -33,6 +33,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | Repository | Name | Version |
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
+| https://charts.bitnami.com/bitnami | redis-cluster(redis) | >=20.6.2 |
 | https://helm.openwebui.com | pipelines | >=0.0.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
@@ -79,9 +80,12 @@ helm upgrade --install open-webui open-webui/open-webui
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3}}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
+| redis-cluster.auth | object | `{"enabled":false}` | Redis Authentication |
+| redis-cluster.auth.enabled | bool | `false` | Enable Redis authentication (disabled by default). For your security, we strongly suggest that you switch to 'auth.enabled=true' |
 | redis-cluster.enabled | bool | `false` | Enable Redis installation |
-| redis-cluster.fullnameOverride | string | `"open-webui-redis"` | Redis cluster name (recommended to be 'open-webui-redis') |
-| redis-cluster.auth.enabled | bool | `false` | Enable Redis authentication. For your security, we strongly suggest that you switch to 'true' |
+| redis-cluster.fullnameOverride | string | `"open-webui-redis"` | Redis cluster name (recommended to be 'open-webui-redis') - In this case, redis url will be 'redis://open-webui-redis-master:6379/0' or 'redis://[:<password>@]open-webui-redis-master:6379/0' |
+| redis-cluster.replica | object | `{"replicaCount":3}` | Replica configuration for the Redis cluster |
 | redis-cluster.replica.replicaCount | int | `3` | Number of Redis replica instances |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
@@ -99,23 +103,24 @@ helm upgrade --install open-webui open-webui/open-webui
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
-| websocket.url | string | `"redis://open-webui-redis:6379/0"` | Specifies the URL of the Redis instance for websocket communication. Template with `redis://<host>:<port>/<db>` |
-| websocket.redis.enabled | bool | `true` | Enables redis installation |
-| websocket.redis.name | string | `"open-webui-redis"` | Redis name |
-| websocket.redis.labels | object | `{}` | Redis labels |
+| websocket.redis | object | `{"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","resources":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}}` | Deploys a redis |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
-| websocket.redis.image.repository | string | `"redis"` | URL of the Redis image. Shorten name `redis` stands for `docker.io/library/redis` |
-| websocket.redis.image.tag | string | `"7.4.2-alpine3.21"` | Tag of the the Redis image |
-| websocket.redis.image.pullPolicy | string | `"IfNotPresent"` | Pull policy of the the Redis image |
-| websocket.redis.command | list | `[]` | Override commands of the the Redis container |
-| websocket.redis.args | list | `[]` | Override arguments of the the Redis container |
-| websocket.redis.resources | object | `{}` | Resources of the the Redis container |
-| websocket.service.containerPort | int | `6379` | Redis service port |
-| websocket.service.type | string | `"ClusterIP"` | Redis service type |
-| websocket.service.labels | object | `{}` | Redis service labels |
-| websocket.service.annotations | object | `{}` | Redis service annotations |
-| websocket.service.port | int | `6379` | Redis service port |
-| websocket.service.nodePort | string | `""` | Redis service node port. Valid only when type is `NodePort` |
+| websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
+| websocket.redis.command | list | `[]` | Redis command (overrides default) |
+| websocket.redis.enabled | bool | `true` | Enable redis installation |
+| websocket.redis.image | object | `{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"}` | Redis image |
+| websocket.redis.labels | object | `{}` | Redis labels |
+| websocket.redis.name | string | `"open-webui-redis"` | Redis name |
+| websocket.redis.resources | object | `{}` | Redis resources |
+| websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}` | Redis service |
+| websocket.redis.service.annotations | object | `{}` | Redis service annotations |
+| websocket.redis.service.containerPort | int | `6379` | Redis container/target port |
+| websocket.redis.service.labels | object | `{}` | Redis service labels |
+| websocket.redis.service.nodePort | string | `""` | Redis service node port. Valid only when type is `NodePort` |
+| websocket.redis.service.port | int | `6379` | Redis service port |
+| websocket.redis.service.type | string | `"ClusterIP"` | Redis service type |
+| websocket.url | string | `"redis://open-webui-redis:6379/0"` | Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>` |
+
 ----------------------------------------------
 
 Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs/).
