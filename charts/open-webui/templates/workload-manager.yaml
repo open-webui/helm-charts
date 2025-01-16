@@ -135,6 +135,14 @@ spec:
         - name: "TIKA_SERVER_URL"
           value: http://{{ .Chart.Name }}-tika:9998
         {{- end }}
+        {{- if .Values.websocket.enabled }}
+        - name: "ENABLE_WEBSOCKET_SUPPORT"
+          value: "True"
+        - name: "WEBSOCKET_MANAGER"
+          value: {{ .Values.websocket.manager | default "redis" | quote }}
+        - name: "WEBSOCKET_REDIS_URL"
+          value: {{ .Values.websocket.url | quote }}
+        {{- end }}
         tty: true
       {{- with .Values.nodeSelector }}
       nodeSelector:

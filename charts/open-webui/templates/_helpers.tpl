@@ -153,3 +153,19 @@ Create the service endpoint to use for Pipelines if the subchart is used
 {{- printf "http://%s.%s.svc.%s:%s" (include "pipelines.name" .) (.Release.Namespace) $clusterDomain $pipelinesServicePort }}
 {{- end }}
 {{- end }}
+
+{{/*
+Create selector labels to include on chart all websocket resources
+*/}}
+{{- define "websocket.redis.selectorLabels" -}}
+{{ include "base.selectorLabels" . }}
+app.kubernetes.io/component: {{ .Values.websocket.redis.name }}
+{{- end }}
+
+{{/*
+Create labels to include on chart all websocket resources
+*/}}
+{{- define "websocket.redis.labels" -}}
+{{ include "base.labels" . }}
+{{ include "websocket.redis.selectorLabels" . }}
+{{- end }}

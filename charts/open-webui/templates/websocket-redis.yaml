@@ -1,0 +1,71 @@
+{{- if and .Values.websocket.enabled .Values.websocket.redis.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.websocket.redis.name }}
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "websocket.redis.labels" . | nindent 4 }}
+    {{- with .Values.websocket.redis.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.websocket.redis.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "websocket.redis.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "websocket.redis.labels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.websocket.redis.name }}
+        image: "{{ .Values.websocket.redis.image.repository }}:{{ .Values.websocket.redis.image.tag }}"
+        imagePullPolicy: {{ .Values.websocket.redis.image.pullPolicy }}
+        {{- with .Values.websocket.redis.command }}
+        command:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.websocket.redis.args }}
+        args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.websocket.redis.service.containerPort }}
+        {{- with .Values.websocket.redis.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.websocket.redis.name }}
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "websocket.redis.labels" . | nindent 4 }}
+    {{- with .Values.websocket.redis.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  annotations:
+    {{- with .Values.websocket.redis.service.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    {{- include "websocket.redis.selectorLabels" . | nindent 4 }}
+  type: {{ .Values.websocket.redis.service.type | default "ClusterIP" }}
+  ports:
+  - protocol: TCP
+    name: http
+    port: {{ .Values.websocket.redis.service.port }}
+    targetPort: http
+    {{- if .Values.websocket.redis.service.nodePort }}
+    nodePort: {{ .Values.websocket.redis.service.nodePort | int }}
+    {{- end }}
+{{- end }}
