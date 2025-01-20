@@ -120,10 +120,11 @@ spec:
         - name: "ENABLE_OLLAMA_API"
           value: "False"
         {{- end }}
-        - name: "OPENAI_API_BASE_URL"
         {{- if .Values.pipelines.enabled }}
+        - name: "OPENAI_API_BASE_URL"
           value: {{ include "pipelines.serviceEndpoint" . }}
         {{- else if .Values.openaiBaseApiUrl }}
+        - name: "OPENAI_API_BASE_URL"
           value: {{ .Values.openaiBaseApiUrl | quote }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
