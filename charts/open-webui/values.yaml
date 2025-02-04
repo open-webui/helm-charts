@@ -158,13 +158,12 @@ ingress:
   enabled: true
   class: ""            # update if needed for your ingress controller
   annotations: 
-    kubernetes.io/ingress.class: "gce"   # recommended for GKE; adjust if using a different ingress controller
-    kubernetes.io/ingress.global-static-ip-name: "human-learning"  # Match your reserved IP name    
+    kubernetes.io/ingress.class: "gce"
+    # kubernetes.io/ingress.global-static-ip-name: "human-learning"   # removed static IP mapping
     # networking.gke.io/managed-certificates: "humanlearning-me-cert" 
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    # nginx.ingress.kubernetes.io/rewrite-target: /  # for use with ingress routing
-  host: "humanlearning.me"    # update with your domain; leave empty if not using ingress routing
-  # host: ""    # update with your domain; leave empty if not using ingress routing
+    # nginx.ingress.kubernetes.io/rewrite-target: / 
+  host: "home-market.humanlearning.me"  # updated host
   additionalHosts: []
   tls: false
   existingSecret: ""
