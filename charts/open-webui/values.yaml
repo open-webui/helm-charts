@@ -157,14 +157,14 @@ copyAppData:
 ingress:
   enabled: true
   class: ""            # update if needed for your ingress controller
-  annotations: {}
-    # kubernetes.io/ingress.class: "gce"   # recommended for GKE; adjust if using a different ingress controller
-    # kubernetes.io/ingress.global-static-ip-name: "human-learning"  # Match your reserved IP name    
+  annotations: 
+    kubernetes.io/ingress.class: "gce"   # recommended for GKE; adjust if using a different ingress controller
+    kubernetes.io/ingress.global-static-ip-name: "human-learning"  # Match your reserved IP name    
     # networking.gke.io/managed-certificates: "humanlearning-me-cert" 
     # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     # nginx.ingress.kubernetes.io/rewrite-target: /  # for use with ingress routing
-  # host: "humanlearning.me"    # update with your domain; leave empty if not using ingress routing
-  host: ""    # update with your domain; leave empty if not using ingress routing
+  host: "humanlearning.me"    # update with your domain; leave empty if not using ingress routing
+  # host: ""    # update with your domain; leave empty if not using ingress routing
   additionalHosts: []
   tls: false
   existingSecret: ""
@@ -197,7 +197,7 @@ topologySpreadConstraints: []
 
 # -- Service values to expose Open WebUI pods to cluster
 service:
-  type: ClusterIP   # type: LoadBalancer   # changed from ClusterIP to LoadBalancer for external access on GKE
+  type: LoadBalancer   # changed from ClusterIP to LoadBalancer for external access on GKE
   annotations: {}
   port: 80
   containerPort: 8080
