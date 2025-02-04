@@ -27,14 +27,14 @@ pipelines:
 
 tika:
   # -- Automatically install Apache Tika to extend Open WebUI
-  enabled: false
+  enabled: true
 
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
 ollamaUrls: []
 
 websocket:
   # -- Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT`
-  enabled: false
+  enabled: true
   # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
   manager: redis
   # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
@@ -78,7 +78,7 @@ websocket:
 # -- Deploys a Redis cluster with subchart 'redis' from bitnami
 redis-cluster:
   # -- Enable Redis installation
-  enabled: false
+  enabled: true
   # -- Redis cluster name (recommended to be 'open-webui-redis')
   # - In this case, redis url will be 'redis://open-webui-redis-master:6379/0' or 'redis://[:<password>@]open-webui-redis-master:6379/0'
   fullnameOverride: open-webui-redis
@@ -155,15 +155,20 @@ copyAppData:
   resources: {}
 
 ingress:
-  enabled: false
-  class: ""
-  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
-  # nginx.ingress.kubernetes.io/rewrite-target: /
+  enabled: true
+  class: ""            # update if needed for your ingress controller
   annotations: {}
-  host: ""
+    # kubernetes.io/ingress.class: "gce"   # recommended for GKE; adjust if using a different ingress controller
+    # kubernetes.io/ingress.global-static-ip-name: "human-learning"  # Match your reserved IP name    
+    # networking.gke.io/managed-certificates: "humanlearning-me-cert" 
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/rewrite-target: /  # for use with ingress routing
+  # host: "humanlearning.me"    # update with your domain; leave empty if not using ingress routing
+  host: ""    # update with your domain; leave empty if not using ingress routing
   additionalHosts: []
   tls: false
   existingSecret: ""
+
 persistence:
   enabled: true
   size: 2Gi
@@ -192,7 +197,7 @@ topologySpreadConstraints: []
 
 # -- Service values to expose Open WebUI pods to cluster
 service:
-  type: ClusterIP
+  type: ClusterIP   # type: LoadBalancer   # changed from ClusterIP to LoadBalancer for external access on GKE
   annotations: {}
   port: 80
   containerPort: 8080
