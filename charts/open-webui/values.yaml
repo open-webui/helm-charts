@@ -7,17 +7,23 @@ ollama:
   # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
   fullnameOverride: "open-webui-ollama"
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
-  # ollama:
-  #   gpu:
-  #     enabled: true
-  #     type: 'nvidia'
-  #     number: 1
-  #   models:
-  #     - llama3
+  gpu:
+    enabled: false        # CPU only
+  models:
+    pull:  
+      - deepseek-r1:1.5b    # use specified model
+      # - phi4
+      # - llama3.2:1b
   # runtimeClassName: nvidia
-  # persistentVolume:
-  #   enabled: true
-  #   volumeName: "example-pre-existing-pv-created-by-smb-csi"
+  persistentVolume:
+    enabled: true
+  resources:
+    requests:
+      memory: "2Gi"
+    limits:
+      memory: "4Gi"
+
+
 
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
@@ -150,6 +156,14 @@ startupProbe: {}
 #   failureThreshold: 20
 
 resources: {}
+  # requests:
+  #   cpu: "1"
+  #   memory: "2Gi"
+  #   ephemeral-storage: "2Gi"    # increased from default 1Gi
+  # limits:
+  #   cpu: "2"
+  #   memory: "4Gi"
+  #   ephemeral-storage: "4Gi"
 
 copyAppData:
   resources: {}
@@ -170,9 +184,10 @@ ingress:
 
 persistence:
   enabled: true
-  size: 2Gi
+  size: 2Gi                # updated to match extraResources PVC size
+  # existingClaim: "home-market-pv"  # use existing PVC "home-market-pv"
   # -- Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one
-  existingClaim: ""
+  # existingClaim: ""
   # -- Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty.
   subPath: ""
   # -- If using multiple replicas, you must update accessModes to ReadWriteMany
