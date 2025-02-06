@@ -7,6 +7,10 @@ ollama:
   # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
   fullnameOverride: "open-webui-ollama"
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
+  #   gpu:
+  #     enabled: true
+  #     type: 'nvidia'
+  #     number: 1  
   gpu:
     enabled: false        # CPU only
   models:
@@ -156,37 +160,29 @@ startupProbe: {}
 #   failureThreshold: 20
 
 resources: {}
-  # requests:
-  #   cpu: "1"
-  #   memory: "2Gi"
-  #   ephemeral-storage: "2Gi"    # increased from default 1Gi
-  # limits:
-  #   cpu: "2"
-  #   memory: "4Gi"
-  #   ephemeral-storage: "4Gi"
 
 copyAppData:
   resources: {}
 
 managedCertificate:
-  enabled: true
+  enabled: false
   name: "mydomain-chat-cert"  # You can override this name if needed
   domains:
-    - chat.humanlearning.me
+    - chat.myprivatedomain.com  # change to your domain
 
 ingress:
   enabled: true
   class: ""            # update if needed for your ingress controller
   annotations: 
     kubernetes.io/ingress.class: "gce"
-    kubernetes.io/ingress.global-static-ip-name: "human-learning"   #  static IP mapping
+    kubernetes.io/ingress.global-static-ip-name: "my-static-ip"   # you need to create this IP manually in gke
     # Force HTTP to redirect to HTTPS
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.humanlearning.me"
-    networking.gke.io/managed-certificates: "humanlearning-me-cert"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.myprivatedomain.com" # update to your  host
+    networking.gke.io/managed-certificates: "mydomain-chat-cert"
     # nginx.ingress.kubernetes.io/rewrite-target: / 
-  host: "chat.humanlearning.me"  # updated host
+  host: "chat.myprivatedomain.com"  # update to your  host
   additionalHosts: []
   tls: false
   existingSecret: ""
@@ -194,9 +190,8 @@ ingress:
 persistence:
   enabled: true
   size: 2Gi                # updated to match extraResources PVC size
-  # existingClaim: "home-market-pv"  # use existing PVC "home-market-pv"
   # -- Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one
-  # existingClaim: ""
+  existingClaim: ""
   # -- Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty.
   subPath: ""
   # -- If using multiple replicas, you must update accessModes to ReadWriteMany
