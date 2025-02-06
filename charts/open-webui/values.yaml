@@ -109,7 +109,7 @@ strategy: {}
 # -- Open WebUI image tags can be found here: https://github.com/open-webui/open-webui
 image:
   repository: ghcr.io/open-webui/open-webui
-  tag: ""
+  tag: "latest"
   pullPolicy: "IfNotPresent"
 
 serviceAccount:
@@ -168,16 +168,25 @@ resources: {}
 copyAppData:
   resources: {}
 
+managedCertificate:
+  enabled: true
+  name: "mydomain-chat-cert"  # You can override this name if needed
+  domains:
+    - chat.humanlearning.me
+
 ingress:
   enabled: true
   class: ""            # update if needed for your ingress controller
   annotations: 
     kubernetes.io/ingress.class: "gce"
-    # kubernetes.io/ingress.global-static-ip-name: "human-learning"   # removed static IP mapping
-    # networking.gke.io/managed-certificates: "humanlearning-me-cert" 
-    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.global-static-ip-name: "human-learning"   #  static IP mapping
+    # Force HTTP to redirect to HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.humanlearning.me"
+    networking.gke.io/managed-certificates: "humanlearning-me-cert"
     # nginx.ingress.kubernetes.io/rewrite-target: / 
-  host: "home-market.humanlearning.me"  # updated host
+  host: "chat.humanlearning.me"  # updated host
   additionalHosts: []
   tls: false
   existingSecret: ""
@@ -293,3 +302,4 @@ extraResources:
   #     name: example-configmap
   #   data:
   #     example-key: example-value
+
