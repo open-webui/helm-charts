@@ -113,19 +113,30 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-        {{- if or .Values.ollamaUrls .Values.ollama.enabled }}
+        {{- if .Values.ollamaUrlsFromExtraEnv}}
+        {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
         - name: "OLLAMA_BASE_URLS"
           value: {{ include "ollamaBaseUrls" . | quote }}
         {{- else }}
         - name: "ENABLE_OLLAMA_API"
           value: "False"
         {{- end }}
-        {{- if .Values.pipelines.enabled }}
-        - name: "OPENAI_API_BASE_URL"
-          value: {{ include "pipelines.serviceEndpoint" . }}
-        {{- else if .Values.openaiBaseApiUrl }}
+        {{- if .Values.openaiBaseApiUrl }}
+        # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
         - name: "OPENAI_API_BASE_URL"
           value: {{ .Values.openaiBaseApiUrl | quote }}
+        {{- else if and (not .Values.openaiBaseApiUrls) .Values.pipelines.enabled }}
+        # If Pipelines is enabled and no OpenAI API value is set, set OPENAI_API_BASE_URL to the Pipelines server endpoint 
+        - name: "OPENAI_API_BASE_URL"
+          value: {{ include "pipelines.serviceEndpoint" . | quote }}
+        {{- else if and .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
+        # If OpenAI API value(s) set and Pipelines is enabled, use OPENAI_API_BASE_URLS to support all the endpoints in the chart
+        - name: "OPENAI_API_BASE_URLS"
+          value: {{ toJson .Values.openaiBaseApiUrls | quote }}
+        {{- else if and (not .Values.pipelines.enabled) (kindIs "slice" .Values.openaiBaseApiUrls) (gt (len .Values.openaiBaseApiUrls) 1) }}
+        # If Pipelines is disabled and multiple OpenAI API URLs are set, use OPENAI_API_BASE_URLS
+        - name: "OPENAI_API_BASE_URLS"
+          value: {{ toJson .Values.openaiBaseApiUrls | quote }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- toYaml .Values.extraEnvVars | nindent 8 }}
