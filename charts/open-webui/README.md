@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.10.0](https://img.shields.io/badge/Version-5.10.0-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 5.11.0](https://img.shields.io/badge/Version-5.11.0-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -12,6 +12,7 @@ Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 * <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
 * <https://github.com/otwld/ollama-helm/>
 * <https://hub.docker.com/r/ollama/ollama>
+* <https://charts.bitnami.com/bitnami>
 
 ## Installing
 
@@ -65,6 +66,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
 | ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
+| ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
 | openaiBaseApiUrl | string | `""` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
