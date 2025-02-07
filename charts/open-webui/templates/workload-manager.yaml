@@ -121,10 +121,10 @@ spec:
           value: "False"
         {{- end }}
         - name: "OPENAI_API_BASE_URL"
-        {{- if .Values.pipelines.enabled }}
-          value: {{ include "pipelines.serviceEndpoint" . }}
-        {{- else if .Values.openaiBaseApiUrl }}
+        {{- if .Values.openaiBaseApiUrl }}
           value: {{ .Values.openaiBaseApiUrl | quote }}
+        {{- else if .Values.pipelines.enabled }}
+          value: {{ include "pipelines.serviceEndpoint" . }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- toYaml .Values.extraEnvVars | nindent 8 }}
