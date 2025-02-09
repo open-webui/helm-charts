@@ -3,7 +3,7 @@ namespaceOverride: ""
 
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
-  enabled: true
+  enabled: false
   # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
   fullnameOverride: "open-webui-ollama"
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
@@ -21,7 +21,7 @@ ollama:
 
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
-  enabled: true
+  enabled: false
   # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
   extraEnvVars: []
 
@@ -155,25 +155,25 @@ copyAppData:
   resources: {}
 
 managedCertificate:
-  enabled: false
+  enabled: true
   name: "mydomain-chat-cert"  # You can override this name if needed
   domains:
     - chat.example.com # update to your real domain
 
 ingress:
-  enabled: false
+  enabled: true
   class: ""
   # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:  
-  annotations: {}
-  #   # Example for GKE Ingress
-  #   kubernetes.io/ingress.class: "gce"
-  #   kubernetes.io/ingress.global-static-ip-name: "open-webui-external-ip"   #  you need to create this address in GCP console
-  #   # Force HTTP to redirect to HTTPS
-  #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-  #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
-  #   nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
-  #   networking.gke.io/managed-certificates: "mydomain-chat-cert"
-  #   # nginx.ingress.kubernetes.io/rewrite-target: / 
+  annotations: 
+    # Example for GKE Ingress
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "open-webui-external-ip"   #  you need to create this address in GCP console
+    # Force HTTP to redirect to HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
+    networking.gke.io/managed-certificates: "mydomain-chat-cert"
+    # nginx.ingress.kubernetes.io/rewrite-target: / 
   host: "chat.example.com"  # update to your real domain 
   additionalHosts: []
   tls: false
@@ -206,7 +206,7 @@ topologySpreadConstraints: []
 
 # -- Service values to expose Open WebUI pods to cluster
 service:
-  type: ClusterIP
+  type: LoadBalancer   # changed from ClusterIP to LoadBalancer for external access on GKE
   annotations: {}
   port: 80
   containerPort: 8080
