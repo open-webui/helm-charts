@@ -3,7 +3,7 @@ namespaceOverride: ""
 
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
-  enabled: true
+  enabled: false
   # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
   fullnameOverride: "open-webui-ollama"
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
@@ -21,7 +21,7 @@ ollama:
 
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
-  enabled: true
+  enabled: false
   # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
   extraEnvVars: []
 
@@ -206,7 +206,7 @@ topologySpreadConstraints: []
 
 # -- Service values to expose Open WebUI pods to cluster
 service:
-  type: ClusterIP
+  type: LoadBalancer   # changed from ClusterIP to LoadBalancer for external access on GKE
   annotations: {}
   port: 80
   containerPort: 8080

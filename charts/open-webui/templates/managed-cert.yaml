@@ -1,0 +1,11 @@
+{{- if .Values.managedCertificate.enabled }}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: {{ .Values.managedCertificate.name | default "mydomain-cert" }}
+spec:
+  domains:
+    {{- range .Values.managedCertificate.domains }}
+    - {{ . | quote }}
+    {{- end }}
+{{- end }}
