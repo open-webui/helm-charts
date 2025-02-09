@@ -164,16 +164,16 @@ ingress:
   enabled: false
   class: ""
   # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:  
-  annotations: 
-    # Example for GKE Ingress
-    kubernetes.io/ingress.class: "gce"
-    kubernetes.io/ingress.global-static-ip-name: "open-webui-external-ip"   #  you need to create this address in GCP console
-    # Force HTTP to redirect to HTTPS
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
-    networking.gke.io/managed-certificates: "mydomain-chat-cert"
-    # nginx.ingress.kubernetes.io/rewrite-target: / 
+  annotations: {}
+  #   # Example for GKE Ingress
+  #   kubernetes.io/ingress.class: "gce"
+  #   kubernetes.io/ingress.global-static-ip-name: "open-webui-external-ip"   #  you need to create this address in GCP console
+  #   # Force HTTP to redirect to HTTPS
+  #   nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
+  #   nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
+  #   networking.gke.io/managed-certificates: "mydomain-chat-cert"
+  #   # nginx.ingress.kubernetes.io/rewrite-target: / 
   host: "chat.example.com"  # update to your real domain 
   additionalHosts: []
   tls: false
