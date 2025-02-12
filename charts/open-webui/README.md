@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.10.0](https://img.shields.io/badge/Version-5.10.0-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 5.10.1](https://img.shields.io/badge/Version-5.10.1-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -12,6 +12,7 @@ Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 * <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
 * <https://github.com/otwld/ollama-helm/>
 * <https://hub.docker.com/r/ollama/ollama>
+* <https://charts.bitnami.com/bitnami>
 
 ## Installing
 
@@ -43,6 +44,13 @@ helm upgrade --install open-webui open-webui/open-webui
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
+| autoscaling | object | `{"behavior":{},"enabled":false,"maxReplicas":5,"metrics":[],"minReplicas":1,"targetCPUUtilizationPercentage":50,"targetMemoryUtilizationPercentage":90}` | Configure horizontal pod autoscale (hpa) ref: <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/> |
+| autoscaling.behavior | object | `{}` | Configures the scaling behavior of the target in both Up and Down directions. |
+| autoscaling.enabled | bool | `false` | Enable Horizontal Pod Autoscaler |
+| autoscaling.maxReplicas | int | `5` | Maximum number of replicas |
+| autoscaling.minReplicas | int | `1` | Minimum number of replicas |
+| autoscaling.targetCPUUtilizationPercentage | int | `50` | Average CPU utilization percentage |
+| autoscaling.targetMemoryUtilizationPercentage | int | `90` | Average memory utilization percentage |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | copyAppData.resources | object | `{}` |  |
@@ -52,13 +60,16 @@ helm upgrade --install open-webui open-webui/open-webui
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
 | imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.additionalHosts | list | `[]` |  |
-| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
+| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.existingSecret | string | `""` |  |
-| ingress.host | string | `""` |  |
+| ingress.host | string | `"chat.example.com"` |  |
 | ingress.tls | bool | `false` |  |
 | livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| managedCertificate.domains[0] | string | `"chat.example.com"` |  |
+| managedCertificate.enabled | bool | `false` |  |
+| managedCertificate.name | string | `"mydomain-chat-cert"` |  |
 | nameOverride | string | `""` |  |
 | namespaceOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -66,6 +77,12 @@ helm upgrade --install open-webui open-webui/open-webui
 | ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | openaiBaseApiUrl | string | `""` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
+| pdb | object | `{"annotations":{},"enabled":false,"labels":{},"maxUnavailable":"","minAvailable":1}` | Deploy a PodDisruptionBudget ref: <https://kubernetes.io/docs/tasks/run-application/configure-pdb/> |
+| pdb.annotations | object | `{}` | Annotations to be added to pdb |
+| pdb.enabled | bool | `false` | Enable PodDisruptionBudget |
+| pdb.labels | object | `{}` | Labels to be added to pdb |
+| pdb.maxUnavailable | string | `""` | Number of pods that are unavailable after eviction as number or percentage (eg.: 50%). # Has higher precedence over `controller.pdb.minAvailable` |
+| pdb.minAvailable | int | `1` | Number of pods that are available after eviction as number or percentage (eg.: 50%) |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |
