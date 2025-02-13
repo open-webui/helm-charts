@@ -69,24 +69,68 @@ extraEnvVars:
     value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"
   # - name: PIPELINES_API_KEY
   #   valueFrom:
-  #     secretKeyRef: 
+  #     secretKeyRef:
   #       name: pipelines-keys
   #       key: pipelines-api-key
   # -- Langfuse example, including values used in Langfuse filter to connect
   # - name: PIPELINES_URLS
-  #   value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/langfuse_filter_pipeline.py"  
+  #   value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/langfuse_filter_pipeline.py"
   # - name: LANGFUSE_PUBLIC_KEY
   #   valueFrom:
-  #     secretKeyRef: 
+  #     secretKeyRef:
   #       name: langfuse-keys
   #       key: public-key
   # - name: LANGFUSE_SECRET_KEY
   #   valueFrom:
-  #     secretKeyRef: 
+  #     secretKeyRef:
   #       name: langfuse-keys
   #       key: secret-key
   # - name: LANGFUSE_HOST
   #   value: https://us.cloud.langfuse.com
+
+# -- Configure horizontal pod autoscale (hpa)
+# ref: <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>
+autoscaling:
+  # -- Enable Horizontal Pod Autoscaler
+  enabled: false
+  # -- Minimum number of replicas
+  minReplicas: 1
+  # -- Maximum number of replicas
+  maxReplicas: 5
+  # -- Average CPU utilization percentage
+  targetCPUUtilizationPercentage: 50
+  # -- Average memory utilization percentage
+  targetMemoryUtilizationPercentage: 90
+  # -- Configures the scaling behavior of the target in both Up and Down directions.
+  behavior: {}
+    # scaleDown:
+    #  stabilizationWindowSeconds: 300
+    #  policies:
+    #   - type: Pods
+    #     value: 1
+    #     periodSeconds: 180
+    # scaleUp:
+    #   stabilizationWindowSeconds: 300
+    #   policies:
+    #   - type: Pods
+    #     value: 2
+    #     periodSeconds: 60
+  metrics: []
+
+# -- Deploy a PodDisruptionBudget
+# ref: <https://kubernetes.io/docs/tasks/run-application/configure-pdb/>
+pdb:
+  # -- Enable PodDisruptionBudget
+  enabled: false
+  # -- Labels to be added to pdb
+  labels: {}
+  # -- Annotations to be added to pdb
+  annotations: {}
+  # -- Number of pods that are available after eviction as number or percentage (eg.: 50%)
+  minAvailable: 1
+  # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
+  ## Has higher precedence over `controller.pdb.minAvailable`
+  maxUnavailable: ""
 
 # -- Extra resources to deploy with Open WebUI Pipelines
 extraResources:
