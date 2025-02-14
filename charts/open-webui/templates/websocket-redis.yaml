@@ -21,6 +21,10 @@ spec:
     metadata:
       labels:
         {{- include "websocket.redis.labels" . | nindent 8 }}
+      annotations:
+        {{- with .Values.websocket.redis.pods.annotations }}
+        {{- toYaml . | nindent 4 }}
+        {{- end }}
     spec:
       containers:
       - name: {{ .Values.websocket.redis.name }}

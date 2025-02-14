@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.11.0](https://img.shields.io/badge/Version-5.11.0-informational?style=flat-square) ![AppVersion: 0.5.10](https://img.shields.io/badge/AppVersion-0.5.10-informational?style=flat-square)
+![Version: 5.13.0](https://img.shields.io/badge/Version-5.13.0-informational?style=flat-square) ![AppVersion: 0.5.12](https://img.shields.io/badge/AppVersion-0.5.12-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -53,13 +53,16 @@ helm upgrade --install open-webui open-webui/open-webui
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
 | imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.additionalHosts | list | `[]` |  |
-| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
+| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX:   |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.existingSecret | string | `""` |  |
-| ingress.host | string | `""` |  |
+| ingress.host | string | `"chat.example.com"` |  |
 | ingress.tls | bool | `false` |  |
 | livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| managedCertificate.domains[0] | string | `"chat.example.com"` |  |
+| managedCertificate.enabled | bool | `false` |  |
+| managedCertificate.name | string | `"mydomain-chat-cert"` |  |
 | nameOverride | string | `""` |  |
 | namespaceOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -105,7 +108,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
-| websocket.redis | object | `{"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","resources":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}}` | Deploys a redis |
+| websocket.redis | object | `{"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{}},"resources":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}}` | Deploys a redis |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
 | websocket.redis.command | list | `[]` | Redis command (overrides default) |
@@ -113,6 +116,8 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.image | object | `{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"}` | Redis image |
 | websocket.redis.labels | object | `{}` | Redis labels |
 | websocket.redis.name | string | `"open-webui-redis"` | Redis name |
+| websocket.redis.pods | object | `{"annotations":{}}` | Redis pod |
+| websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.resources | object | `{}` | Redis resources |
 | websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}` | Redis service |
 | websocket.redis.service.annotations | object | `{}` | Redis service annotations |
