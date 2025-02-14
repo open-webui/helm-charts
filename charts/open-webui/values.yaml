@@ -35,6 +35,9 @@ tika:
 # -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
 ollamaUrls: []
 
+# -- Disables taking Ollama Urls from `ollamaUrls`  list
+ollamaUrlsFromExtraEnv: false
+
 websocket:
   # -- Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT`
   enabled: false
@@ -222,7 +225,12 @@ service:
   loadBalancerClass: ""
 
 # -- OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank
-openaiBaseApiUrl: ""
+openaiBaseApiUrl: "https://api.openai.com/v1"
+
+# -- OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set
+openaiBaseApiUrls: []
+  # - "https://api.openai.com/v1"
+  # - "https://api.company.openai.com/v1"
 
 # -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/
 extraEnvVars:

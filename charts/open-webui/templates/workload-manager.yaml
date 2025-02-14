@@ -113,18 +113,30 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-        {{- if or .Values.ollamaUrls .Values.ollama.enabled }}
+        {{- if .Values.ollamaUrlsFromExtraEnv}}
+        {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
         - name: "OLLAMA_BASE_URLS"
           value: {{ include "ollamaBaseUrls" . | quote }}
         {{- else }}
         - name: "ENABLE_OLLAMA_API"
           value: "False"
         {{- end }}
+        {{- if and .Values.openaiBaseApiUrl (not .Values.openaiBaseApiUrls) (not .Values.pipelines.enabled) }}
+        # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
         - name: "OPENAI_API_BASE_URL"
-        {{- if .Values.pipelines.enabled }}
-          value: {{ include "pipelines.serviceEndpoint" . }}
-        {{- else if .Values.openaiBaseApiUrl }}
           value: {{ .Values.openaiBaseApiUrl | quote }}
+        {{- else if and .Values.openaiBaseApiUrl .Values.pipelines.enabled (not .Values.openaiBaseApiUrls) }}
+        # If Pipelines is enabled and OpenAI API value is set, use OPENAI_API_BASE_URLS with combined values
+        - name: "OPENAI_API_BASE_URLS"
+          value: "{{ include "pipelines.serviceEndpoint" . }};{{ .Values.openaiBaseApiUrl }}"
+        {{- else if and .Values.pipelines.enabled (not .Values.openaiBaseApiUrl) (not .Values.openaiBaseApiUrls) }}
+        # If Pipelines is enabled and no OpenAI API values are set, set OPENAI_API_BASE_URL to the Pipelines server endpoint 
+        - name: "OPENAI_API_BASE_URL"
+          value: {{ include "pipelines.serviceEndpoint" . | quote }}
+        {{- else if and .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
+        # If OpenAI API value(s) set and Pipelines is enabled, use OPENAI_API_BASE_URLS to support all the endpoints in the chart
+        - name: "OPENAI_API_BASE_URLS"
+          value: "{{ include "pipelines.serviceEndpoint" . }};{{ join ";" .Values.openaiBaseApiUrls }}"
         {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- toYaml .Values.extraEnvVars | nindent 8 }}

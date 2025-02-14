@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.12.0](https://img.shields.io/badge/Version-5.12.0-informational?style=flat-square) ![AppVersion: 0.5.12](https://img.shields.io/badge/AppVersion-0.5.12-informational?style=flat-square)
+![Version: 5.13.0](https://img.shields.io/badge/Version-5.13.0-informational?style=flat-square) ![AppVersion: 0.5.12](https://img.shields.io/badge/AppVersion-0.5.12-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -12,6 +12,7 @@ Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 * <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
 * <https://github.com/otwld/ollama-helm/>
 * <https://hub.docker.com/r/ollama/ollama>
+* <https://charts.bitnami.com/bitnami>
 
 ## Installing
 
@@ -52,20 +53,25 @@ helm upgrade --install open-webui open-webui/open-webui
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
 | imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.additionalHosts | list | `[]` |  |
-| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: nginx.ingress.kubernetes.io/rewrite-target: / |
+| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX:   |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.existingSecret | string | `""` |  |
-| ingress.host | string | `""` |  |
+| ingress.host | string | `"chat.example.com"` |  |
 | ingress.tls | bool | `false` |  |
 | livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| managedCertificate.domains[0] | string | `"chat.example.com"` |  |
+| managedCertificate.enabled | bool | `false` |  |
+| managedCertificate.name | string | `"mydomain-chat-cert"` |  |
 | nameOverride | string | `""` |  |
 | namespaceOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
 | ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
-| openaiBaseApiUrl | string | `""` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
+| ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
+| openaiBaseApiUrl | string | `"https://api.openai.com/v1"` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
+| openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |
@@ -103,7 +109,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
-| websocket.redis | object | `{"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","resources":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}}` | Deploys a redis |
+| websocket.redis | object | `{"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{}},"resources":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}}` | Deploys a redis |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
 | websocket.redis.command | list | `[]` | Redis command (overrides default) |
@@ -111,6 +117,8 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.image | object | `{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"}` | Redis image |
 | websocket.redis.labels | object | `{}` | Redis labels |
 | websocket.redis.name | string | `"open-webui-redis"` | Redis name |
+| websocket.redis.pods | object | `{"annotations":{}}` | Redis pod |
+| websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.resources | object | `{}` | Redis resources |
 | websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}` | Redis service |
 | websocket.redis.service.annotations | object | `{}` | Redis service annotations |
