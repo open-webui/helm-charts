@@ -1,6 +1,6 @@
 # pipelines
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
 Pipelines: UI-Agnostic OpenAI API Plugin Framework
 
@@ -70,6 +70,8 @@ helm upgrade --install open-webui open-webui/pipelines
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.enable | bool | `true` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment |
+| volumeMounts | list | `[]` | Configure container volume mounts |
+| volumes | list | `[]` | Configure pod volumes |
 
 ----------------------------------------------
 
