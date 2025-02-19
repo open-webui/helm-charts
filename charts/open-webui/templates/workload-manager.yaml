@@ -112,6 +112,9 @@ spec:
         {{- with .Values.volumeMounts.container }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+        {{- with .Values.envFrom }}
+        envFrom: {{- toYaml . | nindent 10 }}
+        {{- end }}
         env:
         {{- if .Values.ollamaUrlsFromExtraEnv}}
         {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}

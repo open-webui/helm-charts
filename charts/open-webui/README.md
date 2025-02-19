@@ -47,6 +47,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | copyAppData.resources | object | `{}` |  |
+| envFrom | list | `[]` | Env vars added to the Open WebUI deployment from an external resource (e.g.: secret, configmap). Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
