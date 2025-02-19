@@ -70,8 +70,8 @@ helm upgrade --install open-webui open-webui/pipelines
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.enable | bool | `true` |  |
 | tolerations | list | `[]` | Tolerations for pod assignment |
-| volumeMounts | list | `[]` | Configure container volume mounts |
-| volumes | list | `[]` | Configure pod volumes |
+| volumeMounts | list | `[]` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
+| volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 
 ----------------------------------------------
 
