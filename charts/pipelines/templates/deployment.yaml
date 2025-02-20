@@ -14,6 +14,10 @@ spec:
   selector:
     matchLabels:
       {{- include "pipelines.selectorLabels" . | nindent 6 }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       labels:
