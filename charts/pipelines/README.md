@@ -69,6 +69,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.enable | bool | `true` |  |
+| strategy | object | `{}` | Strategy for updating the deployment |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | volumeMounts | list | `[]` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
