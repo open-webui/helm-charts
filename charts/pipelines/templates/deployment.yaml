@@ -74,6 +74,10 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
       {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
       - name: data

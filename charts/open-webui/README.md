@@ -105,6 +105,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
+| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
