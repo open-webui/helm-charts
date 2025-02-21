@@ -71,6 +71,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | serviceAccount.enable | bool | `true` |  |
 | strategy | object | `{}` | Strategy for updating the deployment |
 | tolerations | list | `[]` | Tolerations for pod assignment |
+| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | volumeMounts | list | `[]` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 
