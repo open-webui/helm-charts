@@ -24,6 +24,16 @@ jobs:
         run: |
           helm lint ./charts/open-webui
 
+      - name: Add Dependency Repos
+        run: |
+          helm repo add ollama https://otwld.github.io/ollama-helm/
+          helm repo add open-webui https://helm.openwebui.com/
+          helm repo add tika https://apache.jfrog.io/artifactory/tika/
+          helm repo add redis https://charts.bitnami.com/bitnami
+      - name: Build open-webui Helm dependencies
+        run: |
+          helm dependency build ./charts/open-webui
+
   test-deploy:
     name: Test Chart Deployment
     runs-on: ubuntu-latest
