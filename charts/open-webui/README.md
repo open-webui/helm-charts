@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.18.0](https://img.shields.io/badge/Version-5.18.0-informational?style=flat-square) ![AppVersion: 0.5.16](https://img.shields.io/badge/AppVersion-0.5.16-informational?style=flat-square)
+![Version: 5.20.0](https://img.shields.io/badge/Version-5.20.0-informational?style=flat-square) ![AppVersion: 0.5.16](https://img.shields.io/badge/AppVersion-0.5.16-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -50,6 +50,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
+| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
 | imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.additionalHosts | list | `[]` |  |
@@ -105,7 +106,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
-| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
