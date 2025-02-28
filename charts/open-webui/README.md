@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.20.0](https://img.shields.io/badge/Version-5.20.0-informational?style=flat-square) ![AppVersion: 0.5.16](https://img.shields.io/badge/AppVersion-0.5.16-informational?style=flat-square)
+![Version: 5.21.0](https://img.shields.io/badge/Version-5.21.0-informational?style=flat-square) ![AppVersion: 0.5.16](https://img.shields.io/badge/AppVersion-0.5.16-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -37,6 +37,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | https://charts.bitnami.com/bitnami | redis-cluster(redis) | >=20.6.2 |
 | https://helm.openwebui.com | pipelines | >=0.0.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
+| https://zilliztech.github.io/milvus-helm | milvus | >=4.2.40 |
 
 ## Values
 
@@ -64,6 +65,12 @@ helm upgrade --install open-webui open-webui/open-webui
 | managedCertificate.domains[0] | string | `"chat.example.com"` |  |
 | managedCertificate.enabled | bool | `false` |  |
 | managedCertificate.name | string | `"mydomain-chat-cert"` |  |
+| milvus | object | `{"db":"default","enabled":false,"fullnameOverride":"open-webui-milvus","token":{},"uri":"http://open-webui-milvus:19530"}` | Deploys a Milvus cluster/standalone with subchart 'milvus' from zilliztech |
+| milvus.db | string | `"default"` | Active Milvus database for RAG with env `MILVUS_DB` ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_db |
+| milvus.enabled | bool | `false` | Enable Milvus installation |
+| milvus.fullnameOverride | string | `"open-webui-milvus"` | Milvus fullname override (recommended to be 'open-webui-milvus') - In this case, the Milvus uri will be 'http://[username:password@]open-webui-milvus:19530' |
+| milvus.token | object | `{}` | Active Milvus token for RAG with env `MILVUS_TOKEN` ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_token |
+| milvus.uri | string | `"http://open-webui-milvus:19530"` | Active Milvus URI for RAG with env `MILVUS_URI`. If there is credentials in the uri, it will be used to connect to the Milvus server. ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_uri |
 | nameOverride | string | `""` |  |
 | namespaceOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -86,6 +93,10 @@ helm upgrade --install open-webui open-webui/open-webui
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
+| rag.embeddingEngine | object | `{}` | Embedding engine to use for RAG with env `RAG_EMBEDDING_ENGINE`: ""(empty), "ollama", "openai" ref: https://docs.openwebui.com/getting-started/env-configuration#rag_embedding_engine |
+| rag.embeddingModel | object | `{}` | Embedding model to use for RAG with env `RAG_EMBEDDING_MODEL` ref: https://docs.openwebui.com/getting-started/env-configuration#rag_embedding_model |
+| rag.enabled | bool | `false` | Enable RAG ref: https://docs.openwebui.com/getting-started/env-configuration#retrieval-augmented-generation-rag |
+| rag.vectorDB | object | `{}` | Vector database configuration ref: https://docs.openwebui.com/getting-started/env-configuration#vector_db |
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 | redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3}}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
 | redis-cluster.auth | object | `{"enabled":false}` | Redis Authentication |
