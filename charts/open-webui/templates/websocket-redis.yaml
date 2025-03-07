@@ -26,6 +26,10 @@ spec:
         {{- toYaml . | nindent 4 }}
         {{- end }}
     spec:
+      {{- if .Values.websocket.redis.image.pullSecretName }}
+      imagePullSecrets:
+        - name: {{ .Values.websocket.redis.image.pullSecretName }}
+      {{- end }}
       containers:
       - name: {{ .Values.websocket.redis.name }}
         image: "{{ .Values.websocket.redis.image.repository }}:{{ .Values.websocket.redis.image.tag }}"
