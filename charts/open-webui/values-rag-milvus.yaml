@@ -44,3 +44,10 @@ readinessProbe:
   httpGet:
     path: /health/db
     port: http
+startupProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 30 # Adjust this value according to the startup time of the application
+  periodSeconds: 10 # Adjust this value according to the startup time of the application
+  failureThreshold: 20 # Adjust this value according to the startup time of the application
