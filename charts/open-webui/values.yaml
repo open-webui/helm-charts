@@ -115,15 +115,18 @@ rag:
   vectorDB: ""
   # -- Embedding engine to use for RAG with env `RAG_EMBEDDING_ENGINE`: ""(empty), "ollama", "openai"
   # ref: https://docs.openwebui.com/getting-started/env-configuration#rag_embedding_engine
-  embeddingEngine: {}
+  embeddingEngine: ""
   # -- Embedding model to use for RAG with env `RAG_EMBEDDING_MODEL`
   # ref: https://docs.openwebui.com/getting-started/env-configuration#rag_embedding_model
-  embeddingModel: {}
+  embeddingModel: ""
 
-# -- Deploys a Milvus cluster/standalone with subchart 'milvus' from zilliztech
 milvus:
-  # -- Enable Milvus installation
+  # -- Enable Milvus installation. Deploys a Milvus cluster/standalone with subchart 'milvus' from zilliztech
+  # ref: https://github.com/zilliztech/milvus-helm/tree/master/charts/milvus
   enabled: false
+  # -- Milvus fullname override (recommended to be 'open-webui-milvus')
+  # - In this case, the Milvus uri will be 'http://[username:password@]open-webui-milvus:19530'
+  fullnameOverride: open-webui-milvus
   # -- Active Milvus URI for RAG with env `MILVUS_URI`. If there is credentials in the uri, it will be used to connect to the Milvus server.
   # ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_uri
   uri: "http://open-webui-milvus:19530"
@@ -135,9 +138,6 @@ milvus:
   # -- Active Milvus token for RAG with env `MILVUS_TOKEN`
   # ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_token
   token: {}
-  # -- Milvus fullname override (recommended to be 'open-webui-milvus')
-  # - In this case, the Milvus uri will be 'http://[username:password@]open-webui-milvus:19530'
-  fullnameOverride: open-webui-milvus
 
 # -- Value of cluster domain
 clusterDomain: cluster.local
