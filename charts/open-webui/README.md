@@ -50,6 +50,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | copyAppData.resources | object | `{}` |  |
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
+| extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
