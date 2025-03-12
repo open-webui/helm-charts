@@ -69,6 +69,9 @@ spec:
         {{- with .Values.volumeMounts.initContainer }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      {{- with .Values.extraInitContainers }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       enableServiceLinks: false
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       {{- if .Values.serviceAccount.enable }}

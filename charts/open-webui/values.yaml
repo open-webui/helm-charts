@@ -265,7 +265,7 @@ service:
   labels: {}
   loadBalancerClass: ""
 
-# Enables the use of OpenAI APIs
+# -- Enables the use of OpenAI APIs
 enableOpenaiApi: true
 
 # -- OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank
@@ -302,6 +302,16 @@ volumeMounts:
   container: []
   # - name: ""
   #   mountPath: ""
+
+# -- Additional init containers to add to the deployment/statefulset
+# ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/>
+extraInitContainers: []
+# - name: custom-init
+#   image: busybox:latest
+#   command: ['sh', '-c', 'echo "Custom init container running"']
+#   volumeMounts:
+#   - name: data
+#     mountPath: /data
 
 # -- Configure pod volumes
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/>
