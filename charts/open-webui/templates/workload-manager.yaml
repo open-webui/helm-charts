@@ -144,28 +144,6 @@ spec:
         - name: "ENABLE_OPENAI_API"
           value: "False"
         {{- end }}
-        {{- if .Values.rag.enabled }}
-        - name: "VECTOR_DB"
-          value: {{ .Values.rag.vectorDB | default "croma" | quote }}
-        {{- if and .Values.rag.enabled .Values.rag.embeddingEngine }}
-        - name: "RAG_EMBEDDING_ENGINE"
-          value: {{ .Values.rag.embeddingEngine | quote }}
-        {{- end }}
-        {{- if and .Values.rag.enabled .Values.rag.embeddingModel }}
-        - name: "RAG_EMBEDDING_MODEL"
-          value: {{ .Values.rag.embeddingModel | quote }}
-        {{- end }}
-        {{- end }}
-        {{- if .Values.milvus.enabled }}
-        - name: "MILVUS_URI"
-          value: {{ .Values.milvus.uri | default "${DATA_DIR}/vector_db/milvus.db" | quote }}
-        - name: "MILVUS_DB"
-          value: {{ .Values.milvus.db | default "default" | quote }}
-        {{- if and .Values.milvus.enabled .Values.milvus.token }}
-        - name: "MILVUS_TOKEN"
-          value: {{ .Values.milvus.token | quote }}
-        {{- end }}
-        {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- toYaml .Values.extraEnvVars | nindent 8 }}
         {{- end }}
