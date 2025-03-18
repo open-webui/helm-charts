@@ -124,6 +124,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.pods | object | `{"annotations":{}}` | Redis pod |
 | websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.resources | object | `{}` | Redis resources |
+| websocket.redis.securityContext | object | `{}` | Redis security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}` | Redis service |
 | websocket.redis.service.annotations | object | `{}` | Redis service annotations |
 | websocket.redis.service.containerPort | int | `6379` | Redis container/target port |
