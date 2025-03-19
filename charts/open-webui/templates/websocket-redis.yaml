@@ -23,7 +23,7 @@ spec:
         {{- include "websocket.redis.labels" . | nindent 8 }}
       annotations:
         {{- with .Values.websocket.redis.pods.annotations }}
-        {{- toYaml . | nindent 4 }}
+        {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
       {{- if .Values.websocket.redis.image.pullSecretName }}
