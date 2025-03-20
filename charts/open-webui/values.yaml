@@ -1,6 +1,6 @@
 nameOverride: ""
 namespaceOverride: ""
-
+# @section -- OLLAMA
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   enabled: true
@@ -177,14 +177,14 @@ copyAppData:
 
 managedCertificate:
   enabled: false
-  name: "mydomain-chat-cert"  # You can override this name if needed
+  name: "mydomain-chat-cert" # You can override this name if needed
   domains:
     - chat.example.com # update to your real domain
 
 ingress:
   enabled: false
   class: ""
-  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:  
+  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
   annotations: {}
   #   # Example for GKE Ingress
   #   kubernetes.io/ingress.class: "gce"
@@ -194,8 +194,8 @@ ingress:
   #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
   #   nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
   #   networking.gke.io/managed-certificates: "mydomain-chat-cert"
-  #   # nginx.ingress.kubernetes.io/rewrite-target: / 
-  host: "chat.example.com"  # update to your real domain 
+  #   # nginx.ingress.kubernetes.io/rewrite-target: /
+  host: "chat.example.com" # update to your real domain
   additionalHosts: []
   tls: false
   existingSecret: ""
@@ -245,7 +245,8 @@ enableOpenaiApi: true
 openaiBaseApiUrl: "https://api.openai.com/v1"
 
 # -- OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set
-openaiBaseApiUrls: []
+openaiBaseApiUrls:
+  []
   # - "https://api.openai.com/v1"
   # - "https://api.company.openai.com/v1"
 
@@ -304,7 +305,6 @@ podSecurityContext:
   # supplementalGroups: []
   # fsGroup: 1001
 
-
 # -- Configure container security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
 containerSecurityContext:
@@ -320,6 +320,87 @@ containerSecurityContext:
   #     - ALL
   # seccompProfile:
   #   type: "RuntimeDefault"
+
+# @section -- SSO Configuration
+sso:
+  # -- Enable SSO authentication globally
+  enabled: false
+  # -- Enable account creation when logging in with OAuth (distinct from regular signup)
+  enableSignup: false
+  # -- Allow logging into accounts that match email from OAuth provider (considered insecure)
+  mergeAccountsByEmail: false
+  # -- Enable OAuth role management through access token roles claim
+  enableRoleManagement: false
+  # -- Enable OAuth group management through access token groups claim
+  enableGroupManagement: false
+
+  # @section -- Google OAuth configuration
+  google:
+    # -- Enable Google OAuth
+    enabled: false
+    # -- Google OAuth client ID
+    clientId: ""
+    # -- Google OAuth client secret
+    clientSecret: ""
+
+  # @section -- Microsoft OAuth configuration
+  microsoft:
+    # -- Enable Microsoft OAuth
+    enabled: false
+    # -- Microsoft OAuth client ID
+    clientId: ""
+    # -- Microsoft OAuth client secret
+    clientSecret: ""
+    # -- Microsoft tenant ID - use 9188040d-6c67-4c5b-b112-36a304b66dad for personal accounts
+    tenantId: ""
+
+  # @section -- GitHub OAuth configuration
+  github:
+    # -- Enable GitHub OAuth
+    enabled: false
+    # -- GitHub OAuth client ID
+    clientId: ""
+    # -- GitHub OAuth client secret
+    clientSecret: ""
+
+  # @section -- OIDC configuration
+  oidc:
+    # -- Enable OIDC authentication
+    enabled: false
+    # -- OIDC client ID
+    clientId: ""
+    # -- OIDC client secret
+    clientSecret: ""
+    # -- OIDC provider well known URL
+    providerUrl: ""
+    # -- Name of the provider to show on the UI
+    providerName: "SSO"
+    # -- Scopes to request (space-separated).
+    scopes: "openid email profile"
+
+  # @section -- Role management configuration
+  roleManagement:
+    # -- The claim that contains the roles (can be nested, e.g., user.roles)
+    rolesClaim: "roles"
+    # -- Comma-separated list of roles allowed to log in (receive open webui role user)
+    allowedRoles: ""
+    # -- Comma-separated list of roles allowed to log in as admin (receive open webui role admin)
+    adminRoles: ""
+
+  # @section -- Group management configuration
+  # @default -- "groups"
+  groupManagement:
+    # -- The claim that contains the groups (can be nested, e.g., user.memberOf)
+    groupsClaim: "groups"
+
+  # @section -- Trusted header authentication
+  trustedHeader:
+    # -- Enable trusted header authentication
+    enabled: false
+    # -- Header containing the user's email address
+    emailHeader: ""
+    # -- Header containing the user's name (optional, used for new user creation)
+    nameHeader: ""
 
 # -- Extra resources to deploy with Open WebUI
 extraResources:

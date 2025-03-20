@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.24.0](https://img.shields.io/badge/Version-5.24.0-informational?style=flat-square) ![AppVersion: 0.5.20](https://img.shields.io/badge/AppVersion-0.5.20-informational?style=flat-square)
+![Version: 5.25.0](https://img.shields.io/badge/Version-5.25.0-informational?style=flat-square) ![AppVersion: 0.5.20](https://img.shields.io/badge/AppVersion-0.5.20-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -56,7 +56,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
 | imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.additionalHosts | list | `[]` |  |
-| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX:   |
+| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.existingSecret | string | `""` |  |
@@ -103,6 +103,34 @@ helm upgrade --install open-webui open-webui/open-webui
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
 | serviceAccount.enable | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
+| sso.enableGroupManagement | bool | `false` | Enable OAuth group management through access token groups claim |
+| sso.enableRoleManagement | bool | `false` | Enable OAuth role management through access token roles claim |
+| sso.enableSignup | bool | `false` | Enable account creation when logging in with OAuth (distinct from regular signup) |
+| sso.enabled | bool | `false` | Enable SSO authentication globally |
+| sso.github.clientId | string | `""` | GitHub OAuth client ID |
+| sso.github.clientSecret | string | `""` | GitHub OAuth client secret |
+| sso.github.enabled | bool | `false` | Enable GitHub OAuth |
+| sso.google.clientId | string | `""` | Google OAuth client ID |
+| sso.google.clientSecret | string | `""` | Google OAuth client secret |
+| sso.google.enabled | bool | `false` | Enable Google OAuth |
+| sso.groupManagement.groupsClaim | string | `"groups"` | The claim that contains the groups (can be nested, e.g., user.memberOf) |
+| sso.mergeAccountsByEmail | bool | `false` | Allow logging into accounts that match email from OAuth provider (considered insecure) |
+| sso.microsoft.clientId | string | `""` | Microsoft OAuth client ID |
+| sso.microsoft.clientSecret | string | `""` | Microsoft OAuth client secret |
+| sso.microsoft.enabled | bool | `false` | Enable Microsoft OAuth |
+| sso.microsoft.tenantId | string | `""` | Microsoft tenant ID - use 9188040d-6c67-4c5b-b112-36a304b66dad for personal accounts |
+| sso.oidc.clientId | string | `""` | OIDC client ID |
+| sso.oidc.clientSecret | string | `""` | OIDC client secret |
+| sso.oidc.enabled | bool | `false` | Enable OIDC authentication |
+| sso.oidc.providerName | string | `"SSO"` | Name of the provider to show on the UI |
+| sso.oidc.providerUrl | string | `""` | OIDC provider well known URL |
+| sso.oidc.scopes | string | `"openid email profile"` | Scopes to request (space-separated). |
+| sso.roleManagement.adminRoles | string | `""` | Comma-separated list of roles allowed to log in as admin (receive open webui role admin) |
+| sso.roleManagement.allowedRoles | string | `""` | Comma-separated list of roles allowed to log in (receive open webui role user) |
+| sso.roleManagement.rolesClaim | string | `"roles"` | The claim that contains the roles (can be nested, e.g., user.roles) |
+| sso.trustedHeader.emailHeader | string | `""` | Header containing the user's email address |
+| sso.trustedHeader.enabled | bool | `false` | Enable trusted header authentication |
+| sso.trustedHeader.nameHeader | string | `""` | Header containing the user's name (optional, used for new user creation) |
 | startupProbe | object | `{}` | Probe for startup of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 | strategy | object | `{}` | Strategy for updating the workload manager: deployment or statefulset |
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
@@ -112,7 +140,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
-| websocket.redis | object | `{"affinity":{},"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{}},"resources":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"},"tolerations":[]}` | Deploys a redis |
+| websocket.redis | object | `{"affinity":{},"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{}},"resources":{},"securityContext":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"},"tolerations":[]}` | Deploys a redis |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
@@ -124,7 +152,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.pods | object | `{"annotations":{}}` | Redis pod |
 | websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.resources | object | `{}` | Redis resources |
-| websocket.redis.securityContext | object | `{}` | Redis security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
+| websocket.redis.securityContext | object | `{}` | Redis security context |
 | websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}` | Redis service |
 | websocket.redis.service.annotations | object | `{}` | Redis service annotations |
 | websocket.redis.service.containerPort | int | `6379` | Redis container/target port |

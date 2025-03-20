@@ -161,6 +161,76 @@ spec:
         - name: "WEBSOCKET_REDIS_URL"
           value: {{ .Values.websocket.url | quote }}
         {{- end }}
+        {{- if .Values.sso.enabled }}
+        {{- if .Values.sso.enableSignup }}
+        - name: "ENABLE_OAUTH_SIGNUP"
+          value: "True"
+        {{- end }}
+        {{- if .Values.sso.mergeAccountsByEmail }}
+        - name: "OAUTH_MERGE_ACCOUNTS_BY_EMAIL"
+          value: "True"
+        {{- end }}
+        {{- if .Values.sso.google.enabled }}
+        - name: "GOOGLE_CLIENT_ID"
+          value: {{ .Values.sso.google.clientId | quote }}
+        - name: "GOOGLE_CLIENT_SECRET"
+          value: {{ .Values.sso.google.clientSecret | quote }}
+        {{- end }}
+        {{- if .Values.sso.microsoft.enabled }}
+        - name: "MICROSOFT_CLIENT_ID"
+          value: {{ .Values.sso.microsoft.clientId | quote }}
+        - name: "MICROSOFT_CLIENT_SECRET"
+          value: {{ .Values.sso.microsoft.clientSecret | quote }}
+        - name: "MICROSOFT_CLIENT_TENANT_ID"
+          value: {{ .Values.sso.microsoft.tenantId | quote }}
+        {{- end }}
+        {{- if .Values.sso.github.enabled }}
+        - name: "GITHUB_CLIENT_ID"
+          value: {{ .Values.sso.github.clientId | quote }}
+        - name: "GITHUB_CLIENT_SECRET"
+          value: {{ .Values.sso.github.clientSecret | quote }}
+        {{- end }}
+        {{- if .Values.sso.oidc.enabled }}
+        - name: "OAUTH_CLIENT_ID"
+          value: {{ .Values.sso.oidc.clientId | quote }}
+        - name: "OAUTH_CLIENT_SECRET"
+          value: {{ .Values.sso.oidc.clientSecret | quote }}
+        - name: "OPENID_PROVIDER_URL"
+          value: {{ .Values.sso.oidc.providerUrl | quote }}
+        - name: "OAUTH_PROVIDER_NAME"
+          value: {{ .Values.sso.oidc.providerName | quote }}
+        - name: "OAUTH_SCOPES"
+          value: {{ .Values.sso.oidc.scopes | quote }}
+        {{- end }}
+        {{- if .Values.sso.enableRoleManagement }}
+        - name: "ENABLE_OAUTH_ROLE_MANAGEMENT"
+          value: "True"
+        - name: "OAUTH_ROLES_CLAIM"
+          value: {{ .Values.sso.roleManagement.rolesClaim | quote }}
+        {{- if .Values.sso.roleManagement.allowedRoles }}
+        - name: "OAUTH_ALLOWED_ROLES"
+          value: {{ .Values.sso.roleManagement.allowedRoles | quote }}
+        {{- end }}
+        {{- if .Values.sso.roleManagement.adminRoles }}
+        - name: "OAUTH_ADMIN_ROLES"
+          value: {{ .Values.sso.roleManagement.adminRoles | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.sso.enableGroupManagement }}
+        - name: "ENABLE_OAUTH_GROUP_MANAGEMENT"
+          value: "True"
+        - name: "OAUTH_GROUP_CLAIM"
+          value: {{ .Values.sso.groupManagement.groupsClaim | quote }}
+        {{- end }}
+        {{- if .Values.sso.trustedHeader.enabled }}
+        - name: "WEBUI_AUTH_TRUSTED_EMAIL_HEADER"
+          value: {{ .Values.sso.trustedHeader.emailHeader | quote }}
+        {{- if .Values.sso.trustedHeader.nameHeader }}
+        - name: "WEBUI_AUTH_TRUSTED_NAME_HEADER"
+          value: {{ .Values.sso.trustedHeader.nameHeader | quote }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
         tty: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
