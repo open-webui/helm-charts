@@ -1,6 +1,5 @@
 nameOverride: ""
 namespaceOverride: ""
-
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   enabled: true
@@ -177,14 +176,14 @@ copyAppData:
 
 managedCertificate:
   enabled: false
-  name: "mydomain-chat-cert"  # You can override this name if needed
+  name: "mydomain-chat-cert" # You can override this name if needed
   domains:
     - chat.example.com # update to your real domain
 
 ingress:
   enabled: false
   class: ""
-  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:  
+  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
   annotations: {}
   #   # Example for GKE Ingress
   #   kubernetes.io/ingress.class: "gce"
@@ -194,8 +193,8 @@ ingress:
   #   nginx.ingress.kubernetes.io/ssl-redirect: "true"
   #   nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
   #   networking.gke.io/managed-certificates: "mydomain-chat-cert"
-  #   # nginx.ingress.kubernetes.io/rewrite-target: / 
-  host: "chat.example.com"  # update to your real domain 
+  #   # nginx.ingress.kubernetes.io/rewrite-target: /
+  host: "chat.example.com" # update to your real domain
   additionalHosts: []
   tls: false
   existingSecret: ""
@@ -245,7 +244,8 @@ enableOpenaiApi: true
 openaiBaseApiUrl: "https://api.openai.com/v1"
 
 # -- OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set
-openaiBaseApiUrls: []
+openaiBaseApiUrls:
+  []
   # - "https://api.openai.com/v1"
   # - "https://api.company.openai.com/v1"
 
@@ -304,7 +304,6 @@ podSecurityContext:
   # supplementalGroups: []
   # fsGroup: 1001
 
-
 # -- Configure container security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
 containerSecurityContext:
@@ -320,6 +319,106 @@ containerSecurityContext:
   #     - ALL
   # seccompProfile:
   #   type: "RuntimeDefault"
+
+sso:
+  # -- **Enable SSO authentication globally** must enable to use SSO authentication
+  # @section -- SSO Configuration
+  enabled: false
+  # -- Enable account creation when logging in with OAuth (distinct from regular signup)
+  # @section -- SSO Configuration
+  enableSignup: false
+  # -- Allow logging into accounts that match email from OAuth provider (considered insecure)
+  # @section -- SSO Configuration
+  mergeAccountsByEmail: false
+  # -- Enable OAuth role management through access token roles claim
+  # @section -- SSO Configuration
+  enableRoleManagement: false
+  # -- Enable OAuth group management through access token groups claim
+  # @section -- SSO Configuration
+  enableGroupManagement: false
+
+  google:
+    # -- Enable Google OAuth
+    # @section -- Google OAuth configuration
+    enabled: false
+    # -- Google OAuth client ID
+    # @section -- Google OAuth configuration
+    clientId: ""
+    # -- Google OAuth client secret
+    # @section -- Google OAuth configuration
+    clientSecret: ""
+
+  microsoft:
+    # -- Enable Microsoft OAuth
+    # @section -- Microsoft OAuth configuration
+    enabled: false
+    # -- Microsoft OAuth client ID
+    # @section -- Microsoft OAuth configuration
+    clientId: ""
+    # -- Microsoft OAuth client secret
+    # @section -- Microsoft OAuth configuration
+    clientSecret: ""
+    # -- Microsoft tenant ID - use 9188040d-6c67-4c5b-b112-36a304b66dad for personal accounts
+    # @section -- Microsoft OAuth configuration
+    tenantId: ""
+
+  github:
+    # -- Enable GitHub OAuth
+    # @section -- GitHub OAuth configuration
+    enabled: false
+    # -- GitHub OAuth client ID
+    # @section -- GitHub OAuth configuration
+    clientId: ""
+    # -- GitHub OAuth client secret
+    # @section -- GitHub OAuth configuration
+    clientSecret: ""
+
+  oidc:
+    # -- Enable OIDC authentication
+    # @section -- OIDC configuration
+    enabled: false
+    # -- OIDC client ID
+    # @section -- OIDC configuration
+    clientId: ""
+    # -- OIDC client secret
+    # @section -- OIDC configuration
+    clientSecret: ""
+    # -- OIDC provider well known URL
+    # @section -- OIDC configuration
+    providerUrl: ""
+    # -- Name of the provider to show on the UI
+    # @section -- OIDC configuration
+    providerName: "SSO"
+    # -- Scopes to request (space-separated).
+    # @section -- OIDC configuration
+    scopes: "openid email profile"
+
+  roleManagement:
+    # -- The claim that contains the roles (can be nested, e.g., user.roles)
+    # @section -- Role management configuration
+    rolesClaim: "roles"
+    # -- Comma-separated list of roles allowed to log in (receive open webui role user)
+    # @section -- Role management configuration
+    allowedRoles: ""
+    # -- Comma-separated list of roles allowed to log in as admin (receive open webui role admin)
+    # @section -- Role management configuration
+    adminRoles: ""
+
+  groupManagement:
+    # -- The claim that contains the groups (can be nested, e.g., user.memberOf)
+    # @section -- SSO Configuration
+    groupsClaim: "groups"
+
+  trustedHeader:
+    # -- Enable trusted header authentication
+    # @section -- SSO trusted header authentication
+    enabled: false
+    # -- Header containing the user's email address
+    # @section -- SSO trusted header authentication
+    emailHeader: ""
+    # -- Header containing the user's name (optional, used for new user creation)
+    # @section -- SSO trusted header authentication
+    nameHeader: ""
 
 # -- Extra resources to deploy with Open WebUI
 extraResources:
