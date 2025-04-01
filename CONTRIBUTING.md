@@ -2,9 +2,6 @@
 
 ## How to Contribute
 
-> [!WARNING]
-> There is currently a bug in the Helm Chart Releaser Github Action that prevents you from deploying more than one chart on a single run. The best workaround for now is to ensure that pushes to `main` only include changes to a single chart. If you're contributing to more than one chart, please do it in separate PRs until the upstream issue is fixed, or until we can fork and fix the action ourselves. 
-
 1. **Fork the repository** and create your branch from `main`.
 2. **Make your changes** and ensure they follow the guidelines below.
 3. **Test your changes** locally to ensure everything works as expected. This should include deploying your updates to a live Kubernetes cluster (whether local or remote).
