@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 5.26.0](https://img.shields.io/badge/Version-5.26.0-informational?style=flat-square) ![AppVersion: 0.5.20](https://img.shields.io/badge/AppVersion-0.5.20-informational?style=flat-square)
+![Version: 6.0.0](https://img.shields.io/badge/Version-6.0.0-informational?style=flat-square) ![AppVersion: 0.6.0](https://img.shields.io/badge/AppVersion-0.6.0-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -163,7 +163,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | redis-cluster.replica.replicaCount | int | `3` | Number of Redis replica instances |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
-| runtimeClassName | string | `""` | Allows changing the Runtime Class. For ex. to "nvidia" if nvidia container runtime is installed but not default. |
+| runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
