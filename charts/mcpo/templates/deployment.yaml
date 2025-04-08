@@ -1,0 +1,120 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mcpo.name" . }}
+  namespace: {{ include "mcpo.namespace" . }}
+  labels:
+    {{- include "mcpo.labels" . | nindent 4 }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "mcpo.selectorLabels" . | nindent 6 }}
+  {{- with .Values.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "mcpo.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.extraInitContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      enableServiceLinks: false
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken | default false }}
+      {{- if .Values.serviceAccount.enable }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "mcpo.name" .) }}
+      {{- end }}
+      securityContext:
+        runAsUser: {{ .Values.securityContext.runAsUser }}
+        runAsGroup: {{ .Values.securityContext.runAsGroup }}
+        runAsNonRoot: true
+      containers:
+      - name: {{ .Chart.Name }}
+        {{- with .Values.image }}
+        image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
+        imagePullPolicy: {{ .pullPolicy }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.containerPort }}
+        {{- with .Values.resources }}
+        resources: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        args:
+          - --config
+          - /app/config.json
+          - --port
+          - {{ .Values.service.containerPort | quote }}
+        volumeMounts:
+        - name: mcpo-config
+          mountPath: /app/config.json
+          subPath: config.json
+          readOnly: true
+        - name: data
+          mountPath: /.npm
+          subPath: .npm
+        - name: data
+          mountPath: /.cache
+          subPath: .cache
+        - name: data
+          mountPath: /.local
+          subPath: .local
+        {{- with .Values.volumeMounts }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        env:
+        {{- if .Values.extraEnvVars }}
+          {{- toYaml .Values.extraEnvVars | nindent 8 }}
+        {{- end }}
+        tty: true
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.hostAliases }}
+      hostAliases:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      {{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+      {{- else if not .Values.persistence.enabled }}
+      - name: data
+        emptyDir: {}
+      {{- else if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ include "mcpo.name" . }}
+      {{- end }}
+      {{- with .Values.volumes }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}

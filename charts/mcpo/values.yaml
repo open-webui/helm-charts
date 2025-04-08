@@ -1,0 +1,163 @@
+nameOverride: ""
+namespaceOverride: ""
+
+# -- Value of cluster domain
+clusterDomain: cluster.local
+
+annotations: {}
+podAnnotations: {}
+podLabels: {}
+replicaCount: 1
+# -- Strategy for updating the deployment
+strategy: {}
+image:
+  repository: ghcr.io/open-webui/mcpo
+  tag: git-a6b5d5e
+  pullPolicy: Always
+
+# -- Configure imagePullSecrets to use private registry
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry>
+imagePullSecrets: []
+# imagePullSecrets:
+# - name: myRegistryKeySecretName
+
+resources: {}
+ingress:
+  enabled: true
+  class: ""
+  # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
+  # nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations: {}
+  host: ""
+  tls: false
+  existingSecret: ""
+persistence:
+  enabled: true
+  size: 2Gi
+  existingClaim: ""
+  # -- If using multiple replicas, you must update accessModes to ReadWriteMany
+  accessModes:
+    - ReadWriteOnce
+  storageClass: ""
+  selector: {}
+  annotations: {}
+
+serviceAccount:
+  enable: true
+  automountServiceAccountToken: false
+
+securityContext:
+  runAsUser: 1991
+  runAsGroup: 19991
+
+mcpo:
+  # Insert static config here to deploy as a configmap resource.
+  config: |
+    {
+      "mcpServers": {
+        "sequential-thinking": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@modelcontextprotocol/server-sequential-thinking"
+          ]
+        },
+        "memory": {
+          "command": "npx",
+          "args": [
+            "-y",
+            "@modelcontextprotocol/server-memory"
+          ]
+        },
+        "time": {
+          "command": "uvx",
+          "args": [
+            "mcp-server-time",
+            "--local-timezone=Europe/London"
+          ]
+        }
+      }
+    }
+
+
+# -- Node labels for pod assignment.
+nodeSelector: {}
+
+# -- Tolerations for pod assignment
+tolerations: []
+
+# -- Affinity for pod assignment
+affinity: {}
+
+# -- HostAliases to be added to hosts-file of each container
+hostAliases: []
+
+service:
+  type: ClusterIP
+  annotations: {}
+  port: 8085
+  containerPort: 8085
+  nodePort: ""
+  labels: {}
+  loadBalancerClass: ""
+
+# -- Additional environments variables on the output Deployment definition.
+extraEnvVars:
+  # - name: PIPELINES_API_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: pipelines-keys
+  #       key: pipelines-api-key
+  # -- Langfuse example, including values used in Langfuse filter to connect
+  # - name: PIPELINES_URLS
+  #   value: "https://github.com/open-webui/pipelines/blob/main/examples/filters/langfuse_filter_pipeline.py"  
+  # - name: LANGFUSE_PUBLIC_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: langfuse-keys
+  #       key: public-key
+  # - name: LANGFUSE_SECRET_KEY
+  #   valueFrom:
+  #     secretKeyRef: 
+  #       name: langfuse-keys
+  #       key: secret-key
+  # - name: LANGFUSE_HOST
+  #   value: https://us.cloud.langfuse.com
+
+# -- Configure container volume mounts
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/>
+volumeMounts: []
+  # - name: ""
+  #   mountPath: ""
+
+# -- Additional init containers to add to the deployment
+# ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/>
+extraInitContainers: []
+# - name: custom-init
+#   image: busybox:latest
+#   command: ['sh', '-c', 'echo "Custom init container running"']
+#   volumeMounts:
+#   - name: data
+#     mountPath: /data
+
+# -- Configure pod volumes
+# ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/>
+volumes: []
+# - name: ""
+#   configMap:
+#     name: ""
+# - name: ""
+#   secret:
+#     name: ""
+# - name: ""
+#   emptyDir: {}
+
+# -- Extra resources to deploy with Open WebUI MCPO
+extraResources:
+  []
+  # - apiVersion: v1
+  #   kind: ConfigMap
+  #   metadata:
+  #     name: example-configmap
+  #   data:
+  #     example-key: example-value
