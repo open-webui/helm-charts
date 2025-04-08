@@ -34,6 +34,13 @@ dependencies:
       - child: service
         parent: pipelines.service
     condition: pipelines.enabled
+  - name: mcpo
+    repository: https://helm.openwebui.com
+    version: '>=0.0.1'
+    import-values:
+      - child: service
+        parent: mcpo.service
+    condition: mcpo.enabled
   - name: tika
     repository: https://apache.jfrog.io/artifactory/tika
     version: '>=2.9.0'
