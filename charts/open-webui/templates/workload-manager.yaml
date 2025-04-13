@@ -147,9 +147,6 @@ spec:
         - name: "ENABLE_OPENAI_API"
           value: "False"
         {{- end }}
-        {{- if .Values.extraEnvVars }}
-          {{- toYaml .Values.extraEnvVars | nindent 8 }}
-        {{- end }}
         {{- if .Values.tika.enabled }}
         - name: "CONTENT_EXTRACTION_ENGINE"
           value: "Tika"
@@ -269,6 +266,9 @@ spec:
           value: {{ .Values.sso.trustedHeader.nameHeader | quote }}
         {{- end }}
         {{- end }}
+        {{- end }}
+        {{- if .Values.extraEnvVars }}
+          {{- toYaml .Values.extraEnvVars | nindent 8 }}
         {{- end }}
         tty: true
       {{- with .Values.nodeSelector }}
