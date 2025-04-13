@@ -20,19 +20,20 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v4
 
-      - name: Lint open-webui Helm Chart
-        run: |
-          helm lint ./charts/open-webui
-
       - name: Add Dependency Repos
         run: |
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
           helm repo add tika https://apache.jfrog.io/artifactory/tika/
-          helm repo add redis https://charts.bitnami.com/bitnami
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
       - name: Build open-webui Helm dependencies
         run: |
           helm dependency build ./charts/open-webui
+
+      - name: Lint open-webui Helm Chart
+        run: |
+          helm lint ./charts/open-webui
 
   test-deploy:
     name: Test Chart Deployment
@@ -51,6 +52,17 @@ jobs:
 
       - name: Set up KinD Cluster
         uses: helm/kind-action@v1
+
+      - name: Add Dependency Repos
+        run: |
+          helm repo add ollama https://otwld.github.io/ollama-helm/
+          helm repo add open-webui https://helm.openwebui.com/
+          helm repo add tika https://apache.jfrog.io/artifactory/tika/
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+
+      - name: Build open-webui Helm dependencies
+        run: |
+          helm dependency build ./charts/open-webui
 
       - name: Template open-webui Helm Chart
         run: |

@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.2.0](https://img.shields.io/badge/Version-6.2.0-informational?style=flat-square) ![AppVersion: 0.6.4](https://img.shields.io/badge/AppVersion-0.6.4-informational?style=flat-square)
+![Version: 6.3.0](https://img.shields.io/badge/Version-6.3.0-informational?style=flat-square) ![AppVersion: 0.6.4](https://img.shields.io/badge/AppVersion-0.6.4-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -34,6 +34,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | Repository | Name | Version |
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
+| https://charts.bitnami.com/bitnami | postgresql(postgresql) | >=15.5.38 |
 | https://charts.bitnami.com/bitnami | redis-cluster(redis) | >=20.6.2 |
 | https://helm.openwebui.com | pipelines | >=0.0.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
@@ -112,6 +113,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | copyAppData.resources | object | `{}` |  |
+| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
 | enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
@@ -142,8 +144,20 @@ helm upgrade --install open-webui open-webui/open-webui
 | openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
+| persistence.azure.container | string | `""` | Sets the container name for Azure Storage |
+| persistence.azure.endpointUrl | string | `nil` | Sets the endpoint URL for Azure Storage |
+| persistence.azure.key | string | `""` | Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services |
 | persistence.enabled | bool | `true` |  |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
+| persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |
+| persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
+| persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
+| persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
+| persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
+| persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
+| persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
+| persistence.s3.region | string | `""` | Sets the region name for S3 storage |
+| persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage |
 | persistence.selector | object | `{}` |  |
 | persistence.size | string | `"2Gi"` |  |
 | persistence.storageClass | string | `""` |  |
@@ -153,6 +167,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | podAnnotations | object | `{}` |  |
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
+| postgresql | object | `{"architecture":"standalone","auth":{"database":"open-webui","password":"0p3n-w3bu!","postgresPassword":"0p3n-w3bu!","username":"open-webui"},"enabled":false,"fullnameOverride":"open-webui-postgres","primary":{"persistence":{"size":"1Gi"},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}}}` | Postgresql configuration (see. https://artifacthub.io/packages/helm/bitnami/postgresql) |
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 | redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3}}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
 | redis-cluster.auth | object | `{"enabled":false}` | Redis Authentication |

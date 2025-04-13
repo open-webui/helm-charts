@@ -211,6 +211,33 @@ persistence:
   storageClass: ""
   selector: {}
   annotations: {}
+  # -- Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure`
+  provider: local
+  s3:
+    # -- Sets the access key ID for S3 storage
+    accessKey: ""
+    # -- Sets the secret access key for S3 storage
+    secretKey: ""
+    # -- Sets the endpoint url for S3 storage
+    endpointUrl: ""
+    # -- Sets the region name for S3 storage
+    region:	""
+    # -- Sets the bucket name for S3 storage
+    bucket:	""
+    # -- Sets the key prefix for a S3 object
+    keyPrefix: ""
+  gcs:
+    # -- Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account
+    appCredentialsJson: ""
+    # -- Sets the bucket name for Google Cloud Storage. Bucket must already exist
+    bucket: ""
+  azure:
+    # -- Sets the endpoint URL for Azure Storage
+    endpointUrl:
+    # -- Sets the container name for Azure Storage
+    container: ""
+    # -- Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services
+    key: ""
 
 # -- Node labels for pod assignment.
 nodeSelector: {}
@@ -433,3 +460,27 @@ extraResources:
   #     name: example-configmap
   #   data:
   #     example-key: example-value
+
+# -- Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database
+databaseUrl: ""
+
+# -- Postgresql configuration (see. https://artifacthub.io/packages/helm/bitnami/postgresql)
+postgresql:
+  enabled: false
+  fullnameOverride: open-webui-postgres
+  architecture: standalone
+  auth:
+    database: open-webui
+    postgresPassword: 0p3n-w3bu!
+    username: open-webui
+    password: 0p3n-w3bu!
+  primary:
+    persistence:
+      size: 1Gi
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 250m
+      limits:
+        memory: 512Mi
+        cpu: 500m
