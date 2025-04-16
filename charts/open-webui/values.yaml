@@ -233,7 +233,7 @@ persistence:
     bucket: ""
   azure:
     # -- Sets the endpoint URL for Azure Storage
-    endpointUrl:
+    endpointUrl: ""
     # -- Sets the container name for Azure Storage
     container: ""
     # -- Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services
@@ -292,6 +292,13 @@ extraEnvVars:
   #       key: api-key
   # - name: OLLAMA_DEBUG
   #   value: "1"
+
+# -- Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`)
+extraEnvFrom: []
+  # - configMapRef:
+  #     name: my-config
+  # - secretRef:
+  #     name: my-secret
 
 # -- Configure runtime class
 # ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/>
