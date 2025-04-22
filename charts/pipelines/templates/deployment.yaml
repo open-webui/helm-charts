@@ -43,6 +43,10 @@ spec:
       {{- if .Values.serviceAccount.enable }}
       serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipelines.name" .) }}
       {{- end }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         {{- with .Values.image }}
@@ -54,6 +58,10 @@ spec:
           containerPort: {{ .Values.service.containerPort }}
         {{- with .Values.resources }}
         resources: {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
         - name: data
