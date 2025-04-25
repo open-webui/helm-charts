@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.6.0](https://img.shields.io/badge/Version-6.6.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
+![Version: 6.7.0](https://img.shields.io/badge/Version-6.7.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -57,24 +57,30 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| sso.github.clientExistingSecret | string | `""` | GitHub OAuth client secret from existing secret |
+| sso.github.clientExistingSecretKey | string | `""` | GitHub OAuth client secret key from existing secret |
 | sso.github.clientId | string | `""` | GitHub OAuth client ID |
-| sso.github.clientSecret | string | `""` | GitHub OAuth client secret |
+| sso.github.clientSecret | string | `""` | GitHub OAuth client secret (ignored if clientExistingSecret is set) |
 | sso.github.enabled | bool | `false` | Enable GitHub OAuth |
 
 ### Google OAuth configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| sso.google.clientExistingSecret | string | `""` | Google OAuth client secret from existing secret |
+| sso.google.clientExistingSecretKey | string | `""` | Google OAuth client secret key from existing secret |
 | sso.google.clientId | string | `""` | Google OAuth client ID |
-| sso.google.clientSecret | string | `""` | Google OAuth client secret |
+| sso.google.clientSecret | string | `""` | Google OAuth client secret (ignored if clientExistingSecret is set) |
 | sso.google.enabled | bool | `false` | Enable Google OAuth |
 
 ### Microsoft OAuth configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| sso.microsoft.clientExistingSecret | string | `""` | Microsoft OAuth client secret from existing secret |
+| sso.microsoft.clientExistingSecretKey | string | `""` | Microsoft OAuth client secret key from existing secret |
 | sso.microsoft.clientId | string | `""` | Microsoft OAuth client ID |
-| sso.microsoft.clientSecret | string | `""` | Microsoft OAuth client secret |
+| sso.microsoft.clientSecret | string | `""` | Microsoft OAuth client secret (ignored if clientExistingSecret is set) |
 | sso.microsoft.enabled | bool | `false` | Enable Microsoft OAuth |
 | sso.microsoft.tenantId | string | `""` | Microsoft tenant ID - use 9188040d-6c67-4c5b-b112-36a304b66dad for personal accounts |
 
@@ -82,8 +88,10 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| sso.oidc.clientExistingSecret | string | `""` | OICD client secret from existing secret |
+| sso.oidc.clientExistingSecretKey | string | `""` | OIDC client secret key from existing secret |
 | sso.oidc.clientId | string | `""` | OIDC client ID |
-| sso.oidc.clientSecret | string | `""` | OIDC client secret |
+| sso.oidc.clientSecret | string | `""` | OIDC client secret (ignored if clientExistingSecret is set) |
 | sso.oidc.enabled | bool | `false` | Enable OIDC authentication |
 | sso.oidc.providerName | string | `"SSO"` | Name of the provider to show on the UI |
 | sso.oidc.providerUrl | string | `""` | OIDC provider well known URL |
