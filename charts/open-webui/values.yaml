@@ -233,11 +233,20 @@ persistence:
     bucket: ""
   azure:
     # -- Sets the endpoint URL for Azure Storage
+    # @section -- Azure Storage configuration
     endpointUrl: ""
     # -- Sets the container name for Azure Storage
+    # @section -- Azure Storage configuration
     container: ""
-    # -- Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services
+    # -- Set the access key for Azure Storage (ignored if keyExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services
+    # @section -- Azure Storage configuration
     key: ""
+    # -- Set the access key for Azure Storage from existing secret
+    # @section -- Azure Storage configuration
+    keyExistingSecret: ""
+    # -- Set the access key for Azure Storage from existing secret key
+    # @section -- Azure Storage configuration
+    keyExistingSecretKey: ""
 
 # -- Node labels for pod assignment.
 nodeSelector: {}

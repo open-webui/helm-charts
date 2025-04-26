@@ -41,6 +41,16 @@ helm upgrade --install open-webui open-webui/open-webui
 
 ## Values
 
+### Azure Storage configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.azure.container | string | `""` | Sets the container name for Azure Storage |
+| persistence.azure.endpointUrl | string | `""` | Sets the endpoint URL for Azure Storage |
+| persistence.azure.key | string | `""` | Set the access key for Azure Storage (ignored if keyExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services |
+| persistence.azure.keyExistingSecret | string | `""` | Set the access key for Azure Storage from existing secret |
+| persistence.azure.keyExistingSecretKey | string | `""` | Set the access key for Azure Storage from existing secret key |
+
 ### SSO Configuration
 
 | Key | Type | Default | Description |
@@ -153,9 +163,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
-| persistence.azure.container | string | `""` | Sets the container name for Azure Storage |
-| persistence.azure.endpointUrl | string | `""` | Sets the endpoint URL for Azure Storage |
-| persistence.azure.key | string | `""` | Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services |
 | persistence.enabled | bool | `true` |  |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
 | persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |

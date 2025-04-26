@@ -183,7 +183,14 @@ spec:
         - name: "AZURE_STORAGE_CONTAINER_NAME"
           value: {{ .Values.persistence.azure.container }}
         - name: "AZURE_STORAGE_KEY"
+        {{- if .Values.persistence.azure.keyExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.persistence.azure.keyExistingSecret }}
+              key: {{ .Values.persistence.azure.keyExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.persistence.azure.key }}
+        {{- end }}
         {{- end }}
         {{- if .Values.websocket.enabled }}
         - name: "ENABLE_WEBSOCKET_SUPPORT"
