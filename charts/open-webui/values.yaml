@@ -227,9 +227,17 @@ persistence:
     # -- Sets the key prefix for a S3 object
     keyPrefix: ""
   gcs:
-    # -- Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account
+    # -- Contents of Google Application Credentials JSON file (ignored if appCredentialsJsonExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account
+    # @section -- Google Cloud Storage configuration
     appCredentialsJson: ""
+    # -- Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret
+    # @section -- Google Cloud Storage configuration
+    appCredentialsJsonExistingSecret: ""
+    # -- Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret key
+    # @section -- Google Cloud Storage configuration
+    appCredentialsJsonExistingSecretKey: ""
     # -- Sets the bucket name for Google Cloud Storage. Bucket must already exist
+    # @section -- Google Cloud Storage configuration
     bucket: ""
   azure:
     # -- Sets the endpoint URL for Azure Storage

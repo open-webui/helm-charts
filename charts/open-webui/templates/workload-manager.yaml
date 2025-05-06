@@ -172,7 +172,14 @@ spec:
         - name: "STORAGE_PROVIDER"
           value: {{ .Values.persistence.provider }}
         - name: "GOOGLE_APPLICATION_CREDENTIALS_JSON"
+        {{- if .Values.persistence.gcs.appCredentialsJsonExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.persistence.gcs.appCredentialsJsonExistingSecret }}
+              key: {{ .Values.persistence.gcs.appCredentialsJsonExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.persistence.gcs.appCredentialsJson }}
+        {{- end }}
         - name: "GCS_BUCKET_NAME"
           value: {{ .Values.persistence.gcs.bucket }}
         {{- else if eq .Values.persistence.provider "azure" }}

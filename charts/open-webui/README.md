@@ -51,6 +51,15 @@ helm upgrade --install open-webui open-webui/open-webui
 | persistence.azure.keyExistingSecret | string | `""` | Set the access key for Azure Storage from existing secret |
 | persistence.azure.keyExistingSecretKey | string | `""` | Set the access key for Azure Storage from existing secret key |
 
+### Google Cloud Storage configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file (ignored if appCredentialsJsonExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |
+| persistence.gcs.appCredentialsJsonExistingSecret | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret |
+| persistence.gcs.appCredentialsJsonExistingSecretKey | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret key |
+| persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
+
 ### SSO Configuration
 
 | Key | Type | Default | Description |
@@ -165,8 +174,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `true` |  |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
-| persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |
-| persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
 | persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
 | persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
 | persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
