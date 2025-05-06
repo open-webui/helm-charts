@@ -209,28 +209,60 @@ spec:
         {{- if .Values.sso.google.enabled }}
         - name: "GOOGLE_CLIENT_ID"
           value: {{ .Values.sso.google.clientId | quote }}
+        {{- include "sso.validateClientSecret" (dict "provider" "google" "values" .Values.sso) }}
         - name: "GOOGLE_CLIENT_SECRET"
+        {{- if .Values.sso.google.clientExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.sso.google.clientExistingSecret | quote }}
+              key: {{ .Values.sso.google.clientExistingSecretKey | quote }}
+        {{- else }}
           value: {{ .Values.sso.google.clientSecret | quote }}
+        {{- end }}
         {{- end }}
         {{- if .Values.sso.microsoft.enabled }}
         - name: "MICROSOFT_CLIENT_ID"
           value: {{ .Values.sso.microsoft.clientId | quote }}
+        {{- include "sso.validateClientSecret" (dict "provider" "microsoft" "values" .Values.sso) }}
         - name: "MICROSOFT_CLIENT_SECRET"
+        {{- if .Values.sso.microsoft.clientExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.sso.microsoft.clientExistingSecret | quote }}
+              key: {{ .Values.sso.microsoft.clientExistingSecretKey | quote }}
+        {{- else }}
           value: {{ .Values.sso.microsoft.clientSecret | quote }}
+        {{- end }}
         - name: "MICROSOFT_CLIENT_TENANT_ID"
           value: {{ .Values.sso.microsoft.tenantId | quote }}
         {{- end }}
         {{- if .Values.sso.github.enabled }}
         - name: "GITHUB_CLIENT_ID"
           value: {{ .Values.sso.github.clientId | quote }}
+        {{- include "sso.validateClientSecret" (dict "provider" "github" "values" .Values.sso) }}
         - name: "GITHUB_CLIENT_SECRET"
+        {{- if .Values.sso.github.clientExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.sso.github.clientExistingSecret | quote }}
+              key: {{ .Values.sso.github.clientExistingSecretKey | quote }}
+        {{- else }}
           value: {{ .Values.sso.github.clientSecret | quote }}
+        {{- end }}
         {{- end }}
         {{- if .Values.sso.oidc.enabled }}
         - name: "OAUTH_CLIENT_ID"
           value: {{ .Values.sso.oidc.clientId | quote }}
+        {{- include "sso.validateClientSecret" (dict "provider" "oidc" "values" .Values.sso) }}
         - name: "OAUTH_CLIENT_SECRET"
+        {{- if .Values.sso.oidc.clientExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.sso.oidc.clientExistingSecret | quote }}
+              key: {{ .Values.sso.oidc.clientExistingSecretKey | quote }}
+        {{- else }}
           value: {{ .Values.sso.oidc.clientSecret | quote }}
+        {{- end }}
         - name: "OPENID_PROVIDER_URL"
           value: {{ .Values.sso.oidc.providerUrl | quote }}
         - name: "OAUTH_PROVIDER_NAME"

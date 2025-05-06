@@ -169,3 +169,14 @@ Create labels to include on chart all websocket resources
 {{ include "base.labels" . }}
 {{ include "websocket.redis.selectorLabels" . }}
 {{- end }}
+
+{{/*
+Validate SSO ClientSecret to be set literally or via Secret
+*/}}
+{{- define "sso.validateClientSecret" -}}
+{{- $provider := .provider }}
+{{- $values := .values }}
+{{- if and (empty (index $values $provider "clientSecret")) (empty (index $values $provider "clientExistingSecret")) }}
+  {{- fail (printf "You must provide either .Values.sso.%s.clientSecret or .Values.sso.%s.clientExistingSecret" $provider $provider) }}
+{{- end }}
+{{- end }}
