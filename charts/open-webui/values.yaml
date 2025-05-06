@@ -215,29 +215,58 @@ persistence:
   provider: local
   s3:
     # -- Sets the access key ID for S3 storage
+    # @section -- Amazon S3 Storage configuration
     accessKey: ""
-    # -- Sets the secret access key for S3 storage
+    # -- Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set)
+    # @section -- Amazon S3 Storage configuration
     secretKey: ""
+    # -- Set the secret access key for S3 storage from existing k8s secret
+    # @section -- Amazon S3 Storage configuration
+    secretKeyExistingSecret: ""
+    # -- Set the secret access key for S3 storage from existing k8s secret key
+    # @section -- Amazon S3 Storage configuration
+    secretKeyExistingSecretKey: ""
     # -- Sets the endpoint url for S3 storage
+    # @section -- Amazon S3 Storage configuration
     endpointUrl: ""
     # -- Sets the region name for S3 storage
-    region:	""
+    # @section -- Amazon S3 Storage configuration
+    region: ""
     # -- Sets the bucket name for S3 storage
-    bucket:	""
+    # @section -- Amazon S3 Storage configuration
+    bucket: ""
     # -- Sets the key prefix for a S3 object
+    # @section -- Amazon S3 Storage configuration
     keyPrefix: ""
   gcs:
-    # -- Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account
+    # -- Contents of Google Application Credentials JSON file (ignored if appCredentialsJsonExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account
+    # @section -- Google Cloud Storage configuration
     appCredentialsJson: ""
+    # -- Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret
+    # @section -- Google Cloud Storage configuration
+    appCredentialsJsonExistingSecret: ""
+    # -- Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret key
+    # @section -- Google Cloud Storage configuration
+    appCredentialsJsonExistingSecretKey: ""
     # -- Sets the bucket name for Google Cloud Storage. Bucket must already exist
+    # @section -- Google Cloud Storage configuration
     bucket: ""
   azure:
     # -- Sets the endpoint URL for Azure Storage
+    # @section -- Azure Storage configuration
     endpointUrl: ""
     # -- Sets the container name for Azure Storage
+    # @section -- Azure Storage configuration
     container: ""
-    # -- Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services
+    # -- Set the access key for Azure Storage (ignored if keyExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services
+    # @section -- Azure Storage configuration
     key: ""
+    # -- Set the access key for Azure Storage from existing secret
+    # @section -- Azure Storage configuration
+    keyExistingSecret: ""
+    # -- Set the access key for Azure Storage from existing secret key
+    # @section -- Azure Storage configuration
+    keyExistingSecretKey: ""
 
 # -- Node labels for pod assignment.
 nodeSelector: {}
