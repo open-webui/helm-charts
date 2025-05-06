@@ -311,16 +311,6 @@ spec:
           value: {{ .Values.rag.embeddingModel | quote }}
         {{- end }}
         {{- end }}
-        {{- if .Values.milvus.enabled }}
-        - name: "MILVUS_URI"
-          value: {{ .Values.milvus.uri | default "${DATA_DIR}/vector_db/milvus.db" | quote }}
-        - name: "MILVUS_DB"
-          value: {{ .Values.milvus.db | default "default" | quote }}
-        {{- if and .Values.milvus.enabled .Values.milvus.token }}
-        - name: "MILVUS_TOKEN"
-          value: {{ .Values.milvus.token | quote }}
-        {{- end }}
-        {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- toYaml .Values.extraEnvVars | nindent 8 }}
         {{- end }}
