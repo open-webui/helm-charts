@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.7.0](https://img.shields.io/badge/Version-6.7.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
+![Version: 6.9.0](https://img.shields.io/badge/Version-6.9.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -38,9 +38,40 @@ helm upgrade --install open-webui open-webui/open-webui
 | https://charts.bitnami.com/bitnami | redis-cluster(redis) | >=20.6.2 |
 | https://helm.openwebui.com | pipelines | >=0.0.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
-| https://zilliztech.github.io/milvus-helm | milvus | >=4.2.40 |
 
 ## Values
+
+### Azure Storage configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.azure.container | string | `""` | Sets the container name for Azure Storage |
+| persistence.azure.endpointUrl | string | `""` | Sets the endpoint URL for Azure Storage |
+| persistence.azure.key | string | `""` | Set the access key for Azure Storage (ignored if keyExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services |
+| persistence.azure.keyExistingSecret | string | `""` | Set the access key for Azure Storage from existing secret |
+| persistence.azure.keyExistingSecretKey | string | `""` | Set the access key for Azure Storage from existing secret key |
+
+### Google Cloud Storage configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file (ignored if appCredentialsJsonExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |
+| persistence.gcs.appCredentialsJsonExistingSecret | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret |
+| persistence.gcs.appCredentialsJsonExistingSecretKey | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret key |
+| persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
+
+### Amazon S3 Storage configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
+| persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
+| persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
+| persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
+| persistence.s3.region | string | `""` | Sets the region name for S3 storage |
+| persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set) |
+| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
+| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
 
 ### SSO Configuration
 
@@ -143,11 +174,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | managedCertificate.domains[0] | string | `"chat.example.com"` |  |
 | managedCertificate.enabled | bool | `false` |  |
 | managedCertificate.name | string | `"mydomain-chat-cert"` |  |
-| milvus.db | string | `"default"` | Active Milvus database for RAG with env `MILVUS_DB` ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_db |
-| milvus.enabled | bool | `false` | Enable Milvus installation. Deploys a Milvus cluster/standalone with subchart 'milvus' from zilliztech ref: https://github.com/zilliztech/milvus-helm/tree/master/charts/milvus |
-| milvus.fullnameOverride | string | `"open-webui-milvus"` | Milvus fullname override (recommended to be 'open-webui-milvus') - In this case, the Milvus uri will be 'http://[username:password@]open-webui-milvus:19530' |
-| milvus.token | object | `{}` | Active Milvus token for RAG with env `MILVUS_TOKEN` ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_token |
-| milvus.uri | string | `"http://open-webui-milvus:19530"` | Active Milvus URI for RAG with env `MILVUS_URI`. If there is credentials in the uri, it will be used to connect to the Milvus server. ref: https://docs.openwebui.com/getting-started/env-configuration#milvus_uri |
 | nameOverride | string | `""` |  |
 | namespaceOverride | string | `""` |  |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
@@ -159,20 +185,9 @@ helm upgrade --install open-webui open-webui/open-webui
 | openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` |  |
-| persistence.azure.container | string | `""` | Sets the container name for Azure Storage |
-| persistence.azure.endpointUrl | string | `""` | Sets the endpoint URL for Azure Storage |
-| persistence.azure.key | string | `""` | Set the access key for Azure Storage. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services |
 | persistence.enabled | bool | `true` |  |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
-| persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file. Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |
-| persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
 | persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
-| persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
-| persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
-| persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
-| persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
-| persistence.s3.region | string | `""` | Sets the region name for S3 storage |
-| persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage |
 | persistence.selector | object | `{}` |  |
 | persistence.size | string | `"2Gi"` |  |
 | persistence.storageClass | string | `""` |  |
@@ -183,10 +198,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
 | postgresql | object | `{"architecture":"standalone","auth":{"database":"open-webui","password":"0p3n-w3bu!","postgresPassword":"0p3n-w3bu!","username":"open-webui"},"enabled":false,"fullnameOverride":"open-webui-postgres","primary":{"persistence":{"size":"1Gi"},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}}}` | Postgresql configuration (see. https://artifacthub.io/packages/helm/bitnami/postgresql) |
-| rag.embeddingEngine | string | `""` | Embedding engine to use for RAG with env `RAG_EMBEDDING_ENGINE`: ""(empty), "ollama", "openai" ref: https://docs.openwebui.com/getting-started/env-configuration#rag_embedding_engine |
-| rag.embeddingModel | string | `""` | Embedding model to use for RAG with env `RAG_EMBEDDING_MODEL` ref: https://docs.openwebui.com/getting-started/env-configuration#rag_embedding_model |
-| rag.enabled | bool | `false` | Enable RAG ref: https://docs.openwebui.com/getting-started/env-configuration#retrieval-augmented-generation-rag |
-| rag.vectorDB | string | `""` | Vector database configuration ref: https://docs.openwebui.com/getting-started/env-configuration#vector_db |
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 | redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3}}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
 | redis-cluster.auth | object | `{"enabled":false}` | Redis Authentication |

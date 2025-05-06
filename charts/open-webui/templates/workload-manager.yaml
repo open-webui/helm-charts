@@ -159,7 +159,14 @@ spec:
         - name: "S3_ACCESS_KEY_ID"
           value: {{ .Values.persistence.s3.accessKey }}
         - name: "S3_SECRET_ACCESS_KEY"
+        {{- if .Values.persistence.s3.secretKeyExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.persistence.s3.secretKeyExistingSecret }}
+              key: {{ .Values.persistence.s3.secretKeyExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.persistence.s3.secretKey }}
+        {{- end }}
         - name: "S3_ENDPOINT_URL"
           value: {{ .Values.persistence.s3.endpointUrl }}
         - name: "S3_BUCKET_NAME"
@@ -172,7 +179,14 @@ spec:
         - name: "STORAGE_PROVIDER"
           value: {{ .Values.persistence.provider }}
         - name: "GOOGLE_APPLICATION_CREDENTIALS_JSON"
+        {{- if .Values.persistence.gcs.appCredentialsJsonExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.persistence.gcs.appCredentialsJsonExistingSecret }}
+              key: {{ .Values.persistence.gcs.appCredentialsJsonExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.persistence.gcs.appCredentialsJson }}
+        {{- end }}
         - name: "GCS_BUCKET_NAME"
           value: {{ .Values.persistence.gcs.bucket }}
         {{- else if eq .Values.persistence.provider "azure" }}
@@ -183,7 +197,14 @@ spec:
         - name: "AZURE_STORAGE_CONTAINER_NAME"
           value: {{ .Values.persistence.azure.container }}
         - name: "AZURE_STORAGE_KEY"
+        {{- if .Values.persistence.azure.keyExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.persistence.azure.keyExistingSecret }}
+              key: {{ .Values.persistence.azure.keyExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.persistence.azure.key }}
+        {{- end }}
         {{- end }}
         {{- if .Values.websocket.enabled }}
         - name: "ENABLE_WEBSOCKET_SUPPORT"
@@ -297,28 +318,6 @@ spec:
         - name: "WEBUI_AUTH_TRUSTED_NAME_HEADER"
           value: {{ .Values.sso.trustedHeader.nameHeader | quote }}
         {{- end }}
-        {{- end }}
-        {{- end }}
-        {{- if .Values.rag.enabled }}
-        - name: "VECTOR_DB"
-          value: {{ .Values.rag.vectorDB | default "croma" | quote }}
-        {{- if and .Values.rag.enabled .Values.rag.embeddingEngine }}
-        - name: "RAG_EMBEDDING_ENGINE"
-          value: {{ .Values.rag.embeddingEngine | quote }}
-        {{- end }}
-        {{- if and .Values.rag.enabled .Values.rag.embeddingModel }}
-        - name: "RAG_EMBEDDING_MODEL"
-          value: {{ .Values.rag.embeddingModel | quote }}
-        {{- end }}
-        {{- end }}
-        {{- if .Values.milvus.enabled }}
-        - name: "MILVUS_URI"
-          value: {{ .Values.milvus.uri | default "${DATA_DIR}/vector_db/milvus.db" | quote }}
-        - name: "MILVUS_DB"
-          value: {{ .Values.milvus.db | default "default" | quote }}
-        {{- if and .Values.milvus.enabled .Values.milvus.token }}
-        - name: "MILVUS_TOKEN"
-          value: {{ .Values.milvus.token | quote }}
         {{- end }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
