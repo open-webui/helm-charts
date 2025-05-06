@@ -215,16 +215,28 @@ persistence:
   provider: local
   s3:
     # -- Sets the access key ID for S3 storage
+    # @section -- Amazon S3 Storage configuration
     accessKey: ""
-    # -- Sets the secret access key for S3 storage
+    # -- Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set)
+    # @section -- Amazon S3 Storage configuration
     secretKey: ""
+    # -- Set the secret access key for S3 storage from existing k8s secret
+    # @section -- Amazon S3 Storage configuration
+    secretKeyExistingSecret: ""
+    # -- Set the secret access key for S3 storage from existing k8s secret key
+    # @section -- Amazon S3 Storage configuration
+    secretKeyExistingSecretKey: ""
     # -- Sets the endpoint url for S3 storage
+    # @section -- Amazon S3 Storage configuration
     endpointUrl: ""
     # -- Sets the region name for S3 storage
-    region:	""
+    # @section -- Amazon S3 Storage configuration
+    region: ""
     # -- Sets the bucket name for S3 storage
-    bucket:	""
+    # @section -- Amazon S3 Storage configuration
+    bucket: ""
     # -- Sets the key prefix for a S3 object
+    # @section -- Amazon S3 Storage configuration
     keyPrefix: ""
   gcs:
     # -- Contents of Google Application Credentials JSON file (ignored if appCredentialsJsonExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account

@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.8.0](https://img.shields.io/badge/Version-6.8.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
+![Version: 6.9.0](https://img.shields.io/badge/Version-6.9.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -59,6 +59,19 @@ helm upgrade --install open-webui open-webui/open-webui
 | persistence.gcs.appCredentialsJsonExistingSecret | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret |
 | persistence.gcs.appCredentialsJsonExistingSecretKey | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret key |
 | persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
+
+### Amazon S3 Storage configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
+| persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
+| persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
+| persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
+| persistence.s3.region | string | `""` | Sets the region name for S3 storage |
+| persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set) |
+| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
+| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
 
 ### SSO Configuration
 
@@ -175,12 +188,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | persistence.enabled | bool | `true` |  |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
 | persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
-| persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
-| persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
-| persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
-| persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
-| persistence.s3.region | string | `""` | Sets the region name for S3 storage |
-| persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage |
 | persistence.selector | object | `{}` |  |
 | persistence.size | string | `"2Gi"` |  |
 | persistence.storageClass | string | `""` |  |
