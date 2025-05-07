@@ -198,6 +198,7 @@ ingress:
   additionalHosts: []
   tls: false
   existingSecret: ""
+
 persistence:
   enabled: true
   size: 2Gi
@@ -544,3 +545,46 @@ postgresql:
       limits:
         memory: 512Mi
         cpu: 500m
+
+# Configure Application logging levels (see. https://docs.openwebui.com/getting-started/advanced-topics/logging#-logging-levels-explained)
+logging:
+  # -- Set the global log level ["notset", "debug", "info" (default), "warning", "error", "critical"]
+  # @section -- Logging configuration
+  level: ""
+
+  # Optional granularity: override log levels per subsystem/component
+  # if not set, it will use the global level (see. https://docs.openwebui.com/getting-started/advanced-topics/logging#%EF%B8%8F-appbackend-specific-logging-levels)
+  components:
+    # -- Set the log level for the Audio processing component
+    # @section -- Logging configuration
+    audio: ""
+    # -- Set the log level for the ComfyUI Integration component
+    # @section -- Logging configuration
+    comfyui: ""
+    # -- Set the log level for the Configuration Management component
+    # @section -- Logging configuration
+    config: ""
+    # -- Set the log level for the Database Operations (Peewee) component
+    # @section -- Logging configuration
+    db: ""
+    # -- Set the log level for the Image Generation component
+    # @section -- Logging configuration
+    images: ""
+    # -- Set the log level for the Main Application Execution component
+    # @section -- Logging configuration
+    main: ""
+    # -- Set the log level for the Model Management component
+    # @section -- Logging configuration
+    models: ""
+    # -- Set the log level for the Ollama Backend Integration component
+    # @section -- Logging configuration
+    ollama: ""
+    # -- Set the log level for the OpenAI API Integration component
+    # @section -- Logging configuration
+    openai: ""
+    # -- Set the log level for the Retrieval-Augmented Generation (RAG) component
+    # @section -- Logging configuration
+    rag: ""
+    # -- Set the log level for the Authentication Webhook component
+    # @section -- Logging configuration
+    webhook: ""
