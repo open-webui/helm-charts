@@ -180,3 +180,56 @@ Validate SSO ClientSecret to be set literally or via Secret
   {{- fail (printf "You must provide either .Values.sso.%s.clientSecret or .Values.sso.%s.clientExistingSecret" $provider $provider) }}
 {{- end }}
 {{- end }}
+
+{{- /*
+Fail template rendering if invalid log component
+*/ -}}
+{{- define "logging.isValidComponent" -}}
+  {{- $component := . | lower -}}
+  {{- $validComponents := dict
+      "audio" true
+      "comfyui" true
+      "config" true
+      "db" true
+      "images" true
+      "main" true
+      "models" true
+      "ollama" true
+      "openai" true
+      "rag" true
+      "webhook" true
+  -}}
+  {{- hasKey $validComponents $component -}}
+{{- end }}
+
+
+{{- define "logging.assertValidComponent" -}}
+  {{- $component := lower . -}}
+  {{- $res := include "logging.isValidComponent" $component }}
+  {{- if ne $res "true" }}
+    {{- fail (printf "Invalid logging component name: '%s'. Valid names: audio, comfyui, config, db, images, main, models, ollama, openai, rag, webhook" $component) }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+Fail template rendering if invalid log level
+*/ -}}
+{{- define "logging.assertValidLevel" -}}
+  {{- $level := lower . }}
+  {{- $validLevels := dict "notset" true "debug" true "info" true "warning" true "error" true "critical" true }}
+  {{- if not (hasKey $validLevels $level) }}
+    {{- fail (printf "Invalid log level: '%s'. Valid values are: notset, debug, info, warning, error, critical" $level) }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+Render a logging env var for a component, validating value
+*/ -}}
+{{- define "logging.componentEnvVar" -}}
+  {{- $name := .componentName }}
+  {{- $level := .logLevel }}
+{{- include "logging.assertValidComponent" $name -}}
+{{- include "logging.assertValidLevel" $level }}
+- name: {{ printf "%s_LOG_LEVEL" (upper $name) | quote }}
+  value: {{ $level | quote | trim }}
+{{- end }}

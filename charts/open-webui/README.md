@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.9.0](https://img.shields.io/badge/Version-6.9.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
+![Version: 6.10.0](https://img.shields.io/badge/Version-6.10.0-informational?style=flat-square) ![AppVersion: 0.6.6](https://img.shields.io/badge/AppVersion-0.6.6-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -40,6 +40,23 @@ helm upgrade --install open-webui open-webui/open-webui
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
+
+### Logging configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| logging.components.audio | string | `""` | Set the log level for the Audio processing component |
+| logging.components.comfyui | string | `""` | Set the log level for the ComfyUI Integration component |
+| logging.components.config | string | `""` | Set the log level for the Configuration Management component |
+| logging.components.db | string | `""` | Set the log level for the Database Operations (Peewee) component |
+| logging.components.images | string | `""` | Set the log level for the Image Generation component |
+| logging.components.main | string | `""` | Set the log level for the Main Application Execution component |
+| logging.components.models | string | `""` | Set the log level for the Model Management component |
+| logging.components.ollama | string | `""` | Set the log level for the Ollama Backend Integration component |
+| logging.components.openai | string | `""` | Set the log level for the OpenAI API Integration component |
+| logging.components.rag | string | `""` | Set the log level for the Retrieval-Augmented Generation (RAG) component |
+| logging.components.webhook | string | `""` | Set the log level for the Authentication Webhook component |
+| logging.level | string | `""` | Set the global log level ["notset", "debug", "info" (default), "warning", "error", "critical"] |
 
 ### Azure Storage configuration
 

@@ -320,6 +320,19 @@ spec:
         {{- end }}
         {{- end }}
         {{- end }}
+        {{- if .Values.logging.level }}
+        {{- include "logging.assertValidLevel" .Values.logging.level }}
+        - name: "GLOBAL_LOG_LEVEL"
+          value: {{ .Values.logging.level | quote }}
+        {{- end }}
+
+        {{- if .Values.logging.components }}
+        {{- range $name, $level := .Values.logging.components }}
+        {{- if $level }}
+        {{- include "logging.componentEnvVar" (dict "componentName" $name "logLevel" $level) | indent 8 }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- toYaml .Values.extraEnvVars | nindent 8 }}
         {{- end }}
