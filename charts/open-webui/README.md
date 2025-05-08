@@ -183,7 +183,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | ingress.additionalHosts | list | `[]` |  |
 | ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
 | ingress.class | string | `""` |  |
-| ingress.enabled | bool | `true` |  |
+| ingress.enabled | bool | `false` |  |
 | ingress.existingSecret | string | `""` |  |
 | ingress.extraLabels | object | `{}` | Additional custom labels to add to the Ingress metadata Useful for tagging, selecting, or applying policies to the Ingress via labels. |
 | ingress.host | string | `"chat.example.com"` |  |
