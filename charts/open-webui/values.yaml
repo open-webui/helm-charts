@@ -181,7 +181,7 @@ managedCertificate:
     - chat.example.com # update to your real domain
 
 ingress:
-  enabled: false
+  enabled: true
   class: ""
   # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
   annotations: {}
@@ -198,6 +198,12 @@ ingress:
   additionalHosts: []
   tls: false
   existingSecret: ""
+
+  # -- Additional custom labels to add to the Ingress metadata
+  # Useful for tagging, selecting, or applying policies to the Ingress via labels.
+  extraLabels: {}
+  # extraLabels:
+  #   app.kubernetes.io/environment: "staging"
 
 persistence:
   enabled: true
