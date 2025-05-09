@@ -325,6 +325,11 @@ extraEnvVars:
   # - name: OLLAMA_DEBUG
   #   value: "1"
 
+# -- Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates)
+commonEnvVars: []
+  # - name: RAG_EMBEDDING_ENGINE
+  #   value: "openai"
+
 # -- Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`)
 extraEnvFrom: []
   # - configMapRef:
