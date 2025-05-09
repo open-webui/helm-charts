@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.11.0](https://img.shields.io/badge/Version-6.11.0-informational?style=flat-square) ![AppVersion: 0.6.7](https://img.shields.io/badge/AppVersion-0.6.7-informational?style=flat-square)
+![Version: 6.12.0](https://img.shields.io/badge/Version-6.12.0-informational?style=flat-square) ![AppVersion: 0.6.7](https://img.shields.io/badge/AppVersion-0.6.7-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -186,6 +186,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | ingress.class | string | `""` |  |
 | ingress.enabled | bool | `false` |  |
 | ingress.existingSecret | string | `""` |  |
+| ingress.extraLabels | object | `{}` | Additional custom labels to add to the Ingress metadata Useful for tagging, selecting, or applying policies to the Ingress via labels. |
 | ingress.host | string | `"chat.example.com"` |  |
 | ingress.tls | bool | `false` |  |
 | livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
