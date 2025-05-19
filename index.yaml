@@ -4,6 +4,60 @@ entries:
   - annotations:
       licenses: MIT
     apiVersion: v2
+    appVersion: 0.6.10
+    created: "2025-05-19T18:10:54.575080766Z"
+    dependencies:
+    - condition: ollama.enabled
+      import-values:
+      - child: service
+        parent: ollama.service
+      name: ollama
+      repository: https://otwld.github.io/ollama-helm/
+      version: '>=0.24.0'
+    - condition: pipelines.enabled
+      import-values:
+      - child: service
+        parent: pipelines.service
+      name: pipelines
+      repository: https://helm.openwebui.com
+      version: '>=0.0.1'
+    - condition: tika.enabled
+      name: tika
+      repository: https://apache.jfrog.io/artifactory/tika
+      version: '>=2.9.0'
+    - alias: redis-cluster
+      condition: redis-cluster.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: '>=20.6.2'
+    - alias: postgresql
+      condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: '>=15.5.38'
+    description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions
+      \U0001F44B"
+    digest: 1f609dac111f9db3478ec858dd9a7e602cb6b8a85c202b9ddddaa3da57326db5
+    home: https://www.openwebui.com/
+    icon: https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
+    keywords:
+    - llm
+    - chat
+    - web-ui
+    - open-webui
+    name: open-webui
+    sources:
+    - https://github.com/open-webui/helm-charts
+    - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+    - https://github.com/otwld/ollama-helm/
+    - https://hub.docker.com/r/ollama/ollama
+    - https://charts.bitnami.com/bitnami
+    urls:
+    - open-webui-6.16.0.tgz
+    version: 6.16.0
+  - annotations:
+      licenses: MIT
+    apiVersion: v2
     appVersion: 0.6.9
     created: "2025-05-16T19:45:01.29078005Z"
     dependencies:
@@ -4280,4 +4334,4 @@ entries:
     urls:
     - pipelines-0.0.1.tgz
     version: 0.0.1
-generated: "2025-05-16T19:45:01.291192271Z"
+generated: "2025-05-19T18:10:54.575362844Z"
