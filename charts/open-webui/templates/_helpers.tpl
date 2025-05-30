@@ -233,3 +233,15 @@ Render a logging env var for a component, validating value
 - name: {{ printf "%s_LOG_LEVEL" (upper $name) | quote }}
   value: {{ $level | quote | trim }}
 {{- end }}
+
+{{- /*
+Constructs a string containing the URLs of the Open WebUI based on the ingress configuration
+used to populate the variable WEBUI_URL  
+*/ -}}
+{{- define "openweb-ui.url" -}}
+  {{- $proto := "http" -}}
+  {{- if .Values.ingress.tls -}}
+    {{- $proto = "https" -}}
+  {{- end -}}
+  {{- printf "%s://%s" $proto $.Values.ingress.host }}
+{{- end }}
