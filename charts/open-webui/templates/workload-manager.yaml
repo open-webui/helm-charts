@@ -119,6 +119,10 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
+        {{- if .Values.ingress.enabled }}
+        - name: WEBUI_URL
+          value: {{ include "openweb-ui.url" . }}
+        {{- end }}
         {{- if .Values.ollamaUrlsFromExtraEnv}}
         {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
         - name: "OLLAMA_BASE_URLS"
