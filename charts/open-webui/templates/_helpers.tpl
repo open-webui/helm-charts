@@ -239,18 +239,15 @@ Constructs a string containing the URLs of the Open WebUI based on the ingress c
 used to populate the variable WEBUI_URL  
 */ -}}
 {{- define "openweb-ui.url" -}}
-  {{- $url := "" -}}
-  {{- range .Values.extraEnvVars }}
-    {{- if and (eq .name "WEBUI_URL") .value }}
-      {{- $url = .value }}
-    {{- end }}
-  {{- end }}
-  {{- if not $url }}
+  {{- $webuiEnv := where .Values.extraEnvVars "name" "WEBUI_URL" | first -}}
+  {{- if and $webuiEnv $webuiEnv.value }}
+    {{- $webuiEnv.value }}
+  {{- else }}
     {{- $proto := "http" -}}
     {{- if .Values.ingress.tls }}
       {{- $proto = "https" -}}
     {{- end }}
-    {{- $url = printf "%s://%s" $proto .Values.ingress.host }}
+    {{- printf "%s://%s" $proto .Values.ingress.host }}
   {{- end }}
-  {{- $url }}
 {{- end }}
+
