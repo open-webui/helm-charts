@@ -52,7 +52,12 @@ spec:
         image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
-        command: ['sh', '-c', 'cp -R -n /app/backend/data/* /tmp/app-data/']
+        command:
+          {{- toYaml (.Values.copyAppData.command | default (list "sh" "-c" "cp -R -n /app/backend/data/* /tmp/app-data/")) | nindent 10 }}
+        {{- with .Values.copyAppData.args }}
+        args:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         {{- with .Values.containerSecurityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}

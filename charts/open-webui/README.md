@@ -172,6 +172,8 @@ helm upgrade --install open-webui open-webui/open-webui
 | command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
 | commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
+| copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
+| copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
 | copyAppData.resources | object | `{}` |  |
 | databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
 | enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
