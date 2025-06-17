@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.20.0](https://img.shields.io/badge/Version-6.20.0-informational?style=flat-square) ![AppVersion: 0.6.14](https://img.shields.io/badge/AppVersion-0.6.14-informational?style=flat-square)
+![Version: 6.21.0](https://img.shields.io/badge/Version-6.21.0-informational?style=flat-square) ![AppVersion: 0.6.15](https://img.shields.io/badge/AppVersion-0.6.15-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
