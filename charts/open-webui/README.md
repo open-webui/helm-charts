@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.21.0](https://img.shields.io/badge/Version-6.21.0-informational?style=flat-square) ![AppVersion: 0.6.15](https://img.shields.io/badge/AppVersion-0.6.15-informational?style=flat-square)
+![Version: 6.22.0](https://img.shields.io/badge/Version-6.22.0-informational?style=flat-square) ![AppVersion: 0.6.15](https://img.shields.io/badge/AppVersion-0.6.15-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -167,9 +167,13 @@ helm upgrade --install open-webui open-webui/open-webui
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
+| args | list | `[]` | Open WebUI container arguments (overrides default) |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
+| command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
 | commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
+| copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
+| copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
 | copyAppData.resources | object | `{}` |  |
 | databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
 | enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
