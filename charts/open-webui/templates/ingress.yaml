@@ -9,9 +9,9 @@ metadata:
     {{- with .Values.ingress.extraLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.ingress.annotations }}
+  {{- if .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .Values.ingress.annotations | nindent 4) . }}
   {{- end }}
 spec:
   {{- with .Values.ingress.class }}
