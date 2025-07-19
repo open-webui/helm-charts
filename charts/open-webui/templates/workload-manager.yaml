@@ -15,6 +15,9 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  {{- if or (not .Values.persistence.enabled) (not (eq .Values.persistence.provider "local")) }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{- end }}
   {{- if and .Values.persistence.enabled (eq .Values.persistence.provider "local") }}
   serviceName: {{ include "open-webui.name" . }}
   {{- end }}
