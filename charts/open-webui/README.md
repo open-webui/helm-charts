@@ -82,13 +82,15 @@ helm upgrade --install open-webui open-webui/open-webui
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
+| persistence.s3.accessKeyExistingAccessKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
+| persistence.s3.accessKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
 | persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
 | persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
 | persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
 | persistence.s3.region | string | `""` | Sets the region name for S3 storage |
 | persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set) |
-| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
-| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
+| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret key for S3 storage from existing k8s secret |
+| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret key for S3 storage from existing k8s secret key |
 
 ### SSO Configuration
 
@@ -221,6 +223,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | podLabels | object | `{}` |  |
 | podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
 | postgresql | object | `{"architecture":"standalone","auth":{"database":"open-webui","password":"0p3n-w3bu!","postgresPassword":"0p3n-w3bu!","username":"open-webui"},"enabled":false,"fullnameOverride":"open-webui-postgres","primary":{"persistence":{"size":"1Gi"},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}}}` | Postgresql configuration (see. https://artifacthub.io/packages/helm/bitnami/postgresql) |
+| priorityClassName | string | `""` | Priority class name for the Open WebUI pods |
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 | redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3}}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
 | redis-cluster.auth | object | `{"enabled":false}` | Redis Authentication |
@@ -231,6 +234,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | redis-cluster.replica.replicaCount | int | `3` | Number of Redis replica instances |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
+| revisionHistoryLimit | int | `10` | Revision history limit for the workload manager (deployment). |
 | runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
 | service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
 | serviceAccount.annotations | object | `{}` |  |
