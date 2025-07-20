@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.24.0](https://img.shields.io/badge/Version-6.24.0-informational?style=flat-square) ![AppVersion: 0.6.16](https://img.shields.io/badge/AppVersion-0.6.16-informational?style=flat-square)
+![Version: 6.25.0](https://img.shields.io/badge/Version-6.25.0-informational?style=flat-square) ![AppVersion: 0.6.17](https://img.shields.io/badge/AppVersion-0.6.17-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -82,13 +82,15 @@ helm upgrade --install open-webui open-webui/open-webui
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
+| persistence.s3.accessKeyExistingAccessKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
+| persistence.s3.accessKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
 | persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
 | persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
 | persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
 | persistence.s3.region | string | `""` | Sets the region name for S3 storage |
 | persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set) |
-| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
-| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
+| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret key for S3 storage from existing k8s secret |
+| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret key for S3 storage from existing k8s secret key |
 
 ### SSO Configuration
 
