@@ -18,9 +18,6 @@ spec:
   {{- if or (not .Values.persistence.enabled) (not (eq .Values.persistence.provider "local")) }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
-  {{- with .Values.priorityClassName }}
-  priorityClassName: {{ . }}
-  {{- end }}
   {{- if and .Values.persistence.enabled (eq .Values.persistence.provider "local") }}
   serviceName: {{ include "open-webui.name" . }}
   {{- end }}
@@ -51,6 +48,9 @@ spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.priorityClassName }}
+      priorityClassName: {{ . }}
       {{- end }}
       initContainers:
       - name: copy-app-data
