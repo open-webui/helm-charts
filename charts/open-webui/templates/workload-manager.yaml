@@ -180,14 +180,14 @@ spec:
         - name: "STORAGE_PROVIDER"
           value: {{ .Values.persistence.provider }}
         - name: "S3_ACCESS_KEY_ID"
-          { { - if .Values.persistence.s3.accessKeyExistingSecret } }
+          {{- if .Values.persistence.s3.accessKeyExistingSecret }}
           valueFrom:
             secretKeyRef:
-              name: { { .Values.persistence.s3.accessKeyExistingSecret } }
-              key: { { .Values.persistence.s3.accessKeyExistingAccessKey } }
-          { { - else } }
-          value: { { .Values.persistence.s3.accessKey } }
-          { { - end } }
+              name: {{ .Values.persistence.s3.accessKeyExistingSecret }}
+              key: {{ .Values.persistence.s3.accessKeyExistingAccessKey }}
+          {{- else }}
+          value: {{ .Values.persistence.s3.accessKey }}
+          {{- end }}
         - name: "S3_SECRET_ACCESS_KEY"
         {{- if .Values.persistence.s3.secretKeyExistingSecret }}
           valueFrom:
