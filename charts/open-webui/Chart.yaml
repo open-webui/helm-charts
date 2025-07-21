@@ -1,11 +1,11 @@
 apiVersion: v2
 name: open-webui
-version: 6.27.0
+version: 6.28.0
 appVersion: 0.6.18
 home: https://www.openwebui.com/
 icon: >-
   https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
-description: 'Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋'
+description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋"
 keywords:
   - llm
   - chat
@@ -22,29 +22,29 @@ annotations:
 dependencies:
   - name: ollama
     repository: https://otwld.github.io/ollama-helm/
-    version: '>=0.24.0'
+    version: ">=0.24.0"
     import-values:
       - child: service
         parent: ollama.service
     condition: ollama.enabled
   - name: pipelines
     repository: https://helm.openwebui.com
-    version: '>=0.0.1'
+    version: ">=0.0.1"
     import-values:
       - child: service
         parent: pipelines.service
     condition: pipelines.enabled
   - name: tika
     repository: https://apache.jfrog.io/artifactory/tika
-    version: '>=2.9.0'
+    version: ">=2.9.0"
     condition: tika.enabled
   - name: redis
     repository: https://charts.bitnami.com/bitnami
-    version: '>=20.6.2'
+    version: ">=20.6.2"
     alias: redis-cluster
     condition: redis-cluster.enabled
   - name: postgresql
     repository: https://charts.bitnami.com/bitnami
-    version: '>=15.5.38'
+    version: ">=15.5.38"
     alias: postgresql
     condition: postgresql.enabled
