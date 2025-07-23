@@ -238,7 +238,7 @@ Render a logging env var for a component, validating value
 Constructs a string containing the URLs of the Open WebUI based on the ingress configuration
 used to populate the variable WEBUI_URL  
 */ -}}
-{{- define "openweb-ui.url" -}}
+{{- define "open-webui.url" -}}
   {{- $url := "" -}}
   {{- range .Values.extraEnvVars }}
     {{- if and (eq .name "WEBUI_URL") .value }}

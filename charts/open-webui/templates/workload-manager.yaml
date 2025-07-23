@@ -146,7 +146,7 @@ spec:
         {{- end }}
         {{- if and .Values.ingress.enabled (not $hasCustomWebUIUrl) }}
         - name: WEBUI_URL
-          value: {{ include "openweb-ui.url" . | quote }}
+          value: {{ include "open-webui.url" . | quote }}
         {{- end }}
         {{- if .Values.ollamaUrlsFromExtraEnv}}
         {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
