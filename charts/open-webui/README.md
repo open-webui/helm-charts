@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 6.28.0](https://img.shields.io/badge/Version-6.28.0-informational?style=flat-square) ![AppVersion: 0.6.18](https://img.shields.io/badge/AppVersion-0.6.18-informational?style=flat-square)
+![Version: 6.29.0](https://img.shields.io/badge/Version-6.29.0-informational?style=flat-square) ![AppVersion: 0.6.18](https://img.shields.io/badge/AppVersion-0.6.18-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -225,13 +225,14 @@ helm upgrade --install open-webui open-webui/open-webui
 | postgresql | object | `{"architecture":"standalone","auth":{"database":"open-webui","password":"0p3n-w3bu!","postgresPassword":"0p3n-w3bu!","username":"open-webui"},"enabled":false,"fullnameOverride":"open-webui-postgres","primary":{"persistence":{"size":"1Gi"},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}}}` | Postgresql configuration (see. https://artifacthub.io/packages/helm/bitnami/postgresql) |
 | priorityClassName | string | `""` | Priority class name for the Open WebUI pods |
 | readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3}}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
+| redis-cluster | object | `{"auth":{"enabled":false},"enabled":false,"fullnameOverride":"open-webui-redis","replica":{"replicaCount":3},"url":"redis://open-webui-redis:6379/0"}` | Deploys a Redis cluster with subchart 'redis' from bitnami |
 | redis-cluster.auth | object | `{"enabled":false}` | Redis Authentication |
 | redis-cluster.auth.enabled | bool | `false` | Enable Redis authentication (disabled by default). For your security, we strongly suggest that you switch to 'auth.enabled=true' |
 | redis-cluster.enabled | bool | `false` | Enable Redis installation |
 | redis-cluster.fullnameOverride | string | `"open-webui-redis"` | Redis cluster name (recommended to be 'open-webui-redis') - In this case, redis url will be 'redis://open-webui-redis-master:6379/0' or 'redis://[:<password>@]open-webui-redis-master:6379/0' |
 | redis-cluster.replica | object | `{"replicaCount":3}` | Replica configuration for the Redis cluster |
 | redis-cluster.replica.replicaCount | int | `3` | Number of Redis replica instances |
+| redis-cluster.url | string | `"redis://open-webui-redis:6379/0"` | Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>` |
 | replicaCount | int | `1` |  |
 | resources | object | `{}` |  |
 | revisionHistoryLimit | int | `10` | Revision history limit for the workload manager (deployment). |
