@@ -242,6 +242,10 @@ spec:
           value: {{ .Values.persistence.azure.key }}
         {{- end }}
         {{- end }}
+        {{- if index .Values "redis-cluster" "enabled" }}
+        - name: "REDIS_URL"
+          value: {{ index .Values "redis-cluster" "url" | quote }}
+        {{- end }}
         {{- if .Values.websocket.enabled }}
         - name: "ENABLE_WEBSOCKET_SUPPORT"
           value: "True"
