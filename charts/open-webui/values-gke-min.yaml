@@ -75,22 +75,6 @@ websocket:
       # -- Redis service node port. Valid only when type is `NodePort`
       nodePort: ""
 
-# -- Deploys a Redis cluster with subchart 'redis' from bitnami
-redis-cluster:
-  # -- Enable Redis installation
-  enabled: false
-  # -- Redis cluster name (recommended to be 'open-webui-redis')
-  # - In this case, redis url will be 'redis://open-webui-redis-master:6379/0' or 'redis://[:<password>@]open-webui-redis-master:6379/0'
-  fullnameOverride: open-webui-redis
-  # -- Redis Authentication
-  auth:
-    # -- Enable Redis authentication (disabled by default). For your security, we strongly suggest that you switch to 'auth.enabled=true'
-    enabled: false
-  # -- Replica configuration for the Redis cluster
-  replica:
-    # -- Number of Redis replica instances
-    replicaCount: 3
-
 # -- Value of cluster domain
 clusterDomain: cluster.local
 
