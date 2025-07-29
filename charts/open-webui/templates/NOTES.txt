@@ -27,7 +27,7 @@ This interface allows you to easily interact with local AI models.
   Access via ClusterIP service:
 
     export LOCAL_PORT=8080
-    export POD_NAME=$(kubectl get pods -n {{ .Release.Namespace }} -l "app.kubernetes.io/component={{ include "open-webui.name" . }}" -o jsonpath="{.items[0].metadata.name}")
+    export POD_NAME=$(kubectl get pods -n {{ .Release.Namespace }} -l "app.kubernetes.io/component={{ include "open-webui.fullname" . }}" -o jsonpath="{.items[0].metadata.name}")
     export CONTAINER_PORT=$(kubectl get pod -n {{ .Release.Namespace }} $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
     kubectl -n {{ .Release.Namespace }} port-forward $POD_NAME $LOCAL_PORT:$CONTAINER_PORT
     echo "Visit http://127.0.0.1:$LOCAL_PORT to use your application"
@@ -36,7 +36,7 @@ This interface allows you to easily interact with local AI models.
 
 {{- else if contains "NodePort" .Values.service.type }}
   Access via NodePort service:
-    export NODE_PORT=$(kubectl get -n {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "open-webui.name" . }})
+    export NODE_PORT=$(kubectl get -n {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "open-webui.fullname" . }})
     export NODE_IP=$(kubectl get nodes -o jsonpath="{.items[0].status.addresses[0].address}")
     echo http://$NODE_IP:$NODE_PORT
 
@@ -48,8 +48,8 @@ This interface allows you to easily interact with local AI models.
     - GCP/Azure: Will return an IP address
   You can watch the status by running:
 
-    kubectl get -n {{ .Release.Namespace }} svc {{ include "open-webui.name" . }} --watch
-    export EXTERNAL_IP=$(kubectl get -n {{ .Release.Namespace }} svc {{ include "open-webui.name" . }} -o jsonpath="{.status.loadBalancer.ingress[0].hostname:-.status.loadBalancer.ingress[0].ip}")
+    kubectl get -n {{ .Release.Namespace }} svc {{ include "open-webui.fullname" . }} --watch
+    export EXTERNAL_IP=$(kubectl get -n {{ .Release.Namespace }} svc {{ include "open-webui.fullname" . }} -o jsonpath="{.status.loadBalancer.ingress[0].hostname:-.status.loadBalancer.ingress[0].ip}")
     echo http://$EXTERNAL_IP:{{ .Values.service.port }}
 {{- end }}
 
@@ -67,9 +67,9 @@ This interface allows you to easily interact with local AI models.
 
   - View logs:
     {{- if .Values.persistence.enabled }}
-      kubectl logs -f statefulset/{{ include "open-webui.name" . }} -n {{ .Release.Namespace }}
+      kubectl logs -f statefulset/{{ include "open-webui.fullname" . }} -n {{ .Release.Namespace }}
     {{- else }}
-      kubectl logs -f deployment/{{ include "open-webui.name" . }} -n {{ .Release.Namespace }}
+      kubectl logs -f deployment/{{ include "open-webui.fullname" . }} -n {{ .Release.Namespace }}
     {{- end }}
 
 4. Cleanup:
