@@ -24,7 +24,7 @@ spec:
       {{- range .Values.ingress.additionalHosts }}
       - {{ . | quote }}
       {{- end }}
-      secretName: {{ default (printf "%s-tls" .Release.Name) .Values.ingress.existingSecret }}
+      secretName: {{ default (printf "%s-tls" (include "open-webui.fullname" .))) .Values.ingress.existingSecret }}
   {{- end }}
   rules:
   - host: {{ .Values.ingress.host }}
