@@ -12,7 +12,6 @@ Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 * <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
 * <https://github.com/otwld/ollama-helm/>
 * <https://hub.docker.com/r/ollama/ollama>
-* <https://charts.bitnami.com/bitnami>
 
 ## Installing
 
