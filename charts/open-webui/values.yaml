@@ -99,26 +99,6 @@ websocket:
       # runAsUser: 999
       # runAsGroup: 1000
 
-# -- Deploys a Redis cluster with subchart 'redis' from bitnami
-redis-cluster:
-  # -- Enable Redis installation
-  enabled: false
-  # -- Redis cluster name (recommended to be 'open-webui-redis')
-  # - In this case, redis url will be 'redis://open-webui-redis-master:6379/0' or 'redis://[:<password>@]open-webui-redis-master:6379/0'
-  fullnameOverride: open-webui-redis
-  
-  # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
-  url: redis://open-webui-redis:6379/0
-  
-  # -- Redis Authentication
-  auth:
-    # -- Enable Redis authentication (disabled by default). For your security, we strongly suggest that you switch to 'auth.enabled=true'
-    enabled: false
-  # -- Replica configuration for the Redis cluster
-  replica:
-    # -- Number of Redis replica instances
-    replicaCount: 3
-
 # -- Value of cluster domain
 clusterDomain: cluster.local
 
@@ -560,30 +540,6 @@ extraResources:
   #     name: example-configmap
   #   data:
   #     example-key: example-value
-
-# -- Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database
-databaseUrl: ""
-
-# -- Postgresql configuration (see. https://artifacthub.io/packages/helm/bitnami/postgresql)
-postgresql:
-  enabled: false
-  fullnameOverride: open-webui-postgres
-  architecture: standalone
-  auth:
-    database: open-webui
-    postgresPassword: 0p3n-w3bu!
-    username: open-webui
-    password: 0p3n-w3bu!
-  primary:
-    persistence:
-      size: 1Gi
-    resources:
-      requests:
-        memory: 256Mi
-        cpu: 250m
-      limits:
-        memory: 512Mi
-        cpu: 500m
 
 # Configure Application logging levels (see. https://docs.openwebui.com/getting-started/advanced-topics/logging#-logging-levels-explained)
 logging:

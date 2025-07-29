@@ -1,6 +1,6 @@
 apiVersion: v2
 name: open-webui
-version: 6.29.0
+version: 7.0.0
 appVersion: 0.6.18
 home: https://www.openwebui.com/
 icon: >-
@@ -16,7 +16,6 @@ sources:
   - https://github.com/open-webui/open-webui/pkgs/container/open-webui
   - https://github.com/otwld/ollama-helm/
   - https://hub.docker.com/r/ollama/ollama
-  - https://charts.bitnami.com/bitnami
 annotations:
   licenses: MIT
 dependencies:
@@ -38,13 +37,3 @@ dependencies:
     repository: https://apache.jfrog.io/artifactory/tika
     version: ">=2.9.0"
     condition: tika.enabled
-  - name: redis
-    repository: https://charts.bitnami.com/bitnami
-    version: ">=20.6.2"
-    alias: redis-cluster
-    condition: redis-cluster.enabled
-  - name: postgresql
-    repository: https://charts.bitnami.com/bitnami
-    version: ">=15.5.38"
-    alias: postgresql
-    condition: postgresql.enabled
