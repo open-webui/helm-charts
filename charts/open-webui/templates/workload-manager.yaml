@@ -19,7 +19,7 @@ spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
   {{- if and .Values.persistence.enabled (eq .Values.persistence.provider "local") }}
-  serviceName: {{ include "open-webui.name" . }}
+  serviceName: {{ include "open-webui.fullname" . }}
   {{- end }}
   selector:
     matchLabels:
@@ -89,7 +89,7 @@ spec:
       runtimeClassName: {{ .Values.runtimeClassName | quote }}
       {{- end }}
       {{- if .Values.serviceAccount.enable }}
-      serviceAccountName: {{ .Values.serviceAccount.name | default (include "open-webui.name" .) }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "open-webui.fullname" .)-sa }}
       {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -407,7 +407,7 @@ spec:
       {{- else if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
       - name: data
         persistentVolumeClaim:
-          claimName: {{ include "open-webui.name" . }}
+          claimName: {{ include "open-webui.fullname" . }}
       {{- end }}
       {{- with .Values.volumes }}
       {{- toYaml . | nindent 6 }}
