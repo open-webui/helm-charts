@@ -174,6 +174,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
 | copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
 | copyAppData.resources | object | `{}` |  |
+| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
 | enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
 | extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
