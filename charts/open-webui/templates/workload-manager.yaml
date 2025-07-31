@@ -250,9 +250,9 @@ spec:
         - name: "WEBSOCKET_REDIS_URL"
           value: {{ .Values.websocket.url | quote }}
         {{- end }}
-        {{- if or .Values.postgresql.enabled .Values.databaseUrl }}
+        {{- if .Values.databaseUrl }}
         - name: "DATABASE_URL"
-          value: {{ .Values.databaseUrl | default (printf "postgresql://%s:%s@%s:%s/%s" .Values.postgresql.auth.username .Values.postgresql.auth.password .Values.postgresql.fullnameOverride "5432" .Values.postgresql.auth.database) }}
+          value: {{ .Values.databaseUrl | quote }}
         {{- end }}
         {{- if .Values.sso.enabled }}
         {{- if .Values.sso.enableSignup }}
