@@ -89,7 +89,7 @@ spec:
   type: {{ .Values.websocket.redis.service.type | default "ClusterIP" }}
   ports:
   - protocol: TCP
-    name: http
+    name: {{ .Values.websocket.redis.service.portName | default "http" }}
     port: {{ .Values.websocket.redis.service.port }}
     targetPort: http
     {{- if .Values.websocket.redis.service.nodePort }}

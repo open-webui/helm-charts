@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 7.1.0](https://img.shields.io/badge/Version-7.1.0-informational?style=flat-square) ![AppVersion: 0.6.18](https://img.shields.io/badge/AppVersion-0.6.18-informational?style=flat-square)
+![Version: 7.2.0](https://img.shields.io/badge/Version-7.2.0-informational?style=flat-square) ![AppVersion: 0.6.18](https://img.shields.io/badge/AppVersion-0.6.18-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -240,7 +240,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
 | websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
-| websocket.redis | object | `{"affinity":{},"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{},"labels":{}},"resources":{},"securityContext":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"},"tolerations":[]}` | Deploys a redis |
+| websocket.redis | object | `{"affinity":{},"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{},"labels":{}},"resources":{},"securityContext":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"portName":"http","type":"ClusterIP"},"tolerations":[]}` | Deploys a redis |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
@@ -254,12 +254,13 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.pods.labels | object | `{}` | Redis pod labels |
 | websocket.redis.resources | object | `{}` | Redis resources |
 | websocket.redis.securityContext | object | `{}` | Redis security context |
-| websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"type":"ClusterIP"}` | Redis service |
+| websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"portName":"http","type":"ClusterIP"}` | Redis service |
 | websocket.redis.service.annotations | object | `{}` | Redis service annotations |
 | websocket.redis.service.containerPort | int | `6379` | Redis container/target port |
 | websocket.redis.service.labels | object | `{}` | Redis service labels |
 | websocket.redis.service.nodePort | string | `""` | Redis service node port. Valid only when type is `NodePort` |
 | websocket.redis.service.port | int | `6379` | Redis service port |
+| websocket.redis.service.portName | string | `"http"` | Redis service port name. Istio needs this to be something like `tcp-redis` |
 | websocket.redis.service.type | string | `"ClusterIP"` | Redis service type |
 | websocket.redis.tolerations | list | `[]` | Redis tolerations for pod assignment |
 | websocket.url | string | `"redis://open-webui-redis:6379/0"` | Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>` |
