@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.websocket.redis.name }}
+  name: {{ include "open-webui.fullname" . }}-redis
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "websocket.redis.labels" . | nindent 4 }}
@@ -34,7 +34,7 @@ spec:
         - name: {{ .Values.websocket.redis.image.pullSecretName }}
       {{- end }}
       containers:
-      - name: {{ .Values.websocket.redis.name }}
+      - name: {{ include "open-webui.fullname" . }}-redis
         image: "{{ .Values.websocket.redis.image.repository }}:{{ .Values.websocket.redis.image.tag }}"
         imagePullPolicy: {{ .Values.websocket.redis.image.pullPolicy }}
         {{- with .Values.websocket.redis.command }}
@@ -72,7 +72,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.websocket.redis.name }}
+  name: {{ include "open-webui.fullname" . }}-redis
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "websocket.redis.labels" . | nindent 4 }}
