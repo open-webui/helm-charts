@@ -82,6 +82,8 @@ websocket:
       labels: {}
       # -- Redis service annotations
       annotations: {}
+      # -- Redis service port name. Istio needs this to be something like `tcp-redis`
+      portName: http
       # -- Redis service port
       port: 6379
       # -- Redis service node port. Valid only when type is `NodePort`
@@ -318,6 +320,9 @@ openaiBaseApiUrls:
   []
   # - "https://api.openai.com/v1"
   # - "https://api.company.openai.com/v1"
+
+# -- Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database
+databaseUrl: ""
 
 # -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/
 extraEnvVars:

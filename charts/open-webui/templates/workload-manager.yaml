@@ -250,6 +250,10 @@ spec:
         - name: "WEBSOCKET_REDIS_URL"
           value: {{ .Values.websocket.url | quote }}
         {{- end }}
+        {{- if .Values.databaseUrl }}
+        - name: "DATABASE_URL"
+          value: {{ .Values.databaseUrl | quote }}
+        {{- end }}
         {{- if .Values.sso.enabled }}
         {{- if .Values.sso.enableSignup }}
         - name: "ENABLE_OAUTH_SIGNUP"
