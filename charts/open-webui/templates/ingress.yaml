@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "open-webui.name" . }}
+  name: {{ include "open-webui.fullname" . }}
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
@@ -24,7 +24,7 @@ spec:
       {{- range .Values.ingress.additionalHosts }}
       - {{ . | quote }}
       {{- end }}
-      secretName: {{ default (printf "%s-tls" .Release.Name) .Values.ingress.existingSecret }}
+      secretName: {{ default (printf "%s-tls" (include "open-webui.fullname" .)) .Values.ingress.existingSecret }}
   {{- end }}
   rules:
   - host: {{ .Values.ingress.host }}
@@ -34,7 +34,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "open-webui.name" . }}
+            name: {{ include "open-webui.fullname" . }}
             port:
               name: http
   {{- range .Values.ingress.additionalHosts }}
@@ -45,7 +45,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: {{ include "open-webui.name" $ }}
+            name: {{ include "open-webui.fullname" $ }}
             port:
               name: http
   {{- end }}
