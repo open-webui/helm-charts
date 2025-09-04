@@ -39,7 +39,7 @@ ollamaUrlsFromExtraEnv: false
 
 websocket:
   # -- Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT`
-  enabled: false
+  enabled: true
   # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
   manager: redis
   # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
@@ -95,9 +95,21 @@ websocket:
     # -- Redis affinity for pod assignment
     affinity: {}
 
-    # -- Redis security context
-    securityContext:
-      {}
+    # -- Redis container security context
+    containerSecurityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 2000
+      fsGroup: 2000
+      # runAsUser: 999
+      # runAsGroup: 1000
+
+    # -- Redis pod security context
+    podSecurityContext:
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 2000
+      fsGroup: 2000
       # runAsUser: 999
       # runAsGroup: 1000
 
@@ -330,6 +342,8 @@ extraEnvVars:
   # -- Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines
   - name: OPENAI_API_KEY
     value: "0p3n-w3bu!"
+  - name: WEBUI_SECRET_KEY
+    value: "test-dummy-secret-key"
   # valueFrom:
   #   secretKeyRef:
   #     name: pipelines-api-key
@@ -399,13 +413,12 @@ podSecurityContext:
 # -- Configure container security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
 containerSecurityContext:
-  {}
-  # runAsUser: 1001
-  # runAsGroup: 1001
-  # runAsNonRoot: true
-  # privileged: false
-  # allowPrivilegeEscalation: false
-  # readOnlyRootFilesystem: false
+  runAsUser: 1001
+  runAsGroup: 1001
+  runAsNonRoot: true
+  privileged: false
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
   # capabilities:
   #   drop:
   #     - ALL
