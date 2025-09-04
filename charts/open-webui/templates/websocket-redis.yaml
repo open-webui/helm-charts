@@ -52,6 +52,15 @@ spec:
         resources:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.websocket.redis.containerSecurityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if and (hasKey .Values.websocket.redis.containerSecurityContext "readOnlyRootFilesystem") .Values.websocket.redis.containerSecurityContext.readOnlyRootFilesystem }}
+        volumeMounts:
+          - name: data
+            mountPath: "/data"
+        {{- end }}
       {{- with .Values.websocket.redis.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
@@ -60,13 +69,18 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.websocket.redis.securityContext }}
+      {{- with .Values.websocket.redis.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.websocket.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if and (hasKey .Values.websocket.redis.containerSecurityContext "readOnlyRootFilesystem") .Values.websocket.redis.containerSecurityContext.readOnlyRootFilesystem }}
+      volumes:
+        - name: data
+          emptyDir: {}
       {{- end }}
 ---
 apiVersion: v1

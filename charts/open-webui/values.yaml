@@ -95,8 +95,14 @@ websocket:
     # -- Redis affinity for pod assignment
     affinity: {}
 
-    # -- Redis security context
-    securityContext:
+    # -- Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container
+    containerSecurityContext:
+      {}
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+
+    # -- Redis pod security context
+    podSecurityContext:
       {}
       # runAsUser: 999
       # runAsGroup: 1000
