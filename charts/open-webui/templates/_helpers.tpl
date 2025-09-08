@@ -104,6 +104,12 @@ Create selector labels to include on all Open WebUI resources
 app.kubernetes.io/component: {{ .Chart.Name }}
 {{- end }}
 
+{{- define "open-webui.extraLabels" -}}
+{{- with .Values.extraLabels }}
+{{- toYaml . }}
+{{- end }}
+{{- end }}
+
 {{/*
 Create labels to include on chart all Open WebUI resources
 */}}

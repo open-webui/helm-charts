@@ -5,6 +5,7 @@ metadata:
   namespace: {{ include "pipelines.namespace" . }}
   labels:
     {{- include "pipelines.labels" . | nindent 4 }}
+    {{- include "pipelines.extraLabels" . | nindent 4 }}
   {{- with .Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

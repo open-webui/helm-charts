@@ -168,6 +168,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | annotations | object | `{}` |  |
 | args | list | `[]` | Open WebUI container arguments (overrides default) |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
+| extraLabels | object | `{}` | Additional labels to be added to kubernetes deployment |
 | command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
 | commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
