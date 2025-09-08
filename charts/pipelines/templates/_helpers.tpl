@@ -50,12 +50,19 @@ Create selector labels to include on all Pipelines resources
 app.kubernetes.io/component: {{ .Chart.Name }}
 {{- end }}
 
+{{- define "pipelines.extraLabels" -}}
+{{- with .Values.extraLabels }}
+{{- toYaml . | nindent 4 }}
+{{- end }}
+{{- end }}
+
 {{/*
 Create labels to include on all Pipelines resources
 */}}
 {{- define "pipelines.labels" -}}
 {{ include "base.labels" . }}
 {{ include "pipelines.selectorLabels" . }}
+{{ include "pipelines.extraLabels" . }}
 {{- end }}
 
 {{/*
