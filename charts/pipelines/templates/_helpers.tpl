@@ -52,7 +52,7 @@ app.kubernetes.io/component: {{ .Chart.Name }}
 
 {{- define "pipelines.extraLabels" -}}
 {{- with .Values.extraLabels }}
-{{- toYaml . | nindent 4 }}
+{{- toYaml . }}
 {{- end }}
 {{- end }}
 
@@ -62,7 +62,6 @@ Create labels to include on all Pipelines resources
 {{- define "pipelines.labels" -}}
 {{ include "base.labels" . }}
 {{ include "pipelines.selectorLabels" . }}
-{{ include "pipelines.extraLabels" . }}
 {{- end }}
 
 {{/*

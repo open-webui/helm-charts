@@ -106,7 +106,7 @@ app.kubernetes.io/component: {{ .Chart.Name }}
 
 {{- define "open-webui.extraLabels" -}}
 {{- with .Values.extraLabels }}
-{{- toYaml . | nindent 4 }}
+{{- toYaml . }}
 {{- end }}
 {{- end }}
 
@@ -116,7 +116,6 @@ Create labels to include on chart all Open WebUI resources
 {{- define "open-webui.labels" -}}
 {{ include "base.labels" . }}
 {{ include "open-webui.selectorLabels" . }}
-{{ include "open-webui.extraLabels" . }}
 {{- end }}
 
 {{/*

@@ -9,6 +9,7 @@ metadata:
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
+    {{- include "open-webui.extraLabels" . | nindent 4 }}
   {{- with .Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
