@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.1.0](https://img.shields.io/badge/Version-8.1.0-informational?style=flat-square) ![AppVersion: 0.6.26](https://img.shields.io/badge/AppVersion-0.6.26-informational?style=flat-square)
+![Version: 8.3.0](https://img.shields.io/badge/Version-8.3.0-informational?style=flat-square) ![AppVersion: 0.6.27](https://img.shields.io/badge/AppVersion-0.6.27-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -168,7 +168,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | annotations | object | `{}` |  |
 | args | list | `[]` | Open WebUI container arguments (overrides default) |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| extraLabels | object | `{}` | Additional labels to be added to kubernetes deployment |
 | command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
 | commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
@@ -181,6 +180,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
 | extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
+| extraLabels | object | `{}` |  |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
