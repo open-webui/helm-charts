@@ -183,7 +183,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | extraLabels | object | `{}` |  |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
+| image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":"","useSlim":false}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
 | imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
 | ingress.additionalHosts | list | `[]` |  |
 | ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
