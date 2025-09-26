@@ -56,7 +56,7 @@ spec:
       initContainers:
       - name: copy-app-data
         {{- with .Values.image }}
-        image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
+        image: {{ .repository }}:{{ include "open-webui.tag" $ }}
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
         command:
@@ -99,7 +99,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         {{- with .Values.image }}
-        image: {{ .repository }}:{{ .tag | default $.Chart.AppVersion }}
+        image: {{ .repository }}:{{ include "open-webui.tag" $ }}
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
         {{- with .Values.command }}
@@ -166,7 +166,7 @@ spec:
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ .Values.openaiBaseApiUrl }}"
         {{- else if and .Values.enableOpenaiApi .Values.pipelines.enabled (not .Values.openaiBaseApiUrl) (not .Values.openaiBaseApiUrls) }}
-        # If Pipelines is enabled and no OpenAI API values are set, set OPENAI_API_BASE_URL to the Pipelines server endpoint 
+        # If Pipelines is enabled and no OpenAI API values are set, set OPENAI_API_BASE_URL to the Pipelines server endpoint
         - name: "OPENAI_API_BASE_URL"
           value: {{ include "pipelines.serviceEndpoint" . | quote }}
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
