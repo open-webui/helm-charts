@@ -261,3 +261,20 @@ used to populate the variable WEBUI_URL
   {{- end }}
   {{- $url }}
 {{- end }}
+
+{{- /*
+Define a docker tag that should use for the deployment
+*/ -}}
+{{- define "open-webui.tag" -}}
+{{- $image := .Values.image }}
+{{- if $image.tag }}
+{{- /* If user provided an explicit image.tag, use it */ -}}
+{{- $image.tag -}}
+{{- else if $image.useSlim }}
+{{- /* If useSlim is true and no explicit tag, use Chart.AppVersion-slim */ -}}
+{{- printf "%s-slim" .Chart.AppVersion -}}
+{{- else }}
+{{- /* Fallback to Chart.AppVersion */ -}}
+{{- .Chart.AppVersion -}}
+{{- end }}
+{{- end }}
