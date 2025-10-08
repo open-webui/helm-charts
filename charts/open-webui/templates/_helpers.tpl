@@ -246,20 +246,29 @@ Constructs a string containing the URLs of the Open WebUI based on the ingress c
 used to populate the variable WEBUI_URL  
 */ -}}
 {{- define "open-webui.url" -}}
-  {{- $url := "" -}}
-  {{- range .Values.extraEnvVars }}
-    {{- if and (eq .name "WEBUI_URL") .value }}
-      {{- $url = .value }}
+  {{- $proto := "http" -}}
+  {{- if .Values.ingress.tls }}
+    {{- $proto = "https" -}}
+  {{- end }}
+  {{- printf "%s://%s" $proto .Values.ingress.host }}
+{{- end }}
+
+{{/*
+Convert a map of environment variables to Kubernetes env var format
+*/}}
+{{- define "open-webui.env" -}}
+{{- if kindIs "map" . }}
+  {{- range $key, $val := . }}
+- name: {{ $key }}
+    {{- if kindIs "map" $val }}
+      {{- toYaml $val | nindent 2 }}
+    {{- else }}
+  value: {{ $val | quote }}
     {{- end }}
   {{- end }}
-  {{- if not $url }}
-    {{- $proto := "http" -}}
-    {{- if .Values.ingress.tls }}
-      {{- $proto = "https" -}}
-    {{- end }}
-    {{- $url = printf "%s://%s" $proto .Values.ingress.host }}
-  {{- end }}
-  {{- $url }}
+{{- else }}
+  {{- toYaml . }}
+{{- end }}
 {{- end }}
 
 {{- /*

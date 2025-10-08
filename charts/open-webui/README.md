@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.10.0](https://img.shields.io/badge/Version-8.10.0-informational?style=flat-square) ![AppVersion: 0.6.33](https://img.shields.io/badge/AppVersion-0.6.33-informational?style=flat-square)
+![Version: 8.11.0](https://img.shields.io/badge/Version-8.11.0-informational?style=flat-square) ![AppVersion: 0.6.33](https://img.shields.io/badge/AppVersion-0.6.33-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -177,8 +177,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
 | enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
 | extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
-| extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
-| extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
+| extraEnvVars | list | `[]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style. |
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
 | extraLabels | object | `{}` |  |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
@@ -204,6 +203,8 @@ helm upgrade --install open-webui open-webui/open-webui
 | ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
+| openaiApiKey | string | `"0p3n-w3bu!"` | OpenAI API key to use. Default API key value for Pipelines if `openaiBaseApiUrl` is blank. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
+| openaiApiKeys | list | `["0p3n-w3bu!"]` | List of OpenAI API keys for each OpenAI base API URLs to use. If `pipelines.enabled` is true, the first key will be used for Pipelines. The number of keys must match the number of URLs in `openaiBaseApiUrls` (it needs one more key if `pipelines.enabled`) and respect the same order |
 | openaiBaseApiUrl | string | `"https://api.openai.com/v1"` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
 | openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
