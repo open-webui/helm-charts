@@ -1,9 +1,15 @@
+# -- Provide a name in place of the default application name
 nameOverride: ""
+
+# -- Provide a namespace in place of the default release namespace
 namespaceOverride: ""
+
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
+  # @section -- External Tools configuration
   enabled: true
   # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
+  # @section -- External Tools configuration
   fullnameOverride: "open-webui-ollama"
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
   # ollama:
@@ -21,133 +27,189 @@ ollama:
   #   enabled: true
   #   volumeName: "example-pre-existing-pv-created-by-smb-csi"
 
+# -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
+# @section -- External Tools configuration
+ollamaUrls: []
+
+# -- Disables taking Ollama Urls from `ollamaUrls`  list
+# @section -- External Tools configuration
+ollamaUrlsFromExtraEnv: false
+
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
+  # @section -- External Tools configuration
   enabled: true
   # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
+  # @section -- External Tools configuration
   extraEnvVars: []
 
 tika:
   # -- Automatically install Apache Tika to extend Open WebUI
+  # @section -- External Tools configuration
   enabled: false
-
-# -- A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it.
-ollamaUrls: []
-
-# -- Disables taking Ollama Urls from `ollamaUrls`  list
-ollamaUrlsFromExtraEnv: false
 
 websocket:
   # -- Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT`
+  # @section -- Websocket configuration
   enabled: false
   # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
+  # @section -- Websocket configuration
   manager: redis
   # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
+  # @section -- Websocket configuration
   url: redis://open-webui-redis:6379/0
   # -- Node selector for websocket pods
+  # @section -- Websocket configuration
   nodeSelector: {}
-  # -- Deploys a redis
   redis:
     # -- Enable redis installation
+    # @section -- Websocket configuration
     enabled: true
     # -- Redis name
+    # @section -- Websocket configuration
     name: open-webui-redis
     # -- Redis labels
+    # @section -- Websocket configuration
     labels: {}
     # -- Redis annotations
+    # @section -- Websocket configuration
     annotations: {}
-    # -- Redis pod
     pods:
       # -- Redis pod labels
+      # @section -- Websocket configuration
       labels: {}
       # -- Redis pod annotations
+      # @section -- Websocket configuration
       annotations: {}
-    # -- Redis image
     image:
+      # -- Redis image repository
+      # @section -- Websocket configuration
       repository: redis
+      # -- Redis image tag
+      # @section -- Websocket configuration
       tag: 7.4.2-alpine3.21
+      # -- Redis image pull policy
+      # @section -- Websocket configuration
       pullPolicy: IfNotPresent
     # -- Redis command (overrides default)
+    # @section -- Websocket configuration
     command: []
     # -- Redis arguments (overrides default)
+    # @section -- Websocket configuration
     args: []
     # -- Redis resources
+    # @section -- Websocket configuration
     resources: {}
-    # -- Redis service
     service:
       # -- Redis container/target port
+      # @section -- Websocket configuration
       containerPort: 6379
       # -- Redis service type
+      # @section -- Websocket configuration
       type: ClusterIP
       # -- Redis service labels
+      # @section -- Websocket configuration
       labels: {}
       # -- Redis service annotations
+      # @section -- Websocket configuration
       annotations: {}
       # -- Redis service port name. Istio needs this to be something like `tcp-redis`
+      # @section -- Websocket configuration
       portName: http
       # -- Redis service port
+      # @section -- Websocket configuration
       port: 6379
       # -- Redis service node port. Valid only when type is `NodePort`
+      # @section -- Websocket configuration
       nodePort: ""
     # -- Redis tolerations for pod assignment
+    # @section -- Websocket configuration
     tolerations: []
-
     # -- Redis affinity for pod assignment
+    # @section -- Websocket configuration
     affinity: {}
-
     # -- Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container
-    containerSecurityContext:
-      {}
+    # @section -- Websocket configuration
+    containerSecurityContext: {}
       # readOnlyRootFilesystem: true
       # runAsNonRoot: true
-
     # -- Redis pod security context
-    podSecurityContext:
-      {}
+    # @section -- Websocket configuration
+    podSecurityContext: {}
       # runAsUser: 999
       # runAsGroup: 1000
 
 # -- Value of cluster domain
 clusterDomain: cluster.local
 
+# -- Additional custom labels to add to the Open WebUI deployment/statefulset metadata
 extraLabels: {}
 
+# -- Additional annotations to add to the Open WebUI deployment/statefulset metadata
 annotations: {}
+
+# -- Additional annotations to add to the Open WebUI pods
 podAnnotations: {}
+
+# -- Additional custom labels to add to the Open WebUI pods
 podLabels: {}
+
+# -- Number of Open WebUI replicas
 replicaCount: 1
+
 # -- Revision history limit for the workload manager (deployment).
 revisionHistoryLimit: 10
+
 # -- Priority class name for the Open WebUI pods
 priorityClassName: ""
+
 # -- Strategy for updating the workload manager: deployment or statefulset
 strategy: {}
-# -- Open WebUI image tags can be found here: https://github.com/open-webui/open-webui
+
 image:
+  # -- Open WebUI image repository
+  # @section -- Image configuration
   repository: ghcr.io/open-webui/open-webui
+  # -- Open WebUI image tag (Open WebUI image tags can be found here: https://github.com/open-webui/open-webui)
+  # @section -- Image configuration
   tag: ""
+  # -- Open WebUI image pull policy
+  # @section -- Image configuration
   pullPolicy: "IfNotPresent"
+  # -- Use a slim version of the Open WebUI image
+  # @section -- Image configuration
   useSlim: false
-
-# -- Open WebUI container command (overrides default entrypoint)
-command: []
-# -- Open WebUI container arguments (overrides default)
-args: []
-
-serviceAccount:
-  enable: true
-  name: ""
-  annotations: {}
-  automountServiceAccountToken: false
 
 # -- Configure imagePullSecrets to use private registry
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry>
+# @section -- Image configuration
 imagePullSecrets: []
 # imagePullSecrets:
 # - name: myRegistryKeySecretName
 
+# -- Open WebUI container command (overrides default entrypoint)
+command: []
+
+# -- Open WebUI container arguments (overrides default)
+args: []
+
+serviceAccount:
+  # -- Enable service account creation
+  # @section -- Service Account configuration
+  enable: true
+  # -- Service account name to use. If not set and `serviceAccount.create` is true, a name is generated using the fullname template
+  # @section -- Service Account configuration
+  name: ""
+  # -- Additional annotations to add to the ServiceAccount
+  # @section -- Service Account configuration
+  annotations: {}
+  # -- Automount service account token for the Open WebUI pods
+  # @section -- Service Account configuration
+  automountServiceAccountToken: false
+
 # -- Probe for liveness of the Open WebUI container
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
+# @section -- Probes configuration
 livenessProbe: {}
 # livenessProbe:
 #   httpGet:
@@ -158,6 +220,7 @@ livenessProbe: {}
 
 # -- Probe for readiness of the Open WebUI container
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
+# @section -- Probes configuration
 readinessProbe: {}
 # readinessProbe:
 #   httpGet:
@@ -168,6 +231,7 @@ readinessProbe: {}
 
 # -- Probe for startup of the Open WebUI container
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
+# @section -- Probes configuration
 startupProbe: {}
 # startupProbe:
 #   httpGet:
@@ -177,6 +241,7 @@ startupProbe: {}
 #   periodSeconds: 5
 #   failureThreshold: 20
 
+# -- Resource requests and limits for the Open WebUI container
 resources: {}
 
 copyAppData:
@@ -184,19 +249,30 @@ copyAppData:
   command: []
   # -- Open WebUI copy-app-data init container arguments (overrides default)
   args: []
-
+  # -- Resource requests and limits for the Open WebUI copy-app-data init container
   resources: {}
 
 managedCertificate:
+  # -- Enable GKE Managed Certificate for Ingress TLS
+  # @section -- Ingress configuration
   enabled: false
+  # -- Name of the Managed Certificate resource to create
+  # @section -- Ingress configuration
   name: "mydomain-chat-cert" # You can override this name if needed
+  # -- Domains to include in the Managed Certificate
+  # @section -- Ingress configuration
   domains:
     - chat.example.com # update to your real domain
 
 ingress:
+  # -- Enable Ingress controller for Open WebUI
+  # @section -- Ingress configuration
   enabled: false
+  # -- Ingress class to use, e.g., for GKE Ingress use "gce", for NGINX Ingress use "nginx". If using an Ingress class other than the default, ensure your cluster has the corresponding Ingress controller installed and configured.
+  # @section -- Ingress configuration
   class: ""
   # -- Use appropriate annotations for your Ingress controller, e.g., for NGINX:
+  # @section -- Ingress configuration
   annotations: {}
   #   # Example for GKE Ingress
   #   kubernetes.io/ingress.class: "gce"
@@ -207,31 +283,52 @@ ingress:
   #   nginx.ingress.kubernetes.io/permanent-redirect: "https://chat.example.com"
   #   networking.gke.io/managed-certificates: "mydomain-chat-cert"
   #   # nginx.ingress.kubernetes.io/rewrite-target: /
+  # -- Host for the Ingress record
+  # @section -- Ingress configuration
   host: "chat.example.com" # update to your real domain
+  # -- Additional hosts for the Ingress record
+  # @section -- Ingress configuration
   additionalHosts: []
+  # -- TLS configuration for the Ingress resource
+  # @section -- Ingress configuration
   tls: false
+  # -- TLS secret name for the Ingress record
+  # @section -- Ingress configuration
   existingSecret: ""
-
   # -- Additional custom labels to add to the Ingress metadata
-  # Useful for tagging, selecting, or applying policies to the Ingress via labels.
+  # @section -- Ingress configuration
   extraLabels: {}
   # extraLabels:
   #   app.kubernetes.io/environment: "staging"
 
 persistence:
+  # -- Enable persistence using PVC for Open WebUI data
+  # @section -- Persistence configuration
   enabled: true
+  # -- Size of the Open WebUI PVC
+  # @section -- Persistence configuration
   size: 2Gi
   # -- Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one
+  # @section -- Persistence configuration
   existingClaim: ""
   # -- Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty.
+  # @section -- Persistence configuration
   subPath: ""
   # -- If using multiple replicas, you must update accessModes to ReadWriteMany
+  # @section -- Persistence configuration
   accessModes:
     - ReadWriteOnce
+  # -- Storage class of the Open WebUI PVC
+  # @section -- Persistence configuration
   storageClass: ""
+  # -- Selector to match to get the volume bound to the claim
+  # @section -- Persistence configuration
   selector: {}
+  # -- Additional annotations to add to the PVC
+  # @section -- Persistence configuration
   annotations: {}
   # -- Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure`
+  # @section -- Persistence configuration
   provider: local
   s3:
     # -- Sets the access key ID for S3 storage
@@ -309,40 +406,63 @@ topologySpreadConstraints: []
 # -- HostAliases to be added to hosts-file of each container
 hostAliases: []
 
-# -- Service values to expose Open WebUI pods to cluster
 service:
+  # -- Service type to expose Open WebUI pods to cluster. Options are ClusterIP, NodePort, LoadBalancer, or ExternalName
+  # @section -- Service configuration
   type: ClusterIP
+  # -- Additional annotations to add to the Service
+  # @section -- Service configuration
   annotations: {}
+  # -- Port to expose Open WebUI service on
+  # @section -- Service configuration
   port: 80
+  # -- Target port for the Open WebUI container
+  # @section -- Service configuration
   containerPort: 8080
+  # -- Node port to use if service type is NodePort
+  # @section -- Service configuration
   nodePort: ""
+  # -- Additional custom labels to add to the Service metadata
+  # @section -- Service configuration
   labels: {}
+  # -- Load balancer class to use if service type is LoadBalancer (e.g., for GKE use "gce")
+  # @section -- Service configuration
   loadBalancerClass: ""
 
 # -- Enables the use of OpenAI APIs
+# @section -- OpenAI API configuration
 enableOpenaiApi: true
 
 # -- OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank
+# @section -- OpenAI API configuration
 openaiBaseApiUrl: "https://api.openai.com/v1"
 
 # -- OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set
-openaiBaseApiUrls:
-  []
+# @section -- OpenAI API configuration
+openaiBaseApiUrls: []
   # - "https://api.openai.com/v1"
   # - "https://api.company.openai.com/v1"
+
+# -- OpenAI API key to use. Default API key value for Pipelines if `openaiBaseApiUrl` is blank. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines
+# @section -- OpenAI API configuration
+openaiApiKey: "0p3n-w3bu!"
+
+# -- List of OpenAI API keys for each OpenAI base API URLs to use. If `pipelines.enabled` is true, the first key will be used for Pipelines. The number of keys must match the number of URLs in `openaiBaseApiUrls` (it needs one more key if `pipelines.enabled`) and respect the same order
+# @section -- OpenAI API configuration
+openaiApiKeys:
+  - "0p3n-w3bu!"
+  # - "sk-4389759834759834"
 
 # -- Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database
 databaseUrl: ""
 
-# -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/
-extraEnvVars:
-  # -- Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines
-  - name: OPENAI_API_KEY
-    value: "0p3n-w3bu!"
-  # valueFrom:
-  #   secretKeyRef:
-  #     name: pipelines-api-key
-  #     key: api-key
+# -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style.
+extraEnvVars: []
+  # - name: OPENAI_API_KEY
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: pipelines-api-key
+  #       key: api-key
   # - name: OPENAI_API_KEY
   #   valueFrom:
   #     secretKeyRef:
@@ -350,6 +470,18 @@ extraEnvVars:
   #       key: api-key
   # - name: OLLAMA_DEBUG
   #   value: "1"
+  #
+  # OPENAI_API_KEY:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: pipelines-api-key
+  #       key: api-key
+  # OPENAI_API_KEY:
+  #   valueFrom:
+  #     secretKeyRef:
+  #       name: openai-api-key
+  #       key: api-key
+  # OLLAMA_DEBUG: "1"
 
 # -- Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates)
 commonEnvVars: []
@@ -398,8 +530,7 @@ volumes: []
 
 # -- Configure pod security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container>
-podSecurityContext:
-  {}
+podSecurityContext: {}
   # fsGroupChangePolicy: Always
   # sysctls: []
   # supplementalGroups: []
@@ -407,8 +538,7 @@ podSecurityContext:
 
 # -- Configure container security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
-containerSecurityContext:
-  {}
+containerSecurityContext: {}
   # runAsUser: 1001
   # runAsGroup: 1001
   # runAsNonRoot: true
@@ -437,7 +567,6 @@ sso:
   # -- Enable OAuth group management through access token groups claim
   # @section -- SSO Configuration
   enableGroupManagement: false
-
   google:
     # -- Enable Google OAuth
     # @section -- Google OAuth configuration
@@ -454,7 +583,6 @@ sso:
     # -- Google OAuth client secret key from existing secret
     # @section -- Google OAuth configuration
     clientExistingSecretKey: ""
-
   microsoft:
     # -- Enable Microsoft OAuth
     # @section -- Microsoft OAuth configuration
@@ -474,7 +602,6 @@ sso:
     # -- Microsoft tenant ID - use 9188040d-6c67-4c5b-b112-36a304b66dad for personal accounts
     # @section -- Microsoft OAuth configuration
     tenantId: ""
-
   github:
     # -- Enable GitHub OAuth
     # @section -- GitHub OAuth configuration
@@ -491,7 +618,6 @@ sso:
     # -- GitHub OAuth client secret key from existing secret
     # @section -- GitHub OAuth configuration
     clientExistingSecretKey: ""
-
   oidc:
     # -- Enable OIDC authentication
     # @section -- OIDC configuration
@@ -517,7 +643,6 @@ sso:
     # -- Scopes to request (space-separated).
     # @section -- OIDC configuration
     scopes: "openid email profile"
-
   roleManagement:
     # -- The claim that contains the roles (can be nested, e.g., user.roles)
     # @section -- Role management configuration
@@ -528,12 +653,10 @@ sso:
     # -- Comma-separated list of roles allowed to log in as admin (receive open webui role admin)
     # @section -- Role management configuration
     adminRoles: ""
-
   groupManagement:
     # -- The claim that contains the groups (can be nested, e.g., user.memberOf)
     # @section -- SSO Configuration
     groupsClaim: "groups"
-
   trustedHeader:
     # -- Enable trusted header authentication
     # @section -- SSO trusted header authentication
@@ -546,8 +669,7 @@ sso:
     nameHeader: ""
 
 # -- Extra resources to deploy with Open WebUI
-extraResources:
-  []
+extraResources: []
   # - apiVersion: v1
   #   kind: ConfigMap
   #   metadata:
@@ -560,7 +682,6 @@ logging:
   # -- Set the global log level ["notset", "debug", "info" (default), "warning", "error", "critical"]
   # @section -- Logging configuration
   level: ""
-
   # Optional granularity: override log levels per subsystem/component
   # if not set, it will use the global level (see. https://docs.openwebui.com/getting-started/advanced-topics/logging#%EF%B8%8F-appbackend-specific-logging-levels)
   components:

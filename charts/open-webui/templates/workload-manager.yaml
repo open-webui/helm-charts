@@ -139,13 +139,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-        {{- $hasCustomWebUIUrl := false }}
-        {{- range .Values.extraEnvVars }}
-          {{- if eq .name "WEBUI_URL" }}
-            {{- $hasCustomWebUIUrl = true }}
-          {{- end }}
-        {{- end }}
-        {{- if and .Values.ingress.enabled (not $hasCustomWebUIUrl) }}
+        {{- if and .Values.ingress.enabled (or (and (kindIs "map" .Values.extraEnvVars) (not .Values.extraEnvVars.WEBUI_URL)) (and (kindIs "list" .Values.extraEnvVars) (not hasKey (pluck "name" .Values.extraEnvVars | compact) "WEBUI_URL"))) }}
         - name: WEBUI_URL
           value: {{ include "open-webui.url" . | quote }}
         {{- end }}
@@ -161,18 +155,26 @@ spec:
         # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
         - name: "OPENAI_API_BASE_URL"
           value: {{ .Values.openaiBaseApiUrl | quote }}
+        - name: "OPENAI_API_KEY"
+          value: {{ .Values.openaiApiKey | quote }}
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrl .Values.pipelines.enabled (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and OpenAI API value is set, use OPENAI_API_BASE_URLS with combined values
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ .Values.openaiBaseApiUrl }}"
+        - name: "OPENAI_API_KEYS"
+          value: {{ .Values.openaiApiKeys | join ";" | quote }}
         {{- else if and .Values.enableOpenaiApi .Values.pipelines.enabled (not .Values.openaiBaseApiUrl) (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and no OpenAI API values are set, set OPENAI_API_BASE_URL to the Pipelines server endpoint
         - name: "OPENAI_API_BASE_URL"
           value: {{ include "pipelines.serviceEndpoint" . | quote }}
+        - name: "OPENAI_API_KEY"
+          value: {{ .Values.openaiApiKey | quote }}
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
         # If OpenAI API value(s) set and Pipelines is enabled, use OPENAI_API_BASE_URLS to support all the endpoints in the chart
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ join ";" .Values.openaiBaseApiUrls }}"
+        - name: "OPENAI_API_KEYS"
+          value: {{ .Values.openaiApiKeys | join ";" | quote }}
         {{- else if not .Values.enableOpenaiApi }}
         - name: "ENABLE_OPENAI_API"
           value: "False"
@@ -362,7 +364,6 @@ spec:
         - name: "GLOBAL_LOG_LEVEL"
           value: {{ .Values.logging.level | quote }}
         {{- end }}
-
         {{- if .Values.logging.components }}
         {{- range $name, $level := .Values.logging.components }}
         {{- if $level }}
@@ -371,7 +372,7 @@ spec:
         {{- end }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
-          {{- toYaml .Values.extraEnvVars | nindent 8 }}
+          {{- include "open-webui.env" .Values.extraEnvVars | nindent 8 }}
         {{- end }}
         {{- if .Values.commonEnvVars }}
           {{- toYaml .Values.commonEnvVars | nindent 8 }}
