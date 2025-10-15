@@ -297,13 +297,13 @@ helm upgrade --install open-webui open-webui/open-webui
 | copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
 | copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
 | copyAppData.resources | object | `{}` | Resource requests and limits for the Open WebUI copy-app-data init container |
-| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
+| database | object | `{}` | Database configuration Leave this block empty (`{}`) to use the default SQLite database. To use an external database (e.g. PostgreSQL), set `type` and the relevant connection details. |
+| databaseUrl | string | `""` | Legacy full database connection URL. This is still supported for backwards compatibility. If set, it overrides all other individual database connection fields. Example: postgresql://<user>:<password>@<service>:<port>/<database> Leave empty to use the default SQLite database. |
 | extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
 | extraEnvVars | list | `[]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style. |
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
 | extraLabels | object | `{}` | Additional custom labels to add to the Open WebUI deployment/statefulset metadata |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
-| fullnameOverride | string | `""` | String to fully override the default application name |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | nameOverride | string | `""` | Provide a name in place of the default application name |
 | namespaceOverride | string | `""` | Provide a namespace in place of the default release namespace |

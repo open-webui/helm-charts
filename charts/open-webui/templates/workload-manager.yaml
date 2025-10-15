@@ -253,9 +253,28 @@ spec:
         - name: "WEBSOCKET_REDIS_URL"
           value: {{ .Values.websocket.url | quote }}
         {{- end }}
+        {{- $db := .Values.database | default dict }}
         {{- if .Values.databaseUrl }}
         - name: "DATABASE_URL"
           value: {{ .Values.databaseUrl | quote }}
+        {{- else if $db.type }}
+        - name: "DATABASE_TYPE"
+          value: {{ $db.type | quote }}
+        - name: "DATABASE_USER"
+          value: {{ $db.user | quote }}
+        - name: "DATABASE_HOST"
+          value: {{ default "5432" $db.port | quote }}
+        - name: "DATABASE_NAME"
+          value: {{ $db.dbName | quote }}
+        - name: "DATABASE_PASSWORD"
+        {{- if $db.passwordSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $db.passwordSecret }}
+              key: {{ default "password" $db.passwordSecretKey | quote }}
+        {{- else }}
+          value: {{ default "" $db.password | quote }}
+        {{- end }}
         {{- end }}
         {{- if .Values.sso.enabled }}
         {{- if .Values.sso.enableSignup }}
