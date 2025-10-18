@@ -139,7 +139,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
         env:
-        {{- if and .Values.ingress.enabled (or (and (kindIs "map" .Values.extraEnvVars) (not .Values.extraEnvVars.WEBUI_URL)) (and (kindIs "list" .Values.extraEnvVars) (not hasKey (pluck "name" .Values.extraEnvVars | compact) "WEBUI_URL"))) }}
+        {{- if and .Values.ingress.enabled (not (include "open-webui.hasCustomWebUIUrl" .)) }}
         - name: WEBUI_URL
           value: {{ include "open-webui.url" . | quote }}
         {{- end }}

@@ -241,6 +241,28 @@ Render a logging env var for a component, validating value
   value: {{ $level | quote | trim }}
 {{- end }}
 
+{{/*
+Return true if the user has defined a custom WEBUI_URL in extraEnvVars.
+Supports either a map or a list of maps.
+Usage: {{ include "open-webui.hasCustomWebUIUrl" . }}
+*/}}
+{{- define "open-webui.hasCustomWebUIUrl" -}}
+  {{- $found := false -}}
+  {{- $extra := .Values.extraEnvVars -}}
+  {{- if kindIs "map" $extra }}
+    {{- if hasKey $extra "WEBUI_URL" -}}
+      {{- $found = true -}}
+    {{- end -}}
+  {{- else if kindIs "slice" $extra }}
+    {{- range $extra }}
+      {{- if eq .name "WEBUI_URL" }}
+        {{- $found = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $found }}true{{- end -}}
+{{- end -}}
+
 {{- /*
 Constructs a string containing the URLs of the Open WebUI based on the ingress configuration
 used to populate the variable WEBUI_URL  
