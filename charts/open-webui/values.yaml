@@ -197,11 +197,12 @@ serviceAccount:
   # -- Enable service account creation
   # @section -- Service Account configuration
   enable: true
-  # -- If create is set to false, include name of existing service account
-  create: true
-  # -- Service account name to use. If not set and `serviceAccount.create` is true, a name is generated using the fullname template
+  # -- If create is set to false, set `name` to existing service account name
   # @section -- Service Account configuration
-  name: ""
+  create: true
+  # -- Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template.
+  # @section -- Service Account configuration
+  name: "existing-sa"
   # -- Additional annotations to add to the ServiceAccount
   # @section -- Service Account configuration
   annotations: {}

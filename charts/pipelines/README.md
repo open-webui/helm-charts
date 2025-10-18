@@ -1,6 +1,6 @@
 # pipelines
 
-![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
+![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
 Pipelines: UI-Agnostic OpenAI API Plugin Framework
 
@@ -33,12 +33,12 @@ helm upgrade --install open-webui open-webui/pipelines
 | affinity | object | `{}` | Affinity for pod assignment |
 | annotations | object | `{}` |  |
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| extraLabels | object | `{}` | Additional labels to be added to kubernetes deployment |
 | commonEnvVars | list | `[]` | Additional environments variables on the output Deployment definition, common across environments. |
 | containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
 | extraEnvVars | list | `[{"name":"PIPELINES_URLS","value":"https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"}]` | Additional environments variables on the output Deployment definition. These are used to pull initial Pipeline files, and help configure Pipelines with required values (e.g. Langfuse API keys) |
 | extraEnvVars[0] | object | `{"name":"PIPELINES_URLS","value":"https://github.com/open-webui/pipelines/blob/main/examples/filters/detoxify_filter_pipeline.py"}` | Example pipeline to pull and load on deployment startup, see current pipelines here: https://github.com/open-webui/pipelines/blob/main/examples |
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
+| extraLabels | object | `{}` |  |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI Pipelines |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | image.pullPolicy | string | `"Always"` |  |
@@ -74,7 +74,9 @@ helm upgrade --install open-webui open-webui/pipelines
 | service.port | int | `9099` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.automountServiceAccountToken | bool | `false` |  |
+| serviceAccount.create | bool | `true` |  |
 | serviceAccount.enable | bool | `true` |  |
+| serviceAccount.name | string | `""` |  |
 | strategy | object | `{}` | Strategy for updating the deployment |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | volumeMounts | list | `[]` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |

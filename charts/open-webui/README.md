@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.12.1](https://img.shields.io/badge/Version-8.12.1-informational?style=flat-square) ![AppVersion: 0.6.34](https://img.shields.io/badge/AppVersion-0.6.34-informational?style=flat-square)
+![Version: 8.12.2](https://img.shields.io/badge/Version-8.12.2-informational?style=flat-square) ![AppVersion: 0.6.34](https://img.shields.io/badge/AppVersion-0.6.34-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -177,8 +177,9 @@ helm upgrade --install open-webui open-webui/open-webui
 |-----|------|---------|-------------|
 | serviceAccount.annotations | object | `{}` | Additional annotations to add to the ServiceAccount |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token for the Open WebUI pods |
+| serviceAccount.create | bool | `true` | If create is set to false, set `name` to existing service account name |
 | serviceAccount.enable | bool | `true` | Enable service account creation |
-| serviceAccount.name | string | `""` | Service account name to use. If not set and `serviceAccount.create` is true, a name is generated using the fullname template |
+| serviceAccount.name | string | `"existing-sa"` | Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template. |
 
 ### SSO Configuration
 
