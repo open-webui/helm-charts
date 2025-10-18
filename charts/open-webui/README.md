@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.11.0](https://img.shields.io/badge/Version-8.11.0-informational?style=flat-square) ![AppVersion: 0.6.33](https://img.shields.io/badge/AppVersion-0.6.33-informational?style=flat-square)
+![Version: 8.12.0](https://img.shields.io/badge/Version-8.12.0-informational?style=flat-square) ![AppVersion: 0.6.34](https://img.shields.io/badge/AppVersion-0.6.34-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -303,7 +303,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
 | extraLabels | object | `{}` | Additional custom labels to add to the Open WebUI deployment/statefulset metadata |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
-| fullnameOverride | string | `""` | String to fully override the default application name |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | nameOverride | string | `""` | Provide a name in place of the default application name |
 | namespaceOverride | string | `""` | Provide a namespace in place of the default release namespace |
