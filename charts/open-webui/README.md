@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.12.2](https://img.shields.io/badge/Version-8.12.2-informational?style=flat-square) ![AppVersion: 0.6.34](https://img.shields.io/badge/AppVersion-0.6.34-informational?style=flat-square)
+![Version: 8.12.3](https://img.shields.io/badge/Version-8.12.3-informational?style=flat-square) ![AppVersion: 0.6.34](https://img.shields.io/badge/AppVersion-0.6.34-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -44,7 +44,7 @@ helm upgrade --install open-webui open-webui/open-webui
 |-----|------|---------|-------------|
 | enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
 | openaiApiKey | string | `"0p3n-w3bu!"` | OpenAI API key to use. Default API key value for Pipelines if `openaiBaseApiUrl` is blank. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
-| openaiApiKeys | list | `["0p3n-w3bu!"]` | List of OpenAI API keys for each OpenAI base API URLs to use. If `pipelines.enabled` is true, the first key will be used for Pipelines. The number of keys must match the number of URLs in `openaiBaseApiUrls` (it needs one more key if `pipelines.enabled`) and respect the same order |
+| openaiApiKeys | list | `[]` | List of OpenAI API keys for each OpenAI base API URLs to use. The number of keys must match the number of URLs in `openaiBaseApiUrls` and respect the same order. If `pipelines.enabled` is true, it needs one more key (so the list length should be openaiBaseApiUrls length + 1) and the first key will be used for Pipelines. |
 | openaiBaseApiUrl | string | `"https://api.openai.com/v1"` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
 | openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 
