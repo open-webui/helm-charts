@@ -139,6 +139,14 @@ websocket:
       # runAsUser: 999
       # runAsGroup: 1000
 
+
+workload:
+  # -- Workload kind to use. Options are "Deployment", "StatefulSet".
+  # If not set, the chart will determine the kind based on persistence settings.
+  # NOTE: When using Deployment with local persistence and replicaCount > 1,
+  # ensure persistence.accessModes includes ReadWriteMany (RWX).
+  kind: ""
+
 # -- Value of cluster domain
 clusterDomain: cluster.local
 
