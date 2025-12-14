@@ -1,9 +1,11 @@
+{{- /* Validate workload.kind if set */ -}}
+{{- if and .Values.workload.kind (not (or (eq .Values.workload.kind "Deployment") (eq .Values.workload.kind "StatefulSet"))) -}}
+{{- fail "workload.kind must be \"Deployment\" or \"StatefulSet\" (or empty)" -}}
+{{- end -}}
+{{- /* Determine the actual workload kind */ -}}
+{{- $kind := .Values.workload.kind | default (ternary "StatefulSet" "Deployment" (and .Values.persistence.enabled (eq .Values.persistence.provider "local"))) -}}
 apiVersion: apps/v1
-{{- if and .Values.persistence.enabled (eq .Values.persistence.provider "local") }}
-kind: StatefulSet
-{{- else }}
-kind: Deployment
-{{- end }}
+kind: {{ $kind }}
 metadata:
   name: {{ include "open-webui.name" . }}
   namespace: {{ include "open-webui.namespace" . }}
@@ -16,17 +18,17 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  {{- if or (not .Values.persistence.enabled) (not (eq .Values.persistence.provider "local")) }}
+  {{- if eq $kind "Deployment" }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
-  {{- if and .Values.persistence.enabled (eq .Values.persistence.provider "local") }}
+  {{- if eq $kind "StatefulSet" }}
   serviceName: {{ include "open-webui.name" . }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "open-webui.selectorLabels" . | nindent 6 }}
   {{- if .Values.strategy }}
-  {{- if and .Values.persistence.enabled (eq .Values.persistence.provider "local") }}
+  {{- if eq $kind "StatefulSet" }}
   updateStrategy:
     {{- toYaml .Values.strategy | nindent 4 }}
   {{- else }}

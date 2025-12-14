@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.19.0](https://img.shields.io/badge/Version-8.19.0-informational?style=flat-square) ![AppVersion: 0.6.41](https://img.shields.io/badge/AppVersion-0.6.41-informational?style=flat-square)
+![Version: 8.20.0](https://img.shields.io/badge/Version-8.20.0-informational?style=flat-square) ![AppVersion: 0.6.41](https://img.shields.io/badge/AppVersion-0.6.41-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -321,6 +321,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
 | volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
+| workload.kind | string | `""` | Workload kind to use. Options are "Deployment", "StatefulSet". If not set, the chart will determine the kind based on persistence settings. NOTE: When using Deployment with local persistence and replicaCount > 1, ensure persistence.accessModes includes ReadWriteMany (RWX). |
 
 ----------------------------------------------
 
