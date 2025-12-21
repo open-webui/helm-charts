@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 8.21.0](https://img.shields.io/badge/Version-8.21.0-informational?style=flat-square) ![AppVersion: 0.6.42](https://img.shields.io/badge/AppVersion-0.6.42-informational?style=flat-square)
+![Version: 8.21.1](https://img.shields.io/badge/Version-8.21.1-informational?style=flat-square) ![AppVersion: 0.6.42](https://img.shields.io/badge/AppVersion-0.6.42-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -256,7 +256,7 @@ helm upgrade --install open-webui open-webui/open-webui
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
+| websocket.enabled | bool | `true` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
 | websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
