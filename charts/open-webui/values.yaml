@@ -312,6 +312,46 @@ ingress:
   # extraLabels:
   #   app.kubernetes.io/environment: "staging"
 
+route:
+  # -- Enables or disables the route
+  enabled: false
+
+  # -- Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1alpha2
+  apiVersion: gateway.networking.k8s.io/v1
+
+  # -- Set the route kind
+  # Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute
+  kind: HTTPRoute
+
+  # -- Annotations to add to the route
+  annotations: {}
+  # -- Labels to add to the route
+  labels: {}
+
+  # -- Hostnames to match for the route
+  hostnames: []
+  # - "open-webui.example.com"
+
+  # -- References to the parent resources (e.g. Gateway)
+  parentRefs: []
+  # - name: open-webui-gw
+
+  # -- Enables HTTPS redirect for the route
+  httpsRedirect: false
+
+  matches:
+    - path:
+        # -- Path match type
+        type: PathPrefix
+        # -- Path match value
+        value: /
+
+  # -- Filters define the filters that are applied to requests that match this rule.
+  filters: []
+
+  # -- Additional custom rules that can be added to the route
+  additionalRules: []
+
 persistence:
   # -- Enable persistence using PVC for Open WebUI data
   # @section -- Persistence configuration
