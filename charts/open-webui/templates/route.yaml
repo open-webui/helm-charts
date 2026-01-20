@@ -74,4 +74,12 @@ spec:
           {{- if .Values.service.namespace }}
           namespace: {{ .Values.service.namespace }}
           {{- end }}
+      {{- with .Values.route.filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.route.matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}
