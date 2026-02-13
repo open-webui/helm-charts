@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 7.2.0](https://img.shields.io/badge/Version-7.2.0-informational?style=flat-square) ![AppVersion: 0.6.18](https://img.shields.io/badge/AppVersion-0.6.18-informational?style=flat-square)
+![Version: 11.1.0](https://img.shields.io/badge/Version-11.1.0-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -38,6 +38,50 @@ helm upgrade --install open-webui open-webui/open-webui
 
 ## Values
 
+### OpenAI API configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
+| openaiApiKey | string | `"0p3n-w3bu!"` | OpenAI API key to use. Default API key value for Pipelines if `openaiBaseApiUrl` is blank. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
+| openaiApiKeys | list | `[]` | List of OpenAI API keys for each OpenAI base API URLs to use. The number of keys must match the number of URLs in `openaiBaseApiUrls` and respect the same order. If `pipelines.enabled` is true, it needs one more key (so the list length should be openaiBaseApiUrls length + 1) and the first key will be used for Pipelines. |
+| openaiBaseApiUrl | string | `"https://api.openai.com/v1"` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
+| openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
+
+### Image configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| image.pullPolicy | string | `"IfNotPresent"` | Open WebUI image pull policy |
+| image.repository | string | `"ghcr.io/open-webui/open-webui"` | Open WebUI image repository |
+| image.tag | string | `""` | Open WebUI image tag (Open WebUI image tags can be found here: https://github.com/open-webui/open-webui) |
+| image.useSlim | bool | `false` | Use a slim version of the Open WebUI image |
+| imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
+
+### Ingress configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| ingress.additionalHosts | list | `[]` | Additional hosts for the Ingress record |
+| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
+| ingress.class | string | `""` | Ingress class to use, e.g., for GKE Ingress use "gce", for NGINX Ingress use "nginx". If using an Ingress class other than the default, ensure your cluster has the corresponding Ingress controller installed and configured. |
+| ingress.enabled | bool | `false` | Enable Ingress controller for Open WebUI |
+| ingress.existingSecret | string | `""` | TLS secret name for the Ingress record |
+| ingress.extraLabels | object | `{}` | Additional custom labels to add to the Ingress metadata |
+| ingress.host | string | `"chat.example.com"` | Host for the Ingress record |
+| ingress.tls | bool | `false` | TLS configuration for the Ingress resource |
+| managedCertificate.domains | list | `["chat.example.com"]` | Domains to include in the Managed Certificate |
+| managedCertificate.enabled | bool | `false` | Enable GKE Managed Certificate for Ingress TLS |
+| managedCertificate.name | string | `"mydomain-chat-cert"` | Name of the Managed Certificate resource to create |
+
+### Probes configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| startupProbe | object | `{}` | Probe for startup of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+
 ### Logging configuration
 
 | Key | Type | Default | Description |
@@ -54,6 +98,32 @@ helm upgrade --install open-webui open-webui/open-webui
 | logging.components.rag | string | `""` | Set the log level for the Retrieval-Augmented Generation (RAG) component |
 | logging.components.webhook | string | `""` | Set the log level for the Authentication Webhook component |
 | logging.level | string | `""` | Set the global log level ["notset", "debug", "info" (default), "warning", "error", "critical"] |
+
+### External Tools configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
+| ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
+| ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
+| ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
+| pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
+| pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
+| tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
+
+### Persistence configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
+| persistence.annotations | object | `{}` | Additional annotations to add to the PVC |
+| persistence.enabled | bool | `true` | Enable persistence using PVC for Open WebUI data |
+| persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
+| persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
+| persistence.selector | object | `{}` | Selector to match to get the volume bound to the claim |
+| persistence.size | string | `"2Gi"` | Size of the Open WebUI PVC |
+| persistence.storageClass | string | `""` | Storage class of the Open WebUI PVC |
+| persistence.subPath | string | `""` | Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty. |
 
 ### Azure Storage configuration
 
@@ -88,6 +158,28 @@ helm upgrade --install open-webui open-webui/open-webui
 | persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set) |
 | persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret key for S3 storage from existing k8s secret |
 | persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret key for S3 storage from existing k8s secret key |
+
+### Service configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| service.annotations | object | `{}` | Additional annotations to add to the Service |
+| service.containerPort | int | `8080` | Target port for the Open WebUI container |
+| service.labels | object | `{}` | Additional custom labels to add to the Service metadata |
+| service.loadBalancerClass | string | `""` | Load balancer class to use if service type is LoadBalancer (e.g., for GKE use "gce") |
+| service.nodePort | string | `""` | Node port to use if service type is NodePort |
+| service.port | int | `80` | Port to expose Open WebUI service on |
+| service.type | string | `"ClusterIP"` | Service type to expose Open WebUI pods to cluster. Options are ClusterIP, NodePort, LoadBalancer, or ExternalName |
+
+### Service Account configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| serviceAccount.annotations | object | `{}` | Additional annotations to add to the ServiceAccount |
+| serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token for the Open WebUI pods |
+| serviceAccount.create | bool | `true` | If create is set to false, set `name` to existing service account name |
+| serviceAccount.enable | bool | `true` | Enable service account creation |
+| serviceAccount.name | string | `"existing-sa"` | Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template. |
 
 ### SSO Configuration
 
@@ -160,101 +252,28 @@ helm upgrade --install open-webui open-webui/open-webui
 | sso.trustedHeader.enabled | bool | `false` | Enable trusted header authentication |
 | sso.trustedHeader.nameHeader | string | `""` | Header containing the user's name (optional, used for new user creation) |
 
-### Other Values
+### Websocket configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` | Affinity for pod assignment |
-| annotations | object | `{}` |  |
-| args | list | `[]` | Open WebUI container arguments (overrides default) |
-| clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
-| commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
-| containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
-| copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
-| copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
-| copyAppData.resources | object | `{}` |  |
-| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database |
-| enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
-| extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
-| extraEnvVars | list | `[{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ |
-| extraEnvVars[0] | object | `{"name":"OPENAI_API_KEY","value":"0p3n-w3bu!"}` | Default API key value for Pipelines. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines |
-| extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
-| extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
-| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
-| image | object | `{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/open-webui","tag":""}` | Open WebUI image tags can be found here: https://github.com/open-webui/open-webui |
-| imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
-| ingress.additionalHosts | list | `[]` |  |
-| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
-| ingress.class | string | `""` |  |
-| ingress.enabled | bool | `false` |  |
-| ingress.existingSecret | string | `""` |  |
-| ingress.extraLabels | object | `{}` | Additional custom labels to add to the Ingress metadata Useful for tagging, selecting, or applying policies to the Ingress via labels. |
-| ingress.host | string | `"chat.example.com"` |  |
-| ingress.tls | bool | `false` |  |
-| livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| managedCertificate.domains[0] | string | `"chat.example.com"` |  |
-| managedCertificate.enabled | bool | `false` |  |
-| managedCertificate.name | string | `"mydomain-chat-cert"` |  |
-| nameOverride | string | `""` |  |
-| namespaceOverride | string | `""` |  |
-| nodeSelector | object | `{}` | Node labels for pod assignment. |
-| ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
-| ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
-| ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
-| ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
-| openaiBaseApiUrl | string | `"https://api.openai.com/v1"` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
-| openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
-| persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
-| persistence.annotations | object | `{}` |  |
-| persistence.enabled | bool | `true` |  |
-| persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
-| persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
-| persistence.selector | object | `{}` |  |
-| persistence.size | string | `"2Gi"` |  |
-| persistence.storageClass | string | `""` |  |
-| persistence.subPath | string | `""` | Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty. |
-| pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
-| pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
-| podAnnotations | object | `{}` |  |
-| podLabels | object | `{}` |  |
-| podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
-| priorityClassName | string | `""` | Priority class name for the Open WebUI pods |
-| readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| replicaCount | int | `1` |  |
-| resources | object | `{}` |  |
-| revisionHistoryLimit | int | `10` | Revision history limit for the workload manager (deployment). |
-| runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
-| service | object | `{"annotations":{},"containerPort":8080,"labels":{},"loadBalancerClass":"","nodePort":"","port":80,"type":"ClusterIP"}` | Service values to expose Open WebUI pods to cluster |
-| serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.automountServiceAccountToken | bool | `false` |  |
-| serviceAccount.enable | bool | `true` |  |
-| serviceAccount.name | string | `""` |  |
-| startupProbe | object | `{}` | Probe for startup of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| strategy | object | `{}` | Strategy for updating the workload manager: deployment or statefulset |
-| tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
-| tolerations | list | `[]` | Tolerations for pod assignment |
-| topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
-| volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
-| volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
-| websocket.enabled | bool | `false` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
+| websocket.enabled | bool | `true` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
 | websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
-| websocket.redis | object | `{"affinity":{},"annotations":{},"args":[],"command":[],"enabled":true,"image":{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"},"labels":{},"name":"open-webui-redis","pods":{"annotations":{},"labels":{}},"resources":{},"securityContext":{},"service":{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"portName":"http","type":"ClusterIP"},"tolerations":[]}` | Deploys a redis |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
 | websocket.redis.command | list | `[]` | Redis command (overrides default) |
+| websocket.redis.containerSecurityContext | object | `{}` | Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container |
 | websocket.redis.enabled | bool | `true` | Enable redis installation |
-| websocket.redis.image | object | `{"pullPolicy":"IfNotPresent","repository":"redis","tag":"7.4.2-alpine3.21"}` | Redis image |
+| websocket.redis.image.pullPolicy | string | `"IfNotPresent"` | Redis image pull policy |
+| websocket.redis.image.repository | string | `"redis"` | Redis image repository |
+| websocket.redis.image.tag | string | `"7.4.2-alpine3.21"` | Redis image tag |
 | websocket.redis.labels | object | `{}` | Redis labels |
 | websocket.redis.name | string | `"open-webui-redis"` | Redis name |
-| websocket.redis.pods | object | `{"annotations":{},"labels":{}}` | Redis pod |
+| websocket.redis.podSecurityContext | object | `{}` | Redis pod security context |
 | websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.pods.labels | object | `{}` | Redis pod labels |
 | websocket.redis.resources | object | `{}` | Redis resources |
-| websocket.redis.securityContext | object | `{}` | Redis security context |
-| websocket.redis.service | object | `{"annotations":{},"containerPort":6379,"labels":{},"nodePort":"","port":6379,"portName":"http","type":"ClusterIP"}` | Redis service |
 | websocket.redis.service.annotations | object | `{}` | Redis service annotations |
 | websocket.redis.service.containerPort | int | `6379` | Redis container/target port |
 | websocket.redis.service.labels | object | `{}` | Redis service labels |
@@ -264,6 +283,57 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.service.type | string | `"ClusterIP"` | Redis service type |
 | websocket.redis.tolerations | list | `[]` | Redis tolerations for pod assignment |
 | websocket.url | string | `"redis://open-webui-redis:6379/0"` | Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>` |
+
+### Other Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` | Affinity for pod assignment |
+| annotations | object | `{}` | Additional annotations to add to the Open WebUI deployment/statefulset metadata |
+| args | list | `[]` | Open WebUI container arguments (overrides default) |
+| clusterDomain | string | `"cluster.local"` | Value of cluster domain |
+| command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
+| commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
+| containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
+| copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
+| copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
+| copyAppData.resources | object | `{}` | Resource requests and limits for the Open WebUI copy-app-data init container |
+| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database. Alternatively, use extraEnvVars to construct the database URL by setting the `DATABASE_TYPE`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT` and `DATABASE_NAME` environment variables. Each DATABASE_* var must be set or database will default to sqlite. |
+| extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
+| extraEnvVars | list | `[]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style. |
+| extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
+| extraLabels | object | `{}` | Additional custom labels to add to the Open WebUI deployment/statefulset metadata |
+| extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
+| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
+| nameOverride | string | `""` | Provide a name in place of the default application name |
+| namespaceOverride | string | `""` | Provide a namespace in place of the default release namespace |
+| nodeSelector | object | `{}` | Node labels for pod assignment. |
+| podAnnotations | object | `{}` | Additional annotations to add to the Open WebUI pods |
+| podLabels | object | `{}` | Additional custom labels to add to the Open WebUI pods |
+| podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
+| priorityClassName | string | `""` | Priority class name for the Open WebUI pods |
+| replicaCount | int | `1` | Number of Open WebUI replicas |
+| resources | object | `{}` | Resource requests and limits for the Open WebUI container |
+| revisionHistoryLimit | int | `10` | Revision history limit for the workload manager (deployment). |
+| route.additionalRules | list | `[]` | Additional custom rules that can be added to the route |
+| route.annotations | object | `{}` | Annotations to add to the route |
+| route.apiVersion | string | `"gateway.networking.k8s.io/v1"` | Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1alpha2 |
+| route.enabled | bool | `false` | Enables or disables the route |
+| route.filters | list | `[]` | Filters define the filters that are applied to requests that match this rule. |
+| route.hostnames | list | `[]` | Hostnames to match for the route |
+| route.httpsRedirect | bool | `false` | Enables HTTPS redirect for the route |
+| route.kind | string | `"HTTPRoute"` | Set the route kind Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute |
+| route.labels | object | `{}` | Labels to add to the route |
+| route.matches[0].path.type | string | `"PathPrefix"` | Path match type. Note that custom path prefix is not supported in Open WebUI, so any non-default value will break. See https://github.com/open-webui/open-webui/discussions/3431 |
+| route.matches[0].path.value | string | `"/"` | Path match value |
+| route.parentRefs | list | `[]` | References to the parent resources (e.g. Gateway) |
+| runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
+| strategy | object | `{}` | Strategy for updating the workload manager: deployment or statefulset |
+| tolerations | list | `[]` | Tolerations for pod assignment |
+| topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
+| volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
+| volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
+| workload.kind | string | `""` | Workload kind to use. Options are "Deployment", "StatefulSet". If not set, the chart will determine the kind based on persistence settings. NOTE: When using Deployment with local persistence and replicaCount > 1, ensure persistence.accessModes includes ReadWriteMany (RWX). |
 
 ----------------------------------------------
 

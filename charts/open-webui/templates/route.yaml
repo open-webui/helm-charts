@@ -1,0 +1,85 @@
+{{- if .Values.route.enabled }}
+{{- if .Values.route.httpsRedirect }}
+# HTTP route for redirect
+apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
+kind: {{ .Values.route.kind | default "HTTPRoute" }}
+metadata:
+  name: {{ include "open-webui.fullname" . }}-http-redirect
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "open-webui.labels" . | nindent 4 }}
+    {{- with .Values.route.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.route.parentRefs }}
+  parentRefs:
+  {{- range . }}
+  - {{ toYaml . | nindent 4 | trim }}
+    {{- if not .sectionName }}
+    sectionName: http
+    {{- end }}
+  {{- end }}
+{{- end }}
+  hostnames:
+    {{- toYaml .Values.route.hostnames | nindent 4 }}
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+---
+{{- end }}
+# Main route (HTTP or HTTPS depending on httpsRedirect setting)
+apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
+kind: {{ .Values.route.kind | default "HTTPRoute" }}
+metadata:
+  name: {{ include "open-webui.fullname" . }}
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "open-webui.labels" . | nindent 4 }}
+    {{- with .Values.route.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+  {{- range .Values.route.parentRefs }}
+  - {{ toYaml (omit . "sectionName") | nindent 4 | trim }}
+    {{- if $.Values.route.httpsRedirect }}
+    sectionName: https
+    {{- else if not .sectionName }}
+    sectionName: http
+    {{- else }}
+    sectionName: {{ .sectionName }}
+    {{- end }}
+  {{- end }}
+  hostnames:
+    {{- toYaml .Values.route.hostnames | nindent 4 }}
+  rules:
+    {{- if .Values.route.additionalRules }}
+    {{- tpl (toYaml .Values.route.additionalRules) $ | nindent 4 }}
+    {{- end }}
+    - backendRefs:
+        - name: {{ include "open-webui.fullname" . }}
+          port: {{ .Values.service.port }}
+          {{- if .Values.service.namespace }}
+          namespace: {{ .Values.service.namespace }}
+          {{- end }}
+      {{- with .Values.route.filters }}
+      filters:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.route.matches }}
+      matches:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
