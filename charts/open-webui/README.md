@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 10.2.1](https://img.shields.io/badge/Version-10.2.1-informational?style=flat-square) ![AppVersion: 0.7.2](https://img.shields.io/badge/AppVersion-0.7.2-informational?style=flat-square)
+![Version: 11.1.0](https://img.shields.io/badge/Version-11.1.0-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -318,13 +318,13 @@ helm upgrade --install open-webui open-webui/open-webui
 | route.additionalRules | list | `[]` | Additional custom rules that can be added to the route |
 | route.annotations | object | `{}` | Annotations to add to the route |
 | route.apiVersion | string | `"gateway.networking.k8s.io/v1"` | Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1alpha2 |
-| route.enabled | bool | `true` | Enables or disables the route |
+| route.enabled | bool | `false` | Enables or disables the route |
 | route.filters | list | `[]` | Filters define the filters that are applied to requests that match this rule. |
 | route.hostnames | list | `[]` | Hostnames to match for the route |
 | route.httpsRedirect | bool | `false` | Enables HTTPS redirect for the route |
 | route.kind | string | `"HTTPRoute"` | Set the route kind Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute |
 | route.labels | object | `{}` | Labels to add to the route |
-| route.matches[0].path.type | string | `"PathPrefix"` | Path match type |
+| route.matches[0].path.type | string | `"PathPrefix"` | Path match type. Note that custom path prefix is not supported in Open WebUI, so any non-default value will break. See https://github.com/open-webui/open-webui/discussions/3431 |
 | route.matches[0].path.value | string | `"/"` | Path match value |
 | route.parentRefs | list | `[]` | References to the parent resources (e.g. Gateway) |
 | runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
