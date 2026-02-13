@@ -1,5 +1,11 @@
-# -- Provide a name in place of the default application name
+# -- Override the chart name used in resource names. When set, this replaces the chart name
+# in the generated resource names (which combine release name and chart name).
+# Example: with nameOverride="custom" and release "prod", resources become "prod-custom"
 nameOverride: ""
+
+# -- Override the full resource name completely. When set, this takes precedence over nameOverride
+# and the standard naming convention. Leave empty to use the standard naming pattern.
+# See the "Resource Naming" section in the README for details on how resources are named.
 fullnameOverride: ""
 
 # -- Provide a namespace in place of the default release namespace
@@ -9,9 +15,9 @@ ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   # @section -- External Tools configuration
   enabled: true
-  # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
+  # -- Override the Ollama subchart name. If not set, uses the release name with '-ollama' suffix for multiple instance support
   # @section -- External Tools configuration
-  fullnameOverride: "open-webui-ollama"
+  fullnameOverride: ""
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
   # ollama:
   #   gpu:
@@ -40,6 +46,9 @@ pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
   # @section -- External Tools configuration
   enabled: true
+  # -- Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support
+  # @section -- External Tools configuration
+  fullnameOverride: ""
   # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
   # @section -- External Tools configuration
   extraEnvVars: []
@@ -56,9 +65,9 @@ websocket:
   # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
   # @section -- Websocket configuration
   manager: redis
-  # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
+  # -- Override the Redis URL for websocket communication. If empty, automatically generates URL based on release name. Template: `redis://[:<password>@]<hostname>:<port>/<db>`
   # @section -- Websocket configuration
-  url: redis://open-webui-redis:6379/0
+  url: ""
   # -- Node selector for websocket pods
   # @section -- Websocket configuration
   nodeSelector: {}
@@ -66,9 +75,6 @@ websocket:
     # -- Enable redis installation
     # @section -- Websocket configuration
     enabled: true
-    # -- Redis name
-    # @section -- Websocket configuration
-    name: open-webui-redis
     # -- Redis labels
     # @section -- Websocket configuration
     labels: {}
@@ -211,7 +217,7 @@ serviceAccount:
   create: true
   # -- Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template.
   # @section -- Service Account configuration
-  name: "existing-sa"
+  name: ""
   # -- Additional annotations to add to the ServiceAccount
   # @section -- Service Account configuration
   annotations: {}

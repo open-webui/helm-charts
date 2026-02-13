@@ -261,9 +261,9 @@ spec:
         - name: "WEBSOCKET_MANAGER"
           value: {{ .Values.websocket.manager | default "redis" | quote }}
         - name: "REDIS_URL"
-          value: {{ .Values.websocket.url | quote }}
+          value: {{ include "websocket.redis.url" . | quote }}
         - name: "WEBSOCKET_REDIS_URL"
-          value: {{ .Values.websocket.url | quote }}
+          value: {{ include "websocket.redis.url" . | quote }}
         {{- end }}
         {{- if .Values.databaseUrl }}
         - name: "DATABASE_URL"

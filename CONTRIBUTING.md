@@ -5,10 +5,11 @@
 1. **Fork the repository** and create your branch from `main`.
 2. **Make your changes** and ensure they follow the guidelines below.
 3. **Test your changes** locally to ensure everything works as expected. This should include deploying your updates to a live Kubernetes cluster (whether local or remote).
-4. **Run [helm-docs]** to ensure that the README is updated with the latest changes. 
-5. **Commit your changes** using a descriptive commit message that follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
-6. **Push your changes** to your forked repository.
-7. **Create a Pull Request** and provide a detailed description of your changes. Please consider dropping us your redacted `values.yaml` file used during your testing in the PR so we can make sure we see consistent results. 
+4. **Update the CHANGELOG** - Add your changes to the `[Unreleased]` section in the chart's `CHANGELOG.md` file (e.g., `charts/open-webui/CHANGELOG.md`). Follow the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) format and categorize changes appropriately (Added, Changed, Deprecated, Removed, Fixed, Security). Breaking changes should be clearly marked.
+5. **Run [helm-docs]** to ensure that the README is updated with the latest changes. 
+6. **Commit your changes** using a descriptive commit message that follows the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
+7. **Push your changes** to your forked repository.
+8. **Create a Pull Request** and provide a detailed description of your changes. Please consider dropping us your redacted `values.yaml` file used during your testing in the PR so we can make sure we see consistent results. 
 
 ## Guidelines
 
@@ -18,6 +19,16 @@
   - `PATCH` version increment for backwards-compatible bug fixes
 
 - **Chart.yaml Updates**: When submitting a Pull Request, ensure that you have updated the `Chart.yaml` file with the appropriate version increment and a brief description of the changes in the `appVersion` field.
+
+- **CHANGELOG Updates**: All changes must be documented in the `CHANGELOG.md` file within the chart directory (e.g., `charts/open-webui/CHANGELOG.md`). Add your changes under the `[Unreleased]` section using the appropriate category:
+  - `Added` for new features
+  - `Changed` for changes in existing functionality (mark as **BREAKING CHANGES** if backwards incompatible)
+  - `Deprecated` for soon-to-be removed features
+  - `Removed` for removed features
+  - `Fixed` for bug fixes
+  - `Security` for vulnerability fixes
+  
+  Breaking changes should be clearly highlighted and include migration instructions when applicable.
 
 - **Code Style**: Follow the existing code style and conventions used in the repository.
 
