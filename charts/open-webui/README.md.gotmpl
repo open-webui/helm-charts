@@ -27,6 +27,68 @@ Now you can install the chart:
 helm upgrade --install open-webui open-webui/open-webui
 ```
 
+## Resource Naming
+
+This chart follows standard Helm naming conventions. Resources are named using a combination of the Helm release name and chart name, which allows multiple instances to be deployed in the same namespace without conflicts.
+
+### Default Naming Behavior
+
+When you install the chart, resources are automatically named based on your release name:
+
+- **Release name contains chart name**: If your release name contains "open-webui" (e.g., `open-webui`, `open-webui-prod`, `my-open-webui`), resources use just the release name to avoid redundancy
+  - Example: `helm install open-webui open-webui/open-webui` → Resources named `open-webui`
+  - Example: `helm install open-webui-staging open-webui/open-webui` → Resources named `open-webui-staging`
+
+- **Release name does not contain chart name**: Resources are named as `<release-name>-open-webui`
+  - Example: `helm install production open-webui/open-webui` → Resources named `production-open-webui`
+  - Example: `helm install dev open-webui/open-webui` → Resources named `dev-open-webui`
+
+### Overriding Resource Names
+
+You can customize resource naming using these values:
+
+- **`fullnameOverride`**: Completely overrides the resource name
+  ```yaml
+  fullnameOverride: "my-custom-name"
+  # All resources named "my-custom-name" regardless of release name
+  ```
+
+- **`nameOverride`**: Replaces only the chart name portion in resource names
+  ```yaml
+  nameOverride: "custom"
+  # With release "prod" → Resources named "prod-custom"
+  ```
+
+### Multiple Instances
+
+To deploy multiple instances in the same namespace, use different release names:
+
+```shell
+# Development instance
+helm install dev open-webui/open-webui
+# Creates resources: dev-open-webui
+
+# Staging instance
+helm install staging open-webui/open-webui
+# Creates resources: staging-open-webui
+```
+
+Or use descriptive release names that include "open-webui":
+
+```shell
+# Development instance
+helm install open-webui-dev open-webui/open-webui
+# Creates resources: open-webui-dev
+
+# Staging instance  
+helm install open-webui-staging open-webui/open-webui
+# Creates resources: open-webui-staging
+```
+
+## Upgrading
+
+Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and breaking changes between versions.
+
 {{ template "chart.requirementsSection" . }}
 
 {{ template "chart.valuesSection" . }}

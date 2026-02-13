@@ -4,7 +4,7 @@
 apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
 kind: {{ .Values.route.kind | default "HTTPRoute" }}
 metadata:
-  name: {{ include "open-webui.name" . }}-http-redirect
+  name: {{ include "open-webui.fullname" . }}-http-redirect
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
@@ -39,7 +39,7 @@ spec:
 apiVersion: {{ .Values.route.apiVersion | default "gateway.networking.k8s.io/v1" }}
 kind: {{ .Values.route.kind | default "HTTPRoute" }}
 metadata:
-  name: {{ include "open-webui.name" . }}
+  name: {{ include "open-webui.fullname" . }}
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
@@ -69,7 +69,7 @@ spec:
     {{- tpl (toYaml .Values.route.additionalRules) $ | nindent 4 }}
     {{- end }}
     - backendRefs:
-        - name: {{ include "open-webui.name" . }}
+        - name: {{ include "open-webui.fullname" . }}
           port: {{ .Values.service.port }}
           {{- if .Values.service.namespace }}
           namespace: {{ .Values.service.namespace }}

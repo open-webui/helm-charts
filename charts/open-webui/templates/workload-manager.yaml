@@ -7,7 +7,7 @@
 apiVersion: apps/v1
 kind: {{ $kind }}
 metadata:
-  name: {{ include "open-webui.name" . }}
+  name: {{ include "open-webui.fullname" . }}
   namespace: {{ include "open-webui.namespace" . }}
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
@@ -22,7 +22,7 @@ spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
   {{- if eq $kind "StatefulSet" }}
-  serviceName: {{ include "open-webui.name" . }}
+  serviceName: {{ include "open-webui.fullname" . }}
   {{- end }}
   selector:
     matchLabels:
@@ -92,7 +92,7 @@ spec:
       runtimeClassName: {{ .Values.runtimeClassName | quote }}
       {{- end }}
       {{- if .Values.serviceAccount.enable }}
-      serviceAccountName: {{ .Values.serviceAccount.name | default (include "open-webui.name" .) }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "open-webui.fullname" .) }}-sa
       {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -261,9 +261,9 @@ spec:
         - name: "WEBSOCKET_MANAGER"
           value: {{ .Values.websocket.manager | default "redis" | quote }}
         - name: "REDIS_URL"
-          value: {{ .Values.websocket.url | quote }}
+          value: {{ include "websocket.redis.url" . | quote }}
         - name: "WEBSOCKET_REDIS_URL"
-          value: {{ .Values.websocket.url | quote }}
+          value: {{ include "websocket.redis.url" . | quote }}
         {{- end }}
         {{- if .Values.databaseUrl }}
         - name: "DATABASE_URL"
@@ -425,7 +425,7 @@ spec:
       {{- else if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
       - name: data
         persistentVolumeClaim:
-          claimName: {{ include "open-webui.name" . }}
+          claimName: {{ include "open-webui.fullname" . }}
       {{- end }}
       {{- with .Values.volumes }}
       {{- toYaml . | nindent 6 }}

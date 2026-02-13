@@ -4,8 +4,8 @@ namespaceOverride: ""
 ollama:
   # -- Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure
   enabled: false
-  # -- If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart
-  fullnameOverride: "open-webui-ollama"
+  # -- Override the Ollama subchart name. If not set, uses the release name with '-ollama' suffix for multiple instance support
+  fullnameOverride: ""
   # -- Example Ollama configuration with nvidia GPU enabled, automatically downloading a model, and deploying a PVC for model persistence
   # ollama:
   #   gpu:
@@ -22,6 +22,8 @@ ollama:
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
   enabled: false
+  # -- Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support
+  fullnameOverride: ""
   # -- This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname)
   extraEnvVars: []
 
@@ -37,14 +39,12 @@ websocket:
   enabled: false
   # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
   manager: redis
-  # -- Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>`
-  url: redis://open-webui-redis:6379/0
+  # -- Override the Redis URL for websocket communication. If empty, automatically generates URL based on release name. Template: `redis://[:<password>@]<hostname>:<port>/<db>`
+  url: ""
   # -- Deploys a redis
   redis:
     # -- Enable redis installation
     enabled: true
-    # -- Redis name
-    name: open-webui-redis
     # -- Redis labels
     labels: {}
     # -- Redis annotations

@@ -17,17 +17,28 @@ Set the name of the Open WebUI resources
 {{- end -}}
 
 {{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
+*/}}
+{{- define "open-webui.fullname" -}}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Set the name of the integrated Ollama resources
 */}}
 {{- define "ollama.name" -}}
 open-webui-ollama
-{{- end -}}
-
-{{/*
-Set the name of the integrated Pipelines resources
-*/}}
-{{- define "pipelines.name" -}}
-open-webui-pipelines
 {{- end -}}
 
 {{/*
@@ -47,10 +58,14 @@ as a dependency of the Open WebUI chart
 */}}
 {{- define "ollamaLocalUrl" -}}
 {{- if .Values.ollama.enabled -}}
-{{- $clusterDomain := .Values.clusterDomain }}
-{{- $ollamaServicePort := .Values.ollama.service.port | toString }}
-{{- printf "http://%s.%s.svc.%s:%s" (default .Values.ollama.name .Values.ollama.fullnameOverride) (.Release.Namespace) $clusterDomain $ollamaServicePort }}
-{{- end }}
+{{- $clusterDomain := .Values.clusterDomain -}}
+{{- $ollamaServicePort := .Values.ollama.service.port | toString -}}
+{{- $ollamaName := .Values.ollama.fullnameOverride -}}
+{{- if not $ollamaName -}}
+{{- $ollamaName = printf "%s-ollama" (include "open-webui.fullname" .) -}}
+{{- end -}}
+{{- printf "http://%s.%s.svc.%s:%s" $ollamaName (.Release.Namespace) $clusterDomain $ollamaServicePort -}}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -135,30 +150,18 @@ Create labels to include on chart all Ollama resources
 {{- end }}
 
 {{/*
-Create selector labels to include on chart all Pipelines resources
-*/}}
-{{- define "pipelines.selectorLabels" -}}
-{{ include "base.selectorLabels" . }}
-app.kubernetes.io/component: {{ include "pipelines.name" . }}
-{{- end }}
-
-{{/*
-Create labels to include on chart all Pipelines resources
-*/}}
-{{- define "pipelines.labels" -}}
-{{ include "base.labels" . }}
-{{ include "pipelines.selectorLabels" . }}
-{{- end }}
-
-{{/*
 Create the service endpoint to use for Pipelines if the subchart is used
 */}}
 {{- define "pipelines.serviceEndpoint" -}}
 {{- if .Values.pipelines.enabled -}}
-{{- $clusterDomain := .Values.clusterDomain }}
-{{- $pipelinesServicePort := .Values.pipelines.service.port | toString }}
-{{- printf "http://%s.%s.svc.%s:%s" (include "pipelines.name" .) (.Release.Namespace) $clusterDomain $pipelinesServicePort }}
-{{- end }}
+{{- $clusterDomain := .Values.clusterDomain -}}
+{{- $pipelinesServicePort := .Values.pipelines.service.port | toString -}}
+{{- $pipelinesName := .Values.pipelines.fullnameOverride -}}
+{{- if not $pipelinesName -}}
+{{- $pipelinesName = printf "%s-pipelines" (include "open-webui.fullname" .) -}}
+{{- end -}}
+{{- printf "http://%s.%s.svc.%s:%s" $pipelinesName (.Release.Namespace) $clusterDomain $pipelinesServicePort -}}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -166,7 +169,7 @@ Create selector labels to include on chart all websocket resources
 */}}
 {{- define "websocket.redis.selectorLabels" -}}
 {{ include "base.selectorLabels" . }}
-app.kubernetes.io/component: {{ .Values.websocket.redis.name }}
+app.kubernetes.io/component: {{ include "open-webui.fullname" . }}-redis
 {{- end }}
 
 {{/*
@@ -175,6 +178,18 @@ Create labels to include on chart all websocket resources
 {{- define "websocket.redis.labels" -}}
 {{ include "base.labels" . }}
 {{ include "websocket.redis.selectorLabels" . }}
+{{- end }}
+
+{{/*
+Generate the websocket Redis URL
+*/}}
+{{- define "websocket.redis.url" -}}
+{{- if .Values.websocket.url -}}
+{{- .Values.websocket.url -}}
+{{- else -}}
+{{- $clusterDomain := .Values.clusterDomain -}}
+{{- printf "redis://%s-redis.%s.svc.%s:6379/0" (include "open-webui.fullname" .) (.Release.Namespace) $clusterDomain -}}
+{{- end -}}
 {{- end }}
 
 {{/*

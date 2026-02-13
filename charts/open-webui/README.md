@@ -28,6 +28,68 @@ Now you can install the chart:
 helm upgrade --install open-webui open-webui/open-webui
 ```
 
+## Resource Naming
+
+This chart follows standard Helm naming conventions. Resources are named using a combination of the Helm release name and chart name, which allows multiple instances to be deployed in the same namespace without conflicts.
+
+### Default Naming Behavior
+
+When you install the chart, resources are automatically named based on your release name:
+
+- **Release name contains chart name**: If your release name contains "open-webui" (e.g., `open-webui`, `open-webui-prod`, `my-open-webui`), resources use just the release name to avoid redundancy
+  - Example: `helm install open-webui open-webui/open-webui` → Resources named `open-webui`
+  - Example: `helm install open-webui-staging open-webui/open-webui` → Resources named `open-webui-staging`
+
+- **Release name does not contain chart name**: Resources are named as `<release-name>-open-webui`
+  - Example: `helm install production open-webui/open-webui` → Resources named `production-open-webui`
+  - Example: `helm install dev open-webui/open-webui` → Resources named `dev-open-webui`
+
+### Overriding Resource Names
+
+You can customize resource naming using these values:
+
+- **`fullnameOverride`**: Completely overrides the resource name
+  ```yaml
+  fullnameOverride: "my-custom-name"
+  # All resources named "my-custom-name" regardless of release name
+  ```
+
+- **`nameOverride`**: Replaces only the chart name portion in resource names
+  ```yaml
+  nameOverride: "custom"
+  # With release "prod" → Resources named "prod-custom"
+  ```
+
+### Multiple Instances
+
+To deploy multiple instances in the same namespace, use different release names:
+
+```shell
+# Development instance
+helm install dev open-webui/open-webui
+# Creates resources: dev-open-webui
+
+# Staging instance
+helm install staging open-webui/open-webui
+# Creates resources: staging-open-webui
+```
+
+Or use descriptive release names that include "open-webui":
+
+```shell
+# Development instance
+helm install open-webui-dev open-webui/open-webui
+# Creates resources: open-webui-dev
+
+# Staging instance 
+helm install open-webui-staging open-webui/open-webui
+# Creates resources: open-webui-staging
+```
+
+## Upgrading
+
+Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and breaking changes between versions.
+
 ## Requirements
 
 | Repository | Name | Version |
@@ -117,7 +179,7 @@ helm upgrade --install open-webui open-webui/open-webui
 |-----|------|---------|-------------|
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` | Additional annotations to add to the PVC |
-| persistence.enabled | bool | `true` | Enable persistence using PVC for Open WebUI data |
+| persistence.enabled | bool | `false` | Enable persistence using PVC for Open WebUI data |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
 | persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
 | persistence.selector | object | `{}` | Selector to match to get the volume bound to the claim |
@@ -179,7 +241,7 @@ helm upgrade --install open-webui open-webui/open-webui
 | serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token for the Open WebUI pods |
 | serviceAccount.create | bool | `true` | If create is set to false, set `name` to existing service account name |
 | serviceAccount.enable | bool | `true` | Enable service account creation |
-| serviceAccount.name | string | `"existing-sa"` | Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template. |
+| serviceAccount.name | string | `""` | Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template. |
 
 ### SSO Configuration
 
@@ -269,7 +331,6 @@ helm upgrade --install open-webui open-webui/open-webui
 | websocket.redis.image.repository | string | `"redis"` | Redis image repository |
 | websocket.redis.image.tag | string | `"7.4.2-alpine3.21"` | Redis image tag |
 | websocket.redis.labels | object | `{}` | Redis labels |
-| websocket.redis.name | string | `"open-webui-redis"` | Redis name |
 | websocket.redis.podSecurityContext | object | `{}` | Redis pod security context |
 | websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.pods.labels | object | `{}` | Redis pod labels |
@@ -304,8 +365,9 @@ helm upgrade --install open-webui open-webui/open-webui
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
 | extraLabels | object | `{}` | Additional custom labels to add to the Open WebUI deployment/statefulset metadata |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
+| fullnameOverride | string | `""` | Override the full resource name completely. When set, this takes precedence over nameOverride and the standard naming convention. Leave empty to use the standard naming pattern. See the "Resource Naming" section in the README for details on how resources are named. |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
-| nameOverride | string | `""` | Provide a name in place of the default application name |
+| nameOverride | string | `""` | Override the chart name used in resource names. When set, this replaces the chart name in the generated resource names (which combine release name and chart name). Example: with nameOverride="custom" and release "prod", resources become "prod-custom" |
 | namespaceOverride | string | `""` | Provide a namespace in place of the default release namespace |
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | podAnnotations | object | `{}` | Additional annotations to add to the Open WebUI pods |
