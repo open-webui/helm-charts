@@ -18,6 +18,9 @@ The chart now follows standard Helm naming conventions to align with best practi
 
 **What changed:**
 - `fullnameOverride` now defaults to `""` (empty string) instead of `"open-webui"`
+- `ollama.fullnameOverride` now defaults to `""` (empty string) instead of `"open-webui-ollama"`
+- `pipelines.fullnameOverride` added and defaults to `""` (empty string)
+- `websocket.url` now defaults to `""` (empty string, auto-generated) instead of `"redis://open-webui-redis:6379/0"`
 - Resource names are now dynamically generated based on release name and chart name
 - Removed redundant `websocket.redis.name` configuration value
 - `serviceAccount.name` now defaults to `""` (empty string)
@@ -31,13 +34,23 @@ The chart now follows standard Helm naming conventions to align with best practi
 To upgrade safely without recreating resources:
 
 ```yaml
-# In your values.yaml or via --set flag
+# In your values.yaml or via --set flags
 fullnameOverride: "open-webui"
+ollama:
+  fullnameOverride: "open-webui-ollama"
+pipelines:
+  fullnameOverride: "open-webui-pipelines"
+websocket:
+  url: "redis://open-webui-redis:6379/0"
 ```
 
 Or via command line:
 ```bash
-helm upgrade open-webui open-webui/open-webui --set fullnameOverride="open-webui"
+helm upgrade open-webui open-webui/open-webui \
+  --set fullnameOverride="open-webui" \
+  --set ollama.fullnameOverride="open-webui-ollama" \
+  --set pipelines.fullnameOverride="open-webui-pipelines" \
+  --set websocket.url="redis://open-webui-redis:6379/0"
 ```
 
 Without this override, Helm will create new resources with different names, leaving your existing StatefulSet, PVC, and Services orphaned.
@@ -56,6 +69,17 @@ Without this override, Helm will create new resources with different names, leav
 | `open-webui-dev` | `open-webui` | Resources named `open-webui-dev` |
 | `production` | `open-webui` | Resources named `production-open-webui` |
 | `my-chat` | `open-webui` | Resources named `my-chat-open-webui` |
+
+### Changed
+
+- **`ollama.fullnameOverride`** default value changed from `"open-webui-ollama"` to `""` for dynamic naming
+- **`websocket.url`** default value changed from `"redis://open-webui-redis:6379/0"` to `""` for auto-generation
+
+### Added
+
+- **`pipelines.fullnameOverride`** configuration value for customizing Pipelines subchart naming (defaults to `""`)
+- **`websocket.redis.url`** helper template for dynamically generating Redis URLs
+- **`ollamaLocalUrl`** and **`pipelines.serviceEndpoint`** helpers now support dynamic naming
 
 ### Removed
 
