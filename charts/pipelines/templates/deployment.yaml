@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "pipelines.name" . }}
+  name: {{ include "pipelines.fullname" . }}
   namespace: {{ include "pipelines.namespace" . }}
   labels:
     {{- include "pipelines.labels" . | nindent 4 }}
@@ -42,7 +42,7 @@ spec:
       enableServiceLinks: false
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken | default false }}
       {{- if .Values.serviceAccount.enable }}
-      serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipelines.name" .) }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default (include "pipelines.fullname" .) }}
       {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
@@ -105,7 +105,7 @@ spec:
       {{- else if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
       - name: data
         persistentVolumeClaim:
-          claimName: {{ include "pipelines.name" . }}
+          claimName: {{ include "pipelines.fullname" . }}
       {{- end }}
       {{- with .Values.volumes }}
       {{- toYaml . | nindent 6 }}
