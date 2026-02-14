@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 11.1.0](https://img.shields.io/badge/Version-11.1.0-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
+![Version: 12.0.1](https://img.shields.io/badge/Version-12.0.1-informational?style=flat-square) ![AppVersion: 0.8.0](https://img.shields.io/badge/AppVersion-0.8.0-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -95,7 +95,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | Repository | Name | Version |
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
-| https://helm.openwebui.com | pipelines | >=0.0.1 |
+| https://helm.openwebui.com | pipelines | >=0.10.1 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
@@ -166,11 +166,12 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
-| ollama.fullnameOverride | string | `"open-webui-ollama"` | If enabling embedded Ollama, update fullnameOverride to your desired Ollama name value, or else it will use the default ollama.name value from the Ollama chart |
+| ollama.fullnameOverride | string | `""` | Override the Ollama subchart name. If not set, uses the release name with '-ollama' suffix for multiple instance support |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
 | ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
 | pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
 | pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
+| pipelines.fullnameOverride | string | `""` | Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support |
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 
 ### Persistence configuration
@@ -179,7 +180,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 |-----|------|---------|-------------|
 | persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
 | persistence.annotations | object | `{}` | Additional annotations to add to the PVC |
-| persistence.enabled | bool | `false` | Enable persistence using PVC for Open WebUI data |
+| persistence.enabled | bool | `true` | Enable persistence using PVC for Open WebUI data |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
 | persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
 | persistence.selector | object | `{}` | Selector to match to get the volume bound to the claim |
@@ -343,7 +344,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | websocket.redis.service.portName | string | `"http"` | Redis service port name. Istio needs this to be something like `tcp-redis` |
 | websocket.redis.service.type | string | `"ClusterIP"` | Redis service type |
 | websocket.redis.tolerations | list | `[]` | Redis tolerations for pod assignment |
-| websocket.url | string | `"redis://open-webui-redis:6379/0"` | Specifies the URL of the Redis instance for websocket communication. Template with `redis://[:<password>@]<hostname>:<port>/<db>` |
+| websocket.url | string | `""` | Override the Redis URL for websocket communication. If empty, automatically generates URL based on release name. Template: `redis://[:<password>@]<hostname>:<port>/<db>` |
 
 ### Other Values
 
@@ -359,7 +360,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
 | copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
 | copyAppData.resources | object | `{}` | Resource requests and limits for the Open WebUI copy-app-data init container |
-| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database. Alternatively, use extraEnvVars to construct the database URL by setting the `DATABASE_TYPE`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT` and `DATABASE_NAME` environment variables. Each DATABASE_* var must be set or database will default to sqlite. |
+| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database. Alternatively, use extraEnvVars to construct the database URL by setting the `DATABASE_TYPE`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT`and `DATABASE_NAME` environment variables. Each DATABASE_* var must be set or database will default to sqlite. |
 | extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
 | extraEnvVars | list | `[]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style. |
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |

@@ -156,9 +156,16 @@ Create the service endpoint to use for Pipelines if the subchart is used
 {{- if .Values.pipelines.enabled -}}
 {{- $clusterDomain := .Values.clusterDomain -}}
 {{- $pipelinesServicePort := .Values.pipelines.service.port | toString -}}
-{{- $pipelinesName := .Values.pipelines.fullnameOverride -}}
-{{- if not $pipelinesName -}}
-{{- $pipelinesName = printf "%s-pipelines" (include "open-webui.fullname" .) -}}
+{{- $pipelinesName := "" -}}
+{{- if .Values.pipelines.fullnameOverride -}}
+{{- $pipelinesName = .Values.pipelines.fullnameOverride -}}
+{{- else -}}
+{{- $chartName := default "pipelines" .Values.pipelines.nameOverride -}}
+{{- if contains $chartName .Release.Name -}}
+{{- $pipelinesName = .Release.Name -}}
+{{- else -}}
+{{- $pipelinesName = printf "%s-%s" .Release.Name $chartName -}}
+{{- end -}}
 {{- end -}}
 {{- printf "http://%s.%s.svc.%s:%s" $pipelinesName (.Release.Namespace) $clusterDomain $pipelinesServicePort -}}
 {{- end -}}
