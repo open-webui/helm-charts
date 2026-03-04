@@ -1,6 +1,6 @@
 # pipelines
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![AppVersion: alpha](https://img.shields.io/badge/AppVersion-alpha-informational?style=flat-square)
 
 Pipelines: UI-Agnostic OpenAI API Plugin Framework
 
@@ -40,6 +40,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
 | extraLabels | object | `{}` |  |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI Pipelines |
+| fullnameOverride | string | `""` |  |
 | hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/open-webui/pipelines"` |  |
@@ -79,6 +80,7 @@ helm upgrade --install open-webui open-webui/pipelines
 | serviceAccount.name | string | `""` |  |
 | strategy | object | `{}` | Strategy for updating the deployment |
 | tolerations | list | `[]` | Tolerations for pod assignment |
+| topologySpreadConstraints | list | `[]` | Topology spread constraints for pod distribution |
 | volumeMounts | list | `[]` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 | volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
 
