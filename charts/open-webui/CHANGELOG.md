@@ -6,6 +6,11 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v12.8.1]
+
+### Changed
+Updated helm dependencies (ollama 1.42.0 → 1.48.0).
+
 ## [v12.8.0]
 
 ### Changed
