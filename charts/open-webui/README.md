@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 12.11.0](https://img.shields.io/badge/Version-12.11.0-informational?style=flat-square) ![AppVersion: 0.8.11](https://img.shields.io/badge/AppVersion-0.8.11-informational?style=flat-square)
+![Version: 12.12.0](https://img.shields.io/badge/Version-12.12.0-informational?style=flat-square) ![AppVersion: 0.8.11](https://img.shields.io/badge/AppVersion-0.8.11-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -293,8 +293,11 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | sso.oidc.clientExistingSecret | string | `""` | OICD client secret from existing secret |
 | sso.oidc.clientExistingSecretKey | string | `""` | OIDC client secret key from existing secret |
 | sso.oidc.clientId | string | `""` | OIDC client ID |
+| sso.oidc.clientIdExistingSecretKey | string | `""` | OIDC client ID key from existing secret |
 | sso.oidc.clientSecret | string | `""` | OIDC client secret (ignored if clientExistingSecret is set) |
 | sso.oidc.enabled | bool | `false` | Enable OIDC authentication |
+| sso.oidc.existingConfig | string | `""` | OIDC configuration existing configmap |
+| sso.oidc.existingConfigProviderUrlKey | string | `""` | OIDC provider URL key in the existing configmap |
 | sso.oidc.providerName | string | `"SSO"` | Name of the provider to show on the UI |
 | sso.oidc.providerUrl | string | `""` | OIDC provider well known URL |
 | sso.oidc.scopes | string | `"openid email profile"` | Scopes to request (space-separated). |

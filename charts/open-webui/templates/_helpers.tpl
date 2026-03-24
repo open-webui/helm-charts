@@ -121,7 +121,7 @@ app.kubernetes.io/component: {{ .Chart.Name }}
 
 {{- define "open-webui.extraLabels" -}}
 {{- with .Values.extraLabels }}
-{{- toYaml . }}
+{{- tpl (toYaml .) $ }}
 {{- end }}
 {{- end }}
 
@@ -305,13 +305,13 @@ Convert a map of environment variables to Kubernetes env var format
   {{- range $key, $val := . }}
 - name: {{ $key }}
     {{- if kindIs "map" $val }}
-      {{- toYaml $val | nindent 2 }}
+      {{- tpl (toYaml $val) $ | nindent 2 }}
     {{- else }}
-  value: {{ $val | quote }}
+  value: {{ tpl $val $ | quote }}
     {{- end }}
   {{- end }}
 {{- else }}
-  {{- toYaml . }}
+  {{- tpl (toYaml .) $ }}
 {{- end }}
 {{- end }}
 
