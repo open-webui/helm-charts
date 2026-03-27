@@ -41,7 +41,7 @@ spec:
       labels:
         {{- include "open-webui.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
       {{- with .Values.podAnnotations }}
       annotations:
@@ -50,7 +50,7 @@ spec:
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- with .Values.priorityClassName }}
       priorityClassName: {{ . }}
@@ -156,7 +156,7 @@ spec:
         {{- if and .Values.enableOpenaiApi .Values.openaiBaseApiUrl (not .Values.openaiBaseApiUrls) (not .Values.pipelines.enabled) }}
         # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
         - name: "OPENAI_API_BASE_URL"
-          value: {{ .Values.openaiBaseApiUrl | quote }}
+          value: {{ tpl .Values.openaiBaseApiUrl . | quote }}
         {{- if .Values.openaiApiKey }}
         - name: "OPENAI_API_KEY"
           value: {{ .Values.openaiApiKey | quote }}
@@ -164,7 +164,7 @@ spec:
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrl .Values.pipelines.enabled (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and OpenAI API value is set, use OPENAI_API_BASE_URLS with combined values
         - name: "OPENAI_API_BASE_URLS"
-          value: "{{ include "pipelines.serviceEndpoint" . }};{{ .Values.openaiBaseApiUrl }}"
+          value: "{{ include "pipelines.serviceEndpoint" . }};{{ tpl .Values.openaiBaseApiUrl . }}"
         {{- if .Values.openaiApiKeys }}
         - name: "OPENAI_API_KEYS"
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
@@ -324,19 +324,33 @@ spec:
         {{- end }}
         {{- if .Values.sso.oidc.enabled }}
         - name: "OAUTH_CLIENT_ID"
+        {{- if and .Values.sso.oidc.clientExistingSecret .Values.sso.oidc.clientIdExistingSecretKey }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ tpl .Values.sso.oidc.clientExistingSecret . | quote }}
+              key: {{ tpl .Values.sso.oidc.clientIdExistingSecretKey . | quote }}
+        {{- else }}
           value: {{ .Values.sso.oidc.clientId | quote }}
+        {{- end }}
         {{- include "sso.validateClientSecret" (dict "provider" "oidc" "values" .Values.sso) }}
         - name: "OAUTH_CLIENT_SECRET"
         {{- if .Values.sso.oidc.clientExistingSecret }}
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.sso.oidc.clientExistingSecret | quote }}
-              key: {{ .Values.sso.oidc.clientExistingSecretKey | quote }}
+              name: {{ tpl .Values.sso.oidc.clientExistingSecret . | quote }}
+              key: {{ tpl .Values.sso.oidc.clientExistingSecretKey . | quote }}
         {{- else }}
           value: {{ .Values.sso.oidc.clientSecret | quote }}
         {{- end }}
         - name: "OPENID_PROVIDER_URL"
+        {{- if .Values.sso.oidc.existingConfig }}
+          valueFrom:
+            configMapKeyRef:
+              name: {{ tpl .Values.sso.oidc.existingConfig . | quote }}
+              key: {{ tpl .Values.sso.oidc.existingConfigProviderUrlKey . | quote }}
+        {{- else }}
           value: {{ .Values.sso.oidc.providerUrl | quote }}
+        {{- end }}
         - name: "OAUTH_PROVIDER_NAME"
           value: {{ .Values.sso.oidc.providerName | quote }}
         - name: "OAUTH_SCOPES"
@@ -349,11 +363,11 @@ spec:
           value: {{ .Values.sso.roleManagement.rolesClaim | quote }}
         {{- if .Values.sso.roleManagement.allowedRoles }}
         - name: "OAUTH_ALLOWED_ROLES"
-          value: {{ .Values.sso.roleManagement.allowedRoles | quote }}
+          value: {{ tpl .Values.sso.roleManagement.allowedRoles . | quote }}
         {{- end }}
         {{- if .Values.sso.roleManagement.adminRoles }}
         - name: "OAUTH_ADMIN_ROLES"
-          value: {{ .Values.sso.roleManagement.adminRoles | quote }}
+          value: {{ tpl .Values.sso.roleManagement.adminRoles . | quote }}
         {{- end }}
         {{- end }}
         {{- if .Values.sso.enableGroupManagement }}
@@ -384,19 +398,19 @@ spec:
         {{- end }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
-          {{- include "open-webui.env" .Values.extraEnvVars | nindent 8 }}
+          {{- include "open-webui.env" (dict "envVars" .Values.extraEnvVars "root" .) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonEnvVars }}
-          {{- toYaml .Values.commonEnvVars | nindent 8 }}
+          {{- tpl (toYaml .Values.commonEnvVars) . | nindent 8 }}
         {{- end }}
         {{- if .Values.extraEnvFrom }}
         envFrom:
-          {{- toYaml .Values.extraEnvFrom | nindent 8 }}
+          {{- tpl (toYaml .Values.extraEnvFrom) . | nindent 8 }}
         {{- end }}
         tty: true
       {{- with .Values.nodeSelector }}
       nodeSelector:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:

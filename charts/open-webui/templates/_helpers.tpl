@@ -121,7 +121,7 @@ app.kubernetes.io/component: {{ .Chart.Name }}
 
 {{- define "open-webui.extraLabels" -}}
 {{- with .Values.extraLabels }}
-{{- toYaml . }}
+{{- tpl (toYaml .) $ }}
 {{- end }}
 {{- end }}
 
@@ -298,20 +298,25 @@ used to populate the variable WEBUI_URL
 {{- end }}
 
 {{/*
-Convert a map of environment variables to Kubernetes env var format
+Convert a map of environment variables to Kubernetes env var format.
+Accepts a dict with keys "envVars" (the env var data) and "root" (the root Helm context).
 */}}
 {{- define "open-webui.env" -}}
-{{- if kindIs "map" . }}
-  {{- range $key, $val := . }}
+{{- $root := .root -}}
+{{- $envVars := .envVars -}}
+{{- if kindIs "map" $envVars }}
+  {{- range $key, $val := $envVars }}
 - name: {{ $key }}
     {{- if kindIs "map" $val }}
-      {{- toYaml $val | nindent 2 }}
+      {{- tpl (toYaml $val) $root | nindent 2 }}
+    {{- else if kindIs "string" $val }}
+  value: {{ tpl $val $root | quote }}
     {{- else }}
   value: {{ $val | quote }}
     {{- end }}
   {{- end }}
 {{- else }}
-  {{- toYaml . }}
+  {{- tpl (toYaml $envVars) $root }}
 {{- end }}
 {{- end }}
 
