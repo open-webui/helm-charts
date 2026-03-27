@@ -324,7 +324,7 @@ spec:
         {{- end }}
         {{- if .Values.sso.oidc.enabled }}
         - name: "OAUTH_CLIENT_ID"
-        {{- if .Values.sso.oidc.clientExistingSecret }}
+        {{- if and .Values.sso.oidc.clientExistingSecret .Values.sso.oidc.clientIdExistingSecretKey }}
           valueFrom:
             secretKeyRef:
               name: {{ tpl .Values.sso.oidc.clientExistingSecret . | quote }}
@@ -398,7 +398,7 @@ spec:
         {{- end }}
         {{- end }}
         {{- if .Values.extraEnvVars }}
-          {{- include "open-webui.env" .Values.extraEnvVars | nindent 8 }}
+          {{- include "open-webui.env" (dict "envVars" .Values.extraEnvVars "root" .) | nindent 8 }}
         {{- end }}
         {{- if .Values.commonEnvVars }}
           {{- tpl (toYaml .Values.commonEnvVars) . | nindent 8 }}

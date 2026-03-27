@@ -298,20 +298,25 @@ used to populate the variable WEBUI_URL
 {{- end }}
 
 {{/*
-Convert a map of environment variables to Kubernetes env var format
+Convert a map of environment variables to Kubernetes env var format.
+Accepts a dict with keys "envVars" (the env var data) and "root" (the root Helm context).
 */}}
 {{- define "open-webui.env" -}}
-{{- if kindIs "map" . }}
-  {{- range $key, $val := . }}
+{{- $root := .root -}}
+{{- $envVars := .envVars -}}
+{{- if kindIs "map" $envVars }}
+  {{- range $key, $val := $envVars }}
 - name: {{ $key }}
     {{- if kindIs "map" $val }}
-      {{- tpl (toYaml $val) $ | nindent 2 }}
+      {{- tpl (toYaml $val) $root | nindent 2 }}
+    {{- else if kindIs "string" $val }}
+  value: {{ tpl $val $root | quote }}
     {{- else }}
-  value: {{ tpl $val $ | quote }}
+  value: {{ $val | quote }}
     {{- end }}
   {{- end }}
 {{- else }}
-  {{- tpl (toYaml .) $ }}
+  {{- tpl (toYaml $envVars) $root }}
 {{- end }}
 {{- end }}
 
