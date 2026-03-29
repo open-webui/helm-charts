@@ -1,0 +1,66 @@
+# -- Enable or disable the terminals subchart
+enabled: false
+
+# -- Override the name of the chart
+nameOverride: ""
+# -- Override the full name of the chart
+fullnameOverride: ""
+
+# -- API key shared between orchestrator and spawned terminals
+apiKey: ""
+# -- Use an existing secret for the API key (key: api-key)
+existingSecret: ""
+
+# --------------------------------------------------------------------------
+# CRD
+# --------------------------------------------------------------------------
+crd:
+  # -- Install the Terminal CRD (set false if already installed cluster-wide)
+  install: true
+
+# --------------------------------------------------------------------------
+# Operator (Kopf controller that watches Terminal CRs)
+# --------------------------------------------------------------------------
+operator:
+  image:
+    repository: ghcr.io/open-webui/open-terminal-operator
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# --------------------------------------------------------------------------
+# Orchestrator (FastAPI service that proxies / provisions terminals)
+# --------------------------------------------------------------------------
+orchestrator:
+  image:
+    repository: ghcr.io/open-webui/terminals-orchestrator
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8080
+    containerPort: 8080
+  # -- Backend type: kubernetes-operator, kubernetes, docker, local, static
+  backend: kubernetes-operator
+  # -- Default image for spawned terminal pods
+  terminalImage: "ghcr.io/open-webui/open-terminal:latest"
+  # -- Pull policy for the terminal image inside spawned pods
+  terminalImagePullPolicy: IfNotPresent
+  # -- Idle timeout in minutes for spawned terminal pods (0 = disabled)
+  idleTimeoutMinutes: 30
+  # -- Resource requests/limits for the orchestrator pod itself
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi

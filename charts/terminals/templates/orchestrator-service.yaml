@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "terminals.fullname" . }}-orchestrator
+  namespace: {{ include "terminals.namespace" . }}
+  labels:
+    {{- include "terminals.orchestrator.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.orchestrator.service.type }}
+  selector:
+    {{- include "terminals.orchestrator.selectorLabels" . | nindent 4 }}
+  ports:
+    - port: {{ .Values.orchestrator.service.port }}
+      targetPort: {{ .Values.orchestrator.service.containerPort }}
+      protocol: TCP
+      name: http

@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "terminals.serviceAccountName" . }}
+  namespace: {{ include "terminals.namespace" . }}
+  labels:
+    {{- include "terminals.operator.labels" . | nindent 4 }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "terminals.fullname" . }}-operator
+  labels:
+    {{- include "terminals.operator.labels" . | nindent 4 }}
+rules:
+  # Terminal CRDs
+  - apiGroups: ["openwebui.com"]
+    resources: ["terminals", "terminals/status"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Pods, Services, PVCs, Secrets managed by the operator
+  - apiGroups: [""]
+    resources: ["pods", "services", "persistentvolumeclaims", "secrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Events (Kopf posts events for status)
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create"]
+  # Kopf needs these for leader election and state tracking
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  - apiGroups: ["coordination.k8s.io"]
+    resources: ["leases"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+  # Kopf needs CRD read access for resource discovery
+  - apiGroups: ["apiextensions.k8s.io"]
+    resources: ["customresourcedefinitions"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "terminals.fullname" . }}-operator
+  labels:
+    {{- include "terminals.operator.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "terminals.fullname" . }}-operator
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "terminals.serviceAccountName" . }}
+    namespace: {{ include "terminals.namespace" . }}
