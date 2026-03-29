@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "terminals.fullname" . }}-orchestrator
+  namespace: {{ include "terminals.namespace" . }}
+  labels:
+    {{- include "terminals.orchestrator.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.orchestrator.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "terminals.orchestrator.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "terminals.orchestrator.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "terminals.serviceAccountName" . }}
+      containers:
+        - name: orchestrator
+          image: "{{ .Values.orchestrator.image.repository }}:{{ .Values.orchestrator.image.tag }}"
+          imagePullPolicy: {{ .Values.orchestrator.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.orchestrator.service.containerPort }}
+              protocol: TCP
+          env:
+            - name: TERMINALS_PORT
+              value: {{ .Values.orchestrator.service.containerPort | quote }}
+            - name: TERMINALS_BACKEND
+              value: {{ .Values.orchestrator.backend | quote }}
+            - name: TERMINALS_KUBERNETES_NAMESPACE
+              value: {{ include "terminals.namespace" . | quote }}
+            - name: TERMINALS_KUBERNETES_IMAGE
+              value: {{ .Values.orchestrator.terminalImage | quote }}
+            {{- if .Values.orchestrator.terminalImagePullPolicy }}
+            - name: TERMINALS_KUBERNETES_IMAGE_PULL_POLICY
+              value: {{ .Values.orchestrator.terminalImagePullPolicy | quote }}
+            {{- end }}
+            - name: TERMINALS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "terminals.secretName" . }}
+                  key: api-key
+            - name: TERMINALS_IDLE_TIMEOUT_MINUTES
+              value: {{ .Values.orchestrator.idleTimeoutMinutes | quote }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.orchestrator.service.containerPort }}
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.orchestrator.service.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          {{- with .Values.orchestrator.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
