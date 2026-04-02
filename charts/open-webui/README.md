@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 12.13.0](https://img.shields.io/badge/Version-12.13.0-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
+![Version: 13.0.1](https://img.shields.io/badge/Version-13.0.1-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -96,6 +96,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
 | https://helm.openwebui.com | pipelines | >=0.10.1 |
+| https://helm.openwebui.com | terminals | >=0.2.0 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
@@ -172,6 +173,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
 | pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
 | pipelines.fullnameOverride | string | `""` | Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support |
+| terminals.enabled | bool | `false` | Enable the terminals subchart (operator + orchestrator) |
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 
 ### Persistence configuration
