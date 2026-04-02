@@ -397,6 +397,15 @@ spec:
         {{- end }}
         {{- end }}
         {{- end }}
+        {{- if .Values.terminals.enabled }}
+        - name: "TERMINALS_API_KEY"
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "open-webui.terminals.secretName" . }}
+              key: api-key
+        - name: "TERMINAL_SERVER_CONNECTIONS"
+          value: '[{"id":"terminals","name":"Terminals","enabled":true,"url":"{{ include "terminals.serviceEndpoint" . }}","key":"$(TERMINALS_API_KEY)","auth_type":"bearer","config":{"access_grants":[{"principal_type":"user","principal_id":"*","permission":"read"}]}}]'
+        {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- include "open-webui.env" (dict "envVars" .Values.extraEnvVars "root" .) | nindent 8 }}
         {{- end }}

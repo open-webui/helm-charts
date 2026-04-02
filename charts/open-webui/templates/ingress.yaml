@@ -27,7 +27,9 @@ spec:
       secretName: {{ default (printf "%s-tls" (include "open-webui.fullname" .)) .Values.ingress.existingSecret }}
   {{- end }}
   rules:
-  - host: {{ .Values.ingress.host }}
+  - {{- if .Values.ingress.host }}
+    host: {{ .Values.ingress.host }}
+    {{- end }}
     http:
       paths:
       - path: /

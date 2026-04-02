@@ -200,6 +200,50 @@ Generate the websocket Redis URL
 {{- end }}
 
 {{/*
+Create the service endpoint URL for the terminals orchestrator subchart
+*/}}
+{{- define "terminals.serviceEndpoint" -}}
+{{- if .Values.terminals.enabled -}}
+{{- $clusterDomain := .Values.clusterDomain -}}
+{{- $terminalsPort := (.Values.terminals.orchestrator.service.port | default 8080) | toString -}}
+{{- $terminalsName := "" -}}
+{{- if .Values.terminals.fullnameOverride -}}
+{{- $terminalsName = .Values.terminals.fullnameOverride -}}
+{{- else -}}
+{{- $chartName := default "terminals" .Values.terminals.nameOverride -}}
+{{- if contains $chartName .Release.Name -}}
+{{- $terminalsName = .Release.Name -}}
+{{- else -}}
+{{- $terminalsName = printf "%s-%s" .Release.Name $chartName -}}
+{{- end -}}
+{{- end -}}
+{{- printf "http://%s-orchestrator.%s.svc.%s:%s" $terminalsName (.Release.Namespace) $clusterDomain $terminalsPort -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the terminals API key secret name (parent chart helper)
+*/}}
+{{- define "open-webui.terminals.secretName" -}}
+{{- if .Values.terminals.existingSecret -}}
+{{- .Values.terminals.existingSecret -}}
+{{- else -}}
+{{- $terminalsName := "" -}}
+{{- if .Values.terminals.fullnameOverride -}}
+{{- $terminalsName = .Values.terminals.fullnameOverride -}}
+{{- else -}}
+{{- $chartName := default "terminals" .Values.terminals.nameOverride -}}
+{{- if contains $chartName .Release.Name -}}
+{{- $terminalsName = .Release.Name -}}
+{{- else -}}
+{{- $terminalsName = printf "%s-%s" .Release.Name $chartName -}}
+{{- end -}}
+{{- end -}}
+{{- printf "%s-api-key" $terminalsName -}}
+{{- end -}}
+{{- end }}
+
+{{/*
 Validate SSO ClientSecret to be set literally or via Secret
 */}}
 {{- define "sso.validateClientSecret" -}}
