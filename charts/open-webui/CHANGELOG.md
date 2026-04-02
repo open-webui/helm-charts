@@ -6,6 +6,19 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v13.0.0]
+
+### Added
+- **Terminals subchart integration** — Add `terminals` as a conditional dependency (`terminals.enabled: true` to activate)
+- `terminals.serviceEndpoint` and `open-webui.terminals.secretName` template helpers for service discovery and secret resolution
+- `TERMINAL_SERVER_CONNECTIONS` env var injection when terminals are enabled, with API key sourced from Kubernetes Secret via `secretKeyRef`
+
+### Changed
+- Ingress `host` field is now conditional, allowing ALB/NLB usage without a custom domain
+
+### Fixed
+- Terminals subchart image names corrected (`terminals-operator`, `terminals`)
+
 ## [v12.13.0]
 
 ### Changed
