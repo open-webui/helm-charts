@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 13.0.1](https://img.shields.io/badge/Version-13.0.1-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
+![Version: 13.1.0](https://img.shields.io/badge/Version-13.1.0-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -184,6 +184,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | persistence.annotations | object | `{}` | Additional annotations to add to the PVC |
 | persistence.enabled | bool | `true` | Enable persistence using PVC for Open WebUI data |
 | persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
+| persistence.labels | object | `{}` | Additional labels to add to the PVC |
 | persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
 | persistence.selector | object | `{}` | Selector to match to get the volume bound to the claim |
 | persistence.size | string | `"2Gi"` | Size of the Open WebUI PVC |
