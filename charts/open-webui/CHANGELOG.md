@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add persistence.labels
 - Allow PVC values to be templated
+- Support tpl usage for Ingress labels and host and additionalHosts
 
 ## [v13.0.1]
 
