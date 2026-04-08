@@ -7,7 +7,7 @@ metadata:
   labels:
     {{- include "open-webui.labels" . | nindent 4 }}
     {{- with .Values.ingress.extraLabels }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
   {{- if .Values.ingress.annotations }}
   annotations:
@@ -20,15 +20,15 @@ spec:
   {{- if .Values.ingress.tls }}
   tls:
     - hosts:
-      - {{ .Values.ingress.host | quote }}
+      - {{ tpl .Values.ingress.host . | quote }}
       {{- range .Values.ingress.additionalHosts }}
-      - {{ . | quote }}
+      - {{ tpl . $ | quote }}
       {{- end }}
       secretName: {{ default (printf "%s-tls" (include "open-webui.fullname" .)) .Values.ingress.existingSecret }}
   {{- end }}
   rules:
   - {{- if .Values.ingress.host }}
-    host: {{ .Values.ingress.host }}
+    host: {{ tpl .Values.ingress.host . }}
     {{- end }}
     http:
       paths:
@@ -40,7 +40,7 @@ spec:
             port:
               name: http
   {{- range .Values.ingress.additionalHosts }}
-  - host: {{ . | quote }}
+  - host: {{ tpl . $ | quote }}
     http:
       paths:
       - path: /
