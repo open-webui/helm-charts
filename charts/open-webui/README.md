@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 13.1.2](https://img.shields.io/badge/Version-13.1.2-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
+![Version: 13.2.0](https://img.shields.io/badge/Version-13.2.0-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -326,6 +326,8 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | websocket.enabled | bool | `true` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
+| websocket.existingSecret | string | `""` | Name of an existing Kubernetes secret containing the Redis URL. When set, takes precedence over `websocket.url` |
+| websocket.existingSecretKey | string | `"redis-url"` | Key within the existing secret that contains the Redis URL |
 | websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
 | websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |

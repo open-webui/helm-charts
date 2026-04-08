@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v13.2.0]
+
+### Added
+
+- Add `websocket.existingSecret` and `websocket.existingSecretKey` values to allow sourcing `REDIS_URL` and `WEBSOCKET_REDIS_URL` from a Kubernetes Secret instead of a plaintext value
+
 ## [v13.1.2]
 
 ### Fixed
