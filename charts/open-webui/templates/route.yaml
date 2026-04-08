@@ -11,20 +11,26 @@ metadata:
     {{- with .Values.route.extraLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  {{- with .Values.route.annotations }}
+  {{- with (default .Values.route.annotations (dig "redirect" "annotations" nil .Values.route)) }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- $redirectParentRefs := (dig "redirect" "parentRefs" nil .Values.route) }}
+  {{- if $redirectParentRefs }}
+  parentRefs:
+  {{- range $redirectParentRefs }}
+  - {{ toYaml . | nindent 4 | trim }}
+  {{- end }}
+  {{- else }}
   {{- with .Values.route.parentRefs }}
   parentRefs:
   {{- range . }}
-  - {{ toYaml . | nindent 4 | trim }}
-    {{- if not .sectionName }}
+  - {{ toYaml (omit . "sectionName") | nindent 4 | trim }}
     sectionName: http
-    {{- end }}
   {{- end }}
-{{- end }}
+  {{- end }}
+  {{- end }}
   hostnames:
     {{- toYaml .Values.route.hostnames | nindent 4 }}
   rules:
@@ -51,16 +57,11 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- with .Values.route.parentRefs }}
   parentRefs:
-  {{- range .Values.route.parentRefs }}
-  - {{ toYaml (omit . "sectionName") | nindent 4 | trim }}
-    {{- if $.Values.route.httpsRedirect }}
-    sectionName: https
-    {{- else if not .sectionName }}
-    sectionName: http
-    {{- else }}
-    sectionName: {{ .sectionName }}
-    {{- end }}
+  {{- range . }}
+  - {{ toYaml . | nindent 4 | trim }}
+  {{- end }}
   {{- end }}
   hostnames:
     {{- toYaml .Values.route.hostnames | nindent 4 }}

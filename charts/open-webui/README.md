@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 13.1.1](https://img.shields.io/badge/Version-13.1.1-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
+![Version: 13.1.2](https://img.shields.io/badge/Version-13.1.2-informational?style=flat-square) ![AppVersion: 0.8.12](https://img.shields.io/badge/AppVersion-0.8.12-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -396,6 +396,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | route.matches[0].path.type | string | `"PathPrefix"` | Path match type. Note that custom path prefix is not supported in Open WebUI, so any non-default value will break. See https://github.com/open-webui/open-webui/discussions/3431 |
 | route.matches[0].path.value | string | `"/"` | Path match value |
 | route.parentRefs | list | `[]` | References to the parent resources (e.g. Gateway) |
+| route.redirect | object | `{}` | Configuration for the HTTP-to-HTTPS redirect route (only used when httpsRedirect is true) If redirect.parentRefs is set, it will be used as-is for the redirect route's parentRefs. Otherwise, the main route's parentRefs are used with sectionName defaulting to "http". |
 | runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
 | strategy | object | `{}` | Strategy for updating the workload manager: deployment or statefulset |
 | tolerations | list | `[]` | Tolerations for pod assignment |

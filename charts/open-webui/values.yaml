@@ -351,6 +351,14 @@ route:
   # -- Enables HTTPS redirect for the route
   httpsRedirect: false
 
+  # -- Configuration for the HTTP-to-HTTPS redirect route (only used when httpsRedirect is true)
+  # If redirect.parentRefs is set, it will be used as-is for the redirect route's parentRefs.
+  # Otherwise, the main route's parentRefs are used with sectionName defaulting to "http".
+  redirect: {}
+  # parentRefs:
+  #   - name: my-gateway
+  #     sectionName: http
+
   matches:
     - path:
         # -- Path match type. Note that custom path prefix is not supported in Open WebUI, so any non-default value will break. See https://github.com/open-webui/open-webui/discussions/3431

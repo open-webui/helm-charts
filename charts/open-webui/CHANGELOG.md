@@ -6,6 +6,17 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v13.1.2]
+
+### Fixed
+
+- Fix Route parentRefs forcing `sectionName: http` when no sectionName is specified, preventing routes from binding to all listeners
+- Fix Route httpsRedirect hardcoding `sectionName: https` on the main route, ignoring user-specified sectionName
+
+### Added
+
+- Add `route.redirect.parentRefs` option to independently configure parentRefs on the HTTP-to-HTTPS redirect route
+
 ## [v13.1.1]
 
 ### Fixed
