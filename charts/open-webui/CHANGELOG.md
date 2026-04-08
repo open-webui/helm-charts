@@ -6,6 +6,16 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v13.1.1]
+
+### Fixed
+
+- Fix Tika service URL ignoring nameOverride/fullnameOverride (use release-based naming)
+- Fix Ollama service URL incorrectly using parent chart name instead of release-based naming
+
+### Note
+- `TIKA_SERVER_URL` and `OLLAMA_BASE_URLS` are PersistentConfig variables in Open WebUI. If your existing deployment had the wrong URL persisted in the database, upgrading the chart alone will not fix it. You must also update the URL via the Admin Panel, or set `RESET_CONFIG_ON_START=true` for one restart, or temporarily set `ENABLE_PERSISTENT_CONFIG=False`.
+
 ## [v13.1.0]
 
 ### Added

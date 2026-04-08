@@ -62,9 +62,23 @@ as a dependency of the Open WebUI chart
 {{- $ollamaServicePort := .Values.ollama.service.port | toString -}}
 {{- $ollamaName := .Values.ollama.fullnameOverride -}}
 {{- if not $ollamaName -}}
-{{- $ollamaName = printf "%s-ollama" (include "open-webui.fullname" .) -}}
+{{- $ollamaName = printf "%s-%s" .Release.Name (default "ollama" .Values.ollama.nameOverride) -}}
 {{- end -}}
 {{- printf "http://%s.%s.svc.%s:%s" $ollamaName (.Release.Namespace) $clusterDomain $ollamaServicePort -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Generates the URL for accessing the Tika service within the Kubernetes cluster when the
+tika.enabled value is set to true
+*/}}
+{{- define "tikaLocalUrl" -}}
+{{- if .Values.tika.enabled -}}
+{{- $tikaName := .Values.tika.fullnameOverride -}}
+{{- if not $tikaName -}}
+{{- $tikaName = printf "%s-%s" .Release.Name (default "tika" .Values.tika.nameOverride) -}}
+{{- end -}}
+{{- printf "http://%s:9998" $tikaName -}}
 {{- end -}}
 {{- end }}
 
