@@ -73,6 +73,12 @@ websocket:
   # -- Override the Redis URL for websocket communication. If empty, automatically generates URL based on release name. Template: `redis://[:<password>@]<hostname>:<port>/<db>`
   # @section -- Websocket configuration
   url: ""
+  # -- Name of an existing Kubernetes secret containing the Redis URL. When set, takes precedence over `websocket.url`
+  # @section -- Websocket configuration
+  existingSecret: ""
+  # -- Key within the existing secret that contains the Redis URL
+  # @section -- Websocket configuration
+  existingSecretKey: "redis-url"
   # -- Node selector for websocket pods
   # @section -- Websocket configuration
   nodeSelector: {}

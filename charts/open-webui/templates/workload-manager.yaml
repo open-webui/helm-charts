@@ -261,9 +261,23 @@ spec:
         - name: "WEBSOCKET_MANAGER"
           value: {{ .Values.websocket.manager | default "redis" | quote }}
         - name: "REDIS_URL"
+        {{- if .Values.websocket.existingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.websocket.existingSecret }}
+              key: {{ .Values.websocket.existingSecretKey | default "redis-url" }}
+        {{- else }}
           value: {{ include "websocket.redis.url" . | quote }}
+        {{- end }}
         - name: "WEBSOCKET_REDIS_URL"
+        {{- if .Values.websocket.existingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.websocket.existingSecret }}
+              key: {{ .Values.websocket.existingSecretKey | default "redis-url" }}
+        {{- else }}
           value: {{ include "websocket.redis.url" . | quote }}
+        {{- end }}
         {{- end }}
         {{- if .Values.databaseUrl }}
         - name: "DATABASE_URL"
