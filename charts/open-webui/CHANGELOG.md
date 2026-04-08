@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v13.2.1]
+
+### Fixed
+
+- Fix `openaiBaseApiUrls` and `openaiApiKeys` being ignored when `pipelines.enabled: false`, causing missing `OPENAI_API_BASE_URLS` and `OPENAI_API_KEYS` environment variables
+
 ## [v13.2.0]
 
 ### Added

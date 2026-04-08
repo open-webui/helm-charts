@@ -185,6 +185,14 @@ spec:
         - name: "OPENAI_API_KEYS"
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
         {{- end }}
+        {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls (not .Values.pipelines.enabled) }}
+        # If OpenAI API value(s) set and Pipelines is disabled, use OPENAI_API_BASE_URLS without Pipelines endpoint
+        - name: "OPENAI_API_BASE_URLS"
+          value: {{ join ";" .Values.openaiBaseApiUrls | quote }}
+        {{- if .Values.openaiApiKeys }}
+        - name: "OPENAI_API_KEYS"
+          value: {{ .Values.openaiApiKeys | join ";" | quote }}
+        {{- end }}
         {{- else if not .Values.enableOpenaiApi }}
         - name: "ENABLE_OPENAI_API"
           value: "False"
