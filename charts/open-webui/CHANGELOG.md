@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v13.3.1]
+
+### Fixed
+
+- Explicitly set `ENABLE_WEBSOCKET_SUPPORT` to `False` when `websocket.enabled: false`, fixing websocket errors caused by the app defaulting to `True` when the env var was absent
+
 ## [v13.3.0]
 
 ### Added

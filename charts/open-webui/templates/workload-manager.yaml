@@ -298,9 +298,9 @@ spec:
           value: {{ .Values.persistence.azure.key }}
         {{- end }}
         {{- end }}
-        {{- if .Values.websocket.enabled }}
         - name: "ENABLE_WEBSOCKET_SUPPORT"
-          value: "True"
+          value: {{ ternary "True" "False" .Values.websocket.enabled | quote }}
+        {{- if .Values.websocket.enabled }}
         - name: "WEBSOCKET_MANAGER"
           value: {{ .Values.websocket.manager | default "redis" | quote }}
         - name: "REDIS_URL"
