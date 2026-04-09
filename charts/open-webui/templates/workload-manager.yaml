@@ -157,41 +157,76 @@ spec:
         # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
         - name: "OPENAI_API_BASE_URL"
           value: {{ tpl .Values.openaiBaseApiUrl . | quote }}
-        {{- if .Values.openaiApiKey }}
+        {{- if or .Values.openaiApiKey .Values.openaiApiKeyExistingSecret }}
         - name: "OPENAI_API_KEY"
+        {{- if .Values.openaiApiKeyExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.openaiApiKeyExistingSecret }}
+              key: {{ .Values.openaiApiKeyExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.openaiApiKey | quote }}
+        {{- end }}
         {{- end }}
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrl .Values.pipelines.enabled (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and OpenAI API value is set, use OPENAI_API_BASE_URLS with combined values
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ tpl .Values.openaiBaseApiUrl . }}"
-        {{- if .Values.openaiApiKeys }}
+        {{- if or .Values.openaiApiKeys .Values.openaiApiKeysExistingSecret }}
         - name: "OPENAI_API_KEYS"
+        {{- if .Values.openaiApiKeysExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.openaiApiKeysExistingSecret }}
+              key: {{ .Values.openaiApiKeysExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
+        {{- end }}
         {{- end }}
         {{- else if and .Values.enableOpenaiApi .Values.pipelines.enabled (not .Values.openaiBaseApiUrl) (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and no OpenAI API values are set, set OPENAI_API_BASE_URL to the Pipelines server endpoint
         - name: "OPENAI_API_BASE_URL"
           value: {{ include "pipelines.serviceEndpoint" . | quote }}
-        {{- if .Values.openaiApiKey }}
+        {{- if or .Values.openaiApiKey .Values.openaiApiKeyExistingSecret }}
         - name: "OPENAI_API_KEY"
+        {{- if .Values.openaiApiKeyExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.openaiApiKeyExistingSecret }}
+              key: {{ .Values.openaiApiKeyExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.openaiApiKey | quote }}
+        {{- end }}
         {{- end }}
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
         # If OpenAI API value(s) set and Pipelines is enabled, use OPENAI_API_BASE_URLS to support all the endpoints in the chart
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ join ";" .Values.openaiBaseApiUrls }}"
-        {{- if .Values.openaiApiKeys }}
+        {{- if or .Values.openaiApiKeys .Values.openaiApiKeysExistingSecret }}
         - name: "OPENAI_API_KEYS"
+        {{- if .Values.openaiApiKeysExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.openaiApiKeysExistingSecret }}
+              key: {{ .Values.openaiApiKeysExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
+        {{- end }}
         {{- end }}
         {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls (not .Values.pipelines.enabled) }}
         # If OpenAI API value(s) set and Pipelines is disabled, use OPENAI_API_BASE_URLS without Pipelines endpoint
         - name: "OPENAI_API_BASE_URLS"
           value: {{ join ";" .Values.openaiBaseApiUrls | quote }}
-        {{- if .Values.openaiApiKeys }}
+        {{- if or .Values.openaiApiKeys .Values.openaiApiKeysExistingSecret }}
         - name: "OPENAI_API_KEYS"
+        {{- if .Values.openaiApiKeysExistingSecret }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.openaiApiKeysExistingSecret }}
+              key: {{ .Values.openaiApiKeysExistingSecretKey }}
+        {{- else }}
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
+        {{- end }}
         {{- end }}
         {{- else if not .Values.enableOpenaiApi }}
         - name: "ENABLE_OPENAI_API"
