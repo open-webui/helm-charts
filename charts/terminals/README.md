@@ -1,8 +1,8 @@
 # terminals
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: 0.0.1](https://img.shields.io/badge/AppVersion-0.0.1-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
 
-Open Terminal: Kubernetes operator and orchestrator for per-user terminal instances
+Terminals: Kubernetes operator and orchestrator for per-user Open Terminal instances
 
 **Homepage:** <https://github.com/open-webui/open-terminal>
 
@@ -10,6 +10,7 @@ Open Terminal: Kubernetes operator and orchestrator for per-user terminal instan
 
 * <https://github.com/open-webui/helm-charts>
 * <https://github.com/open-webui/open-terminal>
+* <https://github.com/open-webui/terminals>
 
 ## Values
 
