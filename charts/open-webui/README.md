@@ -96,7 +96,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
 | https://helm.openwebui.com | pipelines | >=0.10.1 |
-| https://helm.openwebui.com | terminals | >=0.2.0 |
+| https://helm.openwebui.com | terminals | >=0.3.0 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
