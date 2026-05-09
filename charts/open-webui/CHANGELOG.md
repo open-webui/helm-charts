@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [v14.3.0]
 
 ### Changed
-Updated minimum Terminals chart version to v0.3.0.
+- Updated chart appVersion to v0.9.3.
+- Updated Ollama subchart to v1.56.0.
+- Updated minimum Terminals chart version to v0.3.0.
 
 ## [v14.2.0]
 
