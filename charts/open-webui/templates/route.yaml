@@ -75,6 +75,9 @@ spec:
           {{- if .Values.service.namespace }}
           namespace: {{ .Values.service.namespace }}
           {{- end }}
+          group: ""
+          kind: Service
+          weight: 1
       {{- with .Values.route.filters }}
       filters:
         {{- toYaml . | nindent 8 }}
