@@ -378,6 +378,17 @@ route:
   # -- Additional custom rules that can be added to the route
   additionalRules: []
 
+  # Backend reference for the route's default rule.
+  backendRef:
+    # -- API group of the backend reference. Use "" for the core API group
+    # (which contains `Service`), or "multicluster.x-k8s.io" for `ServiceImport`.
+    group: ""
+    # -- Kind of the backend reference, e.g. `Service` or `ServiceImport`.
+    kind: Service
+    # -- Weight assigned to the backend reference for traffic distribution
+    # when multiple backendRefs are present. Must be in the range 0-1,000,000.
+    weight: 1
+
 persistence:
   # -- Enable persistence using PVC for Open WebUI data
   # @section -- Persistence configuration

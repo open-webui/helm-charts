@@ -6,6 +6,16 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v14.6.0]
+
+### Added
+
+- Add `route.backendRef.group`, `route.backendRef.kind`, and `route.backendRef.weight` values to configure the Route's default backend reference (e.g. set `kind: ServiceImport` with `group: multicluster.x-k8s.io` for Multi-Cluster Services routing, or adjust `weight` for weighted traffic distribution alongside `route.additionalRules`)
+
+### Fixed
+
+- Render `group`, `kind`, and `weight` on Route `backendRefs` so the templated manifest matches the in-cluster resource after the Kubernetes API server applies defaults
+
 ## [v14.5.0]
 
 ### Changed
