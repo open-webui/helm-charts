@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 14.5.0](https://img.shields.io/badge/Version-14.5.0-informational?style=flat-square) ![AppVersion: 0.9.5](https://img.shields.io/badge/AppVersion-0.9.5-informational?style=flat-square)
+![Version: 14.7.0](https://img.shields.io/badge/Version-14.7.0-informational?style=flat-square) ![AppVersion: 0.9.5](https://img.shields.io/badge/AppVersion-0.9.5-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -96,7 +96,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
 | https://helm.openwebui.com | pipelines | >=0.10.1 |
-| https://helm.openwebui.com | terminals | >=0.3.0 |
+| https://helm.openwebui.com | terminals | >=0.4.0 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
 ## Values
