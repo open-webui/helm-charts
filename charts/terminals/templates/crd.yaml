@@ -81,13 +81,20 @@ spec:
                   properties:
                     enabled:
                       type: boolean
-                      default: true
+                      default: {{ .Values.terminalDefaults.persistence.enabled }}
                     size:
                       type: string
-                      default: "1Gi"
+                      default: {{ .Values.terminalDefaults.persistence.size | quote }}
                     storageClass:
                       type: string
-                      default: ""
+                      {{- with .Values.terminalDefaults.persistence.storageClass }}
+                      default: {{ . | quote }}
+                      {{- end }}
+                      description: >-
+                        StorageClass for the terminal PVC. If unset, the cluster's
+                        default StorageClass is used (recommended for managed
+                        Kubernetes such as EKS, GKE, AKS). Set explicitly to ""
+                        to disable dynamic provisioning.
             status:
               type: object
               properties:

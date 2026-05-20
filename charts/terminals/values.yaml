@@ -19,6 +19,24 @@ crd:
   install: true
 
 # --------------------------------------------------------------------------
+# Terminal CR defaults
+# --------------------------------------------------------------------------
+# Defaults applied to Terminal custom resources when fields are omitted.
+# These values are baked into the CRD's openAPIV3Schema defaults.
+terminalDefaults:
+  persistence:
+    # -- Enable a PVC for each terminal by default
+    enabled: true
+    # -- Default PVC size for each terminal
+    size: "1Gi"
+    # -- StorageClass for the terminal PVC. Leave empty to use the cluster's
+    # default StorageClass (recommended for EKS/GKE/AKS). Set to a name (e.g.
+    # "gp3") to pin a class. Note: the empty value is omitted from the CRD
+    # entirely so PVCs fall through to the cluster default; setting it to ""
+    # via a Terminal CR is still possible and disables dynamic provisioning.
+    storageClass: ""
+
+# --------------------------------------------------------------------------
 # Operator (Kopf controller that watches Terminal CRs)
 # --------------------------------------------------------------------------
 operator:
