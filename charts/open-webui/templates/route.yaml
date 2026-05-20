@@ -70,14 +70,14 @@ spec:
     {{- tpl (toYaml .Values.route.additionalRules) $ | nindent 4 }}
     {{- end }}
     - backendRefs:
-        - name: {{ include "open-webui.fullname" . }}
-          port: {{ .Values.service.port }}
+        - group: {{ .Values.route.backendRef.group | quote }}
+          kind: {{ .Values.route.backendRef.kind }}
+          name: {{ include "open-webui.fullname" . }}
           {{- if .Values.service.namespace }}
           namespace: {{ .Values.service.namespace }}
           {{- end }}
-          group: ""
-          kind: Service
-          weight: 1
+          port: {{ .Values.service.port }}
+          weight: {{ .Values.route.backendRef.weight }}
       {{- with .Values.route.filters }}
       filters:
         {{- toYaml . | nindent 8 }}

@@ -393,6 +393,9 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | route.additionalRules | list | `[]` | Additional custom rules that can be added to the route |
 | route.annotations | object | `{}` | Annotations to add to the route |
 | route.apiVersion | string | `"gateway.networking.k8s.io/v1"` | Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1alpha2 |
+| route.backendRef.group | string | `""` | API group of the backend reference. Use "" for the core API group (which contains `Service`), or "multicluster.x-k8s.io" for `ServiceImport`. |
+| route.backendRef.kind | string | `"Service"` | Kind of the backend reference, e.g. `Service` or `ServiceImport`. |
+| route.backendRef.weight | int | `1` | Weight assigned to the backend reference for traffic distribution when multiple backendRefs are present. Must be in the range 0-1,000,000. |
 | route.enabled | bool | `false` | Enables or disables the route |
 | route.filters | list | `[]` | Filters define the filters that are applied to requests that match this rule. |
 | route.hostnames | list | `[]` | Hostnames to match for the route |
