@@ -145,7 +145,17 @@ spec:
         - name: WEBUI_URL
           value: {{ include "open-webui.url" . | quote }}
         {{- end }}
-        {{- if .Values.ollamaUrlsFromExtraEnv}}
+        {{- if .Values.privacyProxy.enabled }}
+        - name: "OLLAMA_BASE_URLS"
+          value: {{ include "garnet.privacyProxyUrl" . | quote }}
+        - name: "OPENAI_API_BASE_URL"
+          value: {{ printf "%s/openai" (include "garnet.privacyProxyUrl" .) | quote }}
+        - name: "FORCE_OLLAMA_BASE_URL"
+          value: {{ include "garnet.privacyProxyUrl" . | quote }}
+        - name: "FORCE_OPENAI_BASE_URL"
+          value: {{ printf "%s/openai" (include "garnet.privacyProxyUrl" .) | quote }}
+        {{- else if .Values.ollamaUrlsFromExtraEnv}}
+        {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
         {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
         - name: "OLLAMA_BASE_URLS"
           value: {{ include "ollamaBaseUrls" . | quote }}
