@@ -18,26 +18,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
 
       - name: Add Helm Dependency Repos
         run: |
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
 
-      # chart-releaser packages the chart, creates a GitHub Release with the
-      # .tgz as an asset, and updates the Helm repo index on the gh-pages branch.
-      - name: Package and publish chart index via chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
-        with:
-          skip_existing: true
-          packages_with_index: true
-          charts_dir: charts/
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Build chart dependencies
+        run: |
+          for chart in charts/*/; do
+            helm dependency build "$chart"
+          done
+
+      - name: Package charts
+        run: |
+          mkdir -p .cr-release-packages
+          for chart in charts/*/; do
+            helm package "$chart" --destination .cr-release-packages/
+          done
 
       - name: Login to Harbor
         run: |
@@ -46,15 +46,13 @@ jobs:
               --username "${{ secrets.HARBOR_USERNAME }}" \
               --password-stdin
 
-      # Push each packaged .tgz to Harbor as an OCI artifact.
-      # Harbor path: harbor.enclaive.cloud/garnet/<chart-name>:<version>
       - name: Push charts to Harbor OCI registry
         run: |
           shopt -s nullglob
           pkgs=(.cr-release-packages/*.tgz)
           if [ ${#pkgs[@]} -eq 0 ]; then
-            echo "No new chart packages to push."
-            exit 0
+            echo "No chart packages found."
+            exit 1
           fi
           for pkg in "${pkgs[@]}"; do
             echo "Pushing ${pkg} to harbor.enclaive.cloud/garnet"
