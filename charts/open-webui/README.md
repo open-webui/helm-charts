@@ -4,6 +4,8 @@
 
 Garnet: Privacy-aware AI chat platform built on Open WebUI
 
+> This Helm chart is derived from the [open-webui/helm-charts](https://github.com/open-webui/helm-charts) project, licensed under the MIT License.
+
 **Homepage:** <https://github.com/enclaive/garnet-helm>
 
 ## Source Code
