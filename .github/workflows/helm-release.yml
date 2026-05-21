@@ -40,10 +40,13 @@ jobs:
           done
 
       - name: Login to Harbor
+        env:
+          HARBOR_USERNAME: ${{ secrets.HARBOR_USERNAME }}
+          HARBOR_PASSWORD: ${{ secrets.HARBOR_PASSWORD }}
         run: |
-          echo "${{ secrets.HARBOR_PASSWORD }}" | \
+          echo "${HARBOR_PASSWORD}" | \
             helm registry login harbor.enclaive.cloud \
-              --username "${{ secrets.HARBOR_USERNAME }}" \
+              --username "${HARBOR_USERNAME}" \
               --password-stdin
 
       - name: Push charts to Harbor OCI registry
