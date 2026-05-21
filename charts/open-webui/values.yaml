@@ -40,12 +40,12 @@ ollamaUrls: []
 
 # -- Disables taking Ollama Urls from `ollamaUrls`  list
 # @section -- External Tools configuration
-ollamaUrlsFromExtraEnv: false
+ollamaUrlsFromExtraEnv: true
 
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
   # @section -- External Tools configuration
-  enabled: true
+  enabled: false
   # -- Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support
   # @section -- External Tools configuration
   fullnameOverride: ""
@@ -156,6 +156,26 @@ websocket:
     podSecurityContext: {}
       # runAsUser: 999
       # runAsGroup: 1000
+    persistence:
+      # -- Enable PVC for Redis AOF data. ref: docker-compose redis-data volume
+      # @section -- Websocket configuration
+      enabled: false
+      # -- Size of the Redis PVC
+      # @section -- Websocket configuration
+      size: 1Gi
+      # -- Storage class for the Redis PVC
+      # @section -- Websocket configuration
+      storageClass: ""
+      # -- Access modes for the Redis PVC
+      # @section -- Websocket configuration
+      accessModes:
+        - ReadWriteOnce
+      # -- Use an existing PVC instead of creating one
+      # @section -- Websocket configuration
+      existingClaim: ""
+      # -- Additional annotations for the Redis PVC
+      # @section -- Websocket configuration
+      annotations: {}
 
 
 workload:
@@ -163,7 +183,7 @@ workload:
   # If not set, the chart will determine the kind based on persistence settings.
   # NOTE: When using Deployment with local persistence and replicaCount > 1,
   # ensure persistence.accessModes includes ReadWriteMany (RWX).
-  kind: ""
+  kind: "StatefulSet"
 
 # -- Value of cluster domain
 clusterDomain: cluster.local
@@ -195,10 +215,10 @@ strategy: {}
 image:
   # -- Open WebUI image repository
   # @section -- Image configuration
-  repository: ghcr.io/open-webui/open-webui
-  # -- Open WebUI image tag (Open WebUI image tags can be found here: https://github.com/open-webui/open-webui)
+  repository: harbor.enclaive.cloud/garnetdemo/garnet-webui
+  # -- Open WebUI image tag
   # @section -- Image configuration
-  tag: ""
+  tag: "1.0.0.nightly"
   # -- Open WebUI image pull policy
   # @section -- Image configuration
   pullPolicy: "IfNotPresent"
@@ -526,7 +546,7 @@ enableOpenaiApi: true
 
 # -- OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank
 # @section -- OpenAI API configuration
-openaiBaseApiUrl: "https://api.openai.com/v1"
+openaiBaseApiUrl: ""
 
 # -- OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set
 # @section -- OpenAI API configuration
@@ -534,9 +554,9 @@ openaiBaseApiUrls: []
   # - "https://api.openai.com/v1"
   # - "https://api.company.openai.com/v1"
 
-# -- OpenAI API key to use. Default API key value for Pipelines if `openaiBaseApiUrl` is blank. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines (ignored if openaiApiKeyExistingSecret is set)
+# -- OpenAI API key to use. Set via secret reference in production deployments.
 # @section -- OpenAI API configuration
-openaiApiKey: "0p3n-w3bu!"
+openaiApiKey: ""
 # -- OpenAI API key from an existing secret
 # @section -- OpenAI API configuration
 openaiApiKeyExistingSecret: ""
@@ -562,31 +582,16 @@ openaiApiKeysExistingSecretKey: ""
 databaseUrl: ""
 
 # -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style.
-extraEnvVars: []
-  # - name: OPENAI_API_KEY
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: pipelines-api-key
-  #       key: api-key
-  # - name: OPENAI_API_KEY
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: openai-api-key
-  #       key: api-key
-  # - name: OLLAMA_DEBUG
-  #   value: "1"
-  #
-  # OPENAI_API_KEY:
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: pipelines-api-key
-  #       key: api-key
-  # OPENAI_API_KEY:
-  #   valueFrom:
-  #     secretKeyRef:
-  #       name: openai-api-key
-  #       key: api-key
-  # OLLAMA_DEBUG: "1"
+extraEnvVars:
+  # Route all Ollama and OpenAI traffic through the privacy-proxy
+  - name: OLLAMA_BASE_URLS
+    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080'
+  - name: OPENAI_API_BASE_URL
+    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080/openai'
+  - name: FORCE_OPENAI_BASE_URL
+    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080/openai'
+  - name: FORCE_OLLAMA_BASE_URL
+    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080'
 
 # -- Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates)
 commonEnvVars: []
@@ -832,3 +837,190 @@ logging:
     # -- Set the log level for the Authentication Webhook component
     # @section -- Logging configuration
     webhook: ""
+
+# Privacy proxy intercepts all LLM traffic between Open WebUI and upstream providers.
+privacyProxy:
+  # -- Enable the privacy-proxy deployment
+  enabled: true
+  image:
+    # -- Privacy-proxy image repository
+    repository: harbor.enclaive.cloud/garnetdemo/privacy-proxy
+    # -- Leave tag empty when pinning by digest
+    tag: ""
+    # -- Pin to an immutable digest for production deployments
+    digest: "sha256:7b281f1b2f43da866d7e5fc5623fe89fe21feb4ef77d4c0746adc13dc14e65a1"
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
+  # -- Pull secrets for the privacy-proxy image
+  imagePullSecrets: []
+  # -- Number of replicas
+  replicaCount: 1
+  # -- Update strategy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  # -- Upstream Ollama URL. ref: .env OLLAMA_URL
+  ollamaUrl: '{{ printf "http://%s-ollama:11434" .Release.Name }}'
+  # -- Upstream OpenAI API URL. ref: .env OPENAI_API_URL
+  openaiApiUrl: "https://api.openai.com/v1"
+  # -- Additional environment variables
+  extraEnvVars: []
+  # -- Environment variables from ConfigMaps or Secrets
+  extraEnvFrom: []
+  # -- Resource requests and limits. ref: docker-compose memory 10G / cpus 2
+  resources:
+    limits:
+      memory: 10Gi
+      cpu: "2"
+    requests:
+      memory: 512Mi
+      cpu: "250m"
+  # -- Startup probe
+  startupProbe:
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 30
+    periodSeconds: 5
+    failureThreshold: 6
+  # -- Liveness probe
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  # -- Readiness probe
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  service:
+    # -- Service type
+    type: ClusterIP
+    # -- Service port
+    port: 8080
+    # -- Container port
+    containerPort: 8080
+    annotations: {}
+    labels: {}
+  persistence:
+    # -- Enable persistence for privacy-proxy (stateless by default)
+    enabled: false
+    mountPath: "/data"
+    size: 1Gi
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    annotations: {}
+  podAnnotations: {}
+  podLabels: {}
+  podSecurityContext: {}
+  containerSecurityContext: {}
+  annotations: {}
+  extraLabels: {}
+  # -- Priority class name for the pod
+  priorityClassName: ""
+  # -- Service account name to use
+  serviceAccountName: ""
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+  # -- Tolerations for pod assignment
+  tolerations: []
+  # -- Affinity for pod assignment
+  affinity: {}
+  # -- Topology spread constraints
+  topologySpreadConstraints: []
+  # -- Additional init containers
+  initContainers: []
+  # -- Additional volumes
+  extraVolumes: []
+  # -- Additional volume mounts
+  extraVolumeMounts: []
+
+# Garnet Dashboard provides monitoring and management for the deployed stack.
+garnetDashboard:
+  # -- Enable the garnet-dashboard deployment
+  enabled: true
+  image:
+    # -- Garnet Dashboard image repository
+    repository: harbor.enclaive.cloud/garnetdemo/garnet-dashboard
+    # -- Image tag
+    tag: "latest"
+    # -- Image pull policy
+    pullPolicy: IfNotPresent
+  # -- Pull secrets for the dashboard image
+  imagePullSecrets: []
+  # -- Additional environment variables
+  extraEnvVars: []
+  # -- Environment variables from ConfigMaps or Secrets
+  extraEnvFrom: []
+  # -- Resource requests and limits
+  resources:
+    limits:
+      memory: 256Mi
+      cpu: "500m"
+    requests:
+      memory: 64Mi
+      cpu: "50m"
+  # -- Liveness probe
+  livenessProbe:
+    httpGet:
+      path: /
+      port: http
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 3
+  # -- Readiness probe
+  readinessProbe:
+    httpGet:
+      path: /
+      port: http
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  service:
+    # -- Service type
+    type: ClusterIP
+    # -- Service port
+    port: 8081
+    # -- Container port
+    containerPort: 8081
+    annotations: {}
+  dockerSocket:
+    # -- Mount the Docker socket. Required for container monitoring.
+    # Set to false and configure extraVolumeMounts to use a socket proxy instead.
+    enabled: true
+    # -- Path to the Docker socket on the host
+    path: "/var/run/docker.sock"
+  podAnnotations: {}
+  podSecurityContext: {}
+  containerSecurityContext: {}
+  annotations: {}
+  extraLabels: {}
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+  # -- Tolerations for pod assignment
+  tolerations: []
+  # -- Affinity for pod assignment
+  affinity: {}
+  # -- Additional volumes
+  extraVolumes: []
+  # -- Additional volume mounts
+  extraVolumeMounts: []
+
+garnetSecrets:
+  # -- Set to true to let the chart create and manage the Secret.
+  # Set to false when using an externally managed secret (Vault, ESO, Sealed Secrets).
+  create: false
+  # -- Name of a pre-existing Secret to use when create is false
+  existingSecret: ""
+  keys:
+    # -- Key name for the Redis URL inside the secret
+    redisUrl: "redis-url"

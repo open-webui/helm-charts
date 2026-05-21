@@ -56,11 +56,9 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- if and (hasKey .Values.websocket.redis.containerSecurityContext "readOnlyRootFilesystem") .Values.websocket.redis.containerSecurityContext.readOnlyRootFilesystem }}
         volumeMounts:
           - name: data
             mountPath: "/data"
-        {{- end }}
       {{- with .Values.websocket.redis.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
@@ -77,11 +75,17 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if and (hasKey .Values.websocket.redis.containerSecurityContext "readOnlyRootFilesystem") .Values.websocket.redis.containerSecurityContext.readOnlyRootFilesystem }}
       volumes:
         - name: data
+          {{- if .Values.websocket.redis.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.websocket.redis.persistence.existingClaim }}
+          {{- else if .Values.websocket.redis.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "open-webui.fullname" . }}-redis
+          {{- else }}
           emptyDir: {}
-      {{- end }}
+          {{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -109,4 +113,23 @@ spec:
     {{- if .Values.websocket.redis.service.nodePort }}
     nodePort: {{ .Values.websocket.redis.service.nodePort | int }}
     {{- end }}
+{{- if and .Values.websocket.redis.persistence.enabled (not .Values.websocket.redis.persistence.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "open-webui.fullname" . }}-redis
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "websocket.redis.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- toYaml (.Values.websocket.redis.persistence.accessModes | default (list "ReadWriteOnce")) | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.websocket.redis.persistence.size | default "1Gi" }}
+  {{- with .Values.websocket.redis.persistence.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}
 {{- end }}

@@ -394,3 +394,39 @@ Define a docker tag that should use for the deployment
 {{- .Chart.AppVersion -}}
 {{- end }}
 {{- end }}
+
+{{/*
+Return the name of the Garnet secrets object.
+If garnetSecrets.existingSecret is set, use that. Otherwise use the chart-managed secret name.
+*/}}
+{{- define "garnet.secretName" -}}
+{{- if .Values.garnetSecrets.existingSecret -}}
+{{- .Values.garnetSecrets.existingSecret -}}
+{{- else -}}
+{{- printf "%s-garnet-secrets" (include "open-webui.fullname" .) -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Return the key for redis-url inside the Garnet secret.
+*/}}
+{{- define "garnet.redisUrlKey" -}}
+{{- .Values.garnetSecrets.keys.redisUrl | default "redis-url" -}}
+{{- end }}
+
+{{/*
+Return the cluster-internal base URL of the privacy-proxy service.
+Used to build OLLAMA_BASE_URL / OPENAI_API_BASE_URL env vars without
+hardcoding the release name.
+*/}}
+{{- define "garnet.privacyProxyUrl" -}}
+{{- printf "http://%s-privacy-proxy:8080" (include "open-webui.fullname" .) -}}
+{{- end }}
+
+{{/*
+Selector labels for the privacy-proxy component.
+*/}}
+{{- define "privacy-proxy.selectorLabels" -}}
+{{ include "base.selectorLabels" . }}
+app.kubernetes.io/component: privacy-proxy
+{{- end }}
