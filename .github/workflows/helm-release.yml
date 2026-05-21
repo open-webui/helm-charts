@@ -1,4 +1,4 @@
-name: Release Open WebUI Helm Charts
+name: Release Garnet Helm Charts
 
 on:
   push:
@@ -8,45 +8,9 @@ on:
       - "charts/**"
 
 jobs:
-  # semantic-release:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # Checkout repo
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 'lts/*'
-  #     - name: Install dependencies
-  #       run: npm install
-  #     - name: Release
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       run: npx semantic-release
-
-  #     - name: Install yq
-  #       run: |
-  #         wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O yq &&\
-  #         chmod +x yq
-
-  #     - name: Get version
-  #       id: get_version
-  #       run: |
-  #         echo "VERSION=$(cat charts/open-webui/Chart.yaml | ./yq -r  '.version')" >> $GITHUB_OUTPUT
-
-  #     - name: Commit Chart.yaml
-  #       uses: stefanzweifel/git-auto-commit-action@v4
-  #       with:
-  #         commit_message: 'chore(release) bump version to ${{ steps.get_version.outputs.VERSION }}'
-  #         file_pattern: 'charts/open-webui/Chart.yaml'
-
   release:
-    #needs: semantic-release
     permissions:
       contents: write
-      packages: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -59,33 +23,40 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Add Dependency Repos
+      - name: Add Helm Dependency Repos
         run: |
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
-          helm repo add tika https://apache.jfrog.io/artifactory/tika/
 
-      - name: Run chart-releaser
+      # chart-releaser packages the chart, creates a GitHub Release with the
+      # .tgz as an asset, and updates the Helm repo index on the gh-pages branch.
+      - name: Package and publish chart index via chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
         with:
-          skip_existing: false
+          skip_existing: true
           packages_with_index: true
           charts_dir: charts/
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Login to GitHub Container Registry
+      - name: Login to Harbor
         run: |
-          echo "${GHCR_REGISTRY_PASSWORD}" | helm registry login ghcr.io --username ${{ github.actor }} --password-stdin
-        env:
-          GHCR_REGISTRY_PASSWORD: "${{ secrets.GITHUB_TOKEN }}"
+          echo "${{ secrets.HARBOR_PASSWORD }}" | \
+            helm registry login harbor.enclaive.cloud \
+              --username "${{ secrets.HARBOR_USERNAME }}" \
+              --password-stdin
 
-      - name: Push Charts to ghcr.io
+      # Push each packaged .tgz to Harbor as an OCI artifact.
+      # Harbor path: harbor.enclaive.cloud/garnet/<chart-name>:<version>
+      - name: Push charts to Harbor OCI registry
         run: |
-          for pkg in .cr-release-packages/*; do
-            if [ -z "${pkg:-}" ]; then
-              echo "No charts to release"
-              break
-            fi
-            helm push "${pkg}" oci://ghcr.io/${{ github.repository }}
+          shopt -s nullglob
+          pkgs=(.cr-release-packages/*.tgz)
+          if [ ${#pkgs[@]} -eq 0 ]; then
+            echo "No new chart packages to push."
+            exit 0
+          fi
+          for pkg in "${pkgs[@]}"; do
+            echo "Pushing ${pkg} to harbor.enclaive.cloud/garnet"
+            helm push "${pkg}" oci://harbor.enclaive.cloud/garnet
           done

@@ -2,418 +2,221 @@
 
 ![Version: 14.7.0](https://img.shields.io/badge/Version-14.7.0-informational?style=flat-square) ![AppVersion: 0.9.5](https://img.shields.io/badge/AppVersion-0.9.5-informational?style=flat-square)
 
-Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
+Garnet: Privacy-aware AI chat platform built on Open WebUI
 
-**Homepage:** <https://www.openwebui.com/>
+**Homepage:** <https://github.com/enclaive/garnet-helm>
 
 ## Source Code
 
-* <https://github.com/open-webui/helm-charts>
-* <https://github.com/open-webui/open-webui/pkgs/container/open-webui>
+* <https://github.com/enclaive/garnet-helm>
 * <https://github.com/otwld/ollama-helm/>
 * <https://hub.docker.com/r/ollama/ollama>
 
 ## Installing
 
-Before you can install, you need to add the `open-webui` repo to [Helm](https://helm.sh)
+Add the Helm registry and install:
 
 ```shell
-helm repo add open-webui https://helm.openwebui.com/
-helm repo update
+helm registry login harbor.enclaive.cloud --username <username> --password <password>
+
+helm install garnet oci://harbor.enclaive.cloud/garnet/open-webui \
+  --namespace garnet --create-namespace
 ```
 
-Now you can install the chart:
+Or install from source:
 
 ```shell
-helm upgrade --install open-webui open-webui/open-webui
+git clone https://github.com/enclaive/garnet-helm.git
+cd garnet-helm
+
+helm dependency update charts/open-webui
+
+helm install garnet charts/open-webui \
+  --namespace garnet --create-namespace
 ```
 
-## Resource Naming
-
-This chart follows standard Helm naming conventions. Resources are named using a combination of the Helm release name and chart name, which allows multiple instances to be deployed in the same namespace without conflicts.
-
-### Default Naming Behavior
-
-When you install the chart, resources are automatically named based on your release name:
-
-- **Release name contains chart name**: If your release name contains "open-webui" (e.g., `open-webui`, `open-webui-prod`, `my-open-webui`), resources use just the release name to avoid redundancy
-  - Example: `helm install open-webui open-webui/open-webui` → Resources named `open-webui`
-  - Example: `helm install open-webui-staging open-webui/open-webui` → Resources named `open-webui-staging`
-
-- **Release name does not contain chart name**: Resources are named as `<release-name>-open-webui`
-  - Example: `helm install production open-webui/open-webui` → Resources named `production-open-webui`
-  - Example: `helm install dev open-webui/open-webui` → Resources named `dev-open-webui`
-
-### Overriding Resource Names
-
-You can customize resource naming using these values:
-
-- **`fullnameOverride`**: Completely overrides the resource name
-  ```yaml
-  fullnameOverride: "my-custom-name"
-  # All resources named "my-custom-name" regardless of release name
-  ```
-
-- **`nameOverride`**: Replaces only the chart name portion in resource names
-  ```yaml
-  nameOverride: "custom"
-  # With release "prod" → Resources named "prod-custom"
-  ```
-
-### Multiple Instances
-
-To deploy multiple instances in the same namespace, use different release names:
+Before installing, create the secrets required by the chart:
 
 ```shell
-# Development instance
-helm install dev open-webui/open-webui
-# Creates resources: dev-open-webui
-
-# Staging instance
-helm install staging open-webui/open-webui
-# Creates resources: staging-open-webui
-```
-
-Or use descriptive release names that include "open-webui":
-
-```shell
-# Development instance
-helm install open-webui-dev open-webui/open-webui
-# Creates resources: open-webui-dev
-
-# Staging instance 
-helm install open-webui-staging open-webui/open-webui
-# Creates resources: open-webui-staging
+kubectl create secret generic garnet-secrets \
+  --namespace garnet \
+  --from-literal=redis-url='redis://<release>-open-webui-redis.<namespace>.svc.cluster.local:6379'
 ```
 
 ## Upgrading
 
 Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and breaking changes between versions.
 
+## Resource Naming
+
+Resources are named using a combination of the Helm release name and chart name, which allows multiple instances in the same namespace.
+
+| Release Name | Result |
+|---|---|
+| `garnet` | Resources named `garnet-open-webui` |
+| `open-webui` | Resources named `open-webui` |
+| `prod` | Resources named `prod-open-webui` |
+
+Override with `fullnameOverride` to use a fixed name regardless of release name.
+
+## Architecture
+
+This chart deploys the following components:
+
+| Component | Description |
+|---|---|
+| **open-webui** | The main chat UI (StatefulSet) |
+| **privacy-proxy** | Intercepts all LLM traffic between open-webui and upstream providers |
+| **ollama** | Local LLM inference engine (subchart) |
+| **redis** | WebSocket session state |
+| **garnet-dashboard** | Monitoring and management dashboard |
+
+All Ollama and OpenAI traffic from open-webui is routed through the privacy-proxy. open-webui never communicates directly with Ollama or external APIs.
+
 ## Requirements
 
 | Repository | Name | Version |
-|------------|------|---------|
-| https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
+|---|---|---|
 | https://helm.openwebui.com | pipelines | >=0.10.1 |
-| https://helm.openwebui.com | terminals | >=0.4.0 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
 
+## Secrets
+
+The chart expects a Kubernetes Secret with the following keys:
+
+| Key | Description |
+|---|---|
+| `redis-url` | Redis connection URL for WebSocket sessions |
+
+Set `garnetSecrets.create: true` to have the chart create the Secret, or provide your own with `garnetSecrets.existingSecret`.
+
 ## Values
-
-### OpenAI API configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
-| openaiApiKey | string | `"0p3n-w3bu!"` | OpenAI API key to use. Default API key value for Pipelines if `openaiBaseApiUrl` is blank. Should be updated in a production deployment, or be changed to the required API key if not using Pipelines (ignored if openaiApiKeyExistingSecret is set) |
-| openaiApiKeyExistingSecret | string | `""` | OpenAI API key from an existing secret |
-| openaiApiKeyExistingSecretKey | string | `""` | Key within the existing secret containing the OpenAI API key |
-| openaiApiKeys | list | `[]` | List of OpenAI API keys for each OpenAI base API URLs to use. The number of keys must match the number of URLs in `openaiBaseApiUrls` and respect the same order. If `pipelines.enabled` is true, it needs one more key (so the list length should be openaiBaseApiUrls length + 1) and the first key will be used for Pipelines. (ignored if openaiApiKeysExistingSecret is set) |
-| openaiApiKeysExistingSecret | string | `""` | Existing secret containing all OpenAI API keys as a semicolon-separated value |
-| openaiApiKeysExistingSecretKey | string | `""` | Key within the existing secret containing the semicolon-separated OpenAI API keys |
-| openaiBaseApiUrl | string | `"https://api.openai.com/v1"` | OpenAI base API URL to use. Defaults to the Pipelines service endpoint when Pipelines are enabled, and "https://api.openai.com/v1" if Pipelines are not enabled and this value is blank |
-| openaiBaseApiUrls | list | `[]` | OpenAI base API URLs to use. Overwrites the value in openaiBaseApiUrl if set |
 
 ### Image configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | image.pullPolicy | string | `"IfNotPresent"` | Open WebUI image pull policy |
-| image.repository | string | `"ghcr.io/open-webui/open-webui"` | Open WebUI image repository |
-| image.tag | string | `""` | Open WebUI image tag (Open WebUI image tags can be found here: https://github.com/open-webui/open-webui) |
+| image.repository | string | `"harbor.enclaive.cloud/garnetdemo/garnet-webui"` | Open WebUI image repository |
+| image.tag | string | `"1.0.0.nightly"` | Open WebUI image tag |
 | image.useSlim | bool | `false` | Use a slim version of the Open WebUI image |
-| imagePullSecrets | list | `[]` | Configure imagePullSecrets to use private registry ref: <https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry> |
+| imagePullSecrets | list | `[]` | Pull secrets for private registries |
 
-### Ingress configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| ingress.additionalHosts | list | `[]` | Additional hosts for the Ingress record |
-| ingress.annotations | object | `{}` | Use appropriate annotations for your Ingress controller, e.g., for NGINX: |
-| ingress.class | string | `""` | Ingress class to use, e.g., for GKE Ingress use "gce", for NGINX Ingress use "nginx". If using an Ingress class other than the default, ensure your cluster has the corresponding Ingress controller installed and configured. |
-| ingress.enabled | bool | `false` | Enable Ingress controller for Open WebUI |
-| ingress.existingSecret | string | `""` | TLS secret name for the Ingress record |
-| ingress.extraLabels | object | `{}` | Additional custom labels to add to the Ingress metadata |
-| ingress.host | string | `"chat.example.com"` | Host for the Ingress record |
-| ingress.tls | bool | `false` | TLS configuration for the Ingress resource |
-| managedCertificate.domains | list | `["chat.example.com"]` | Domains to include in the Managed Certificate |
-| managedCertificate.enabled | bool | `false` | Enable GKE Managed Certificate for Ingress TLS |
-| managedCertificate.name | string | `"mydomain-chat-cert"` | Name of the Managed Certificate resource to create |
-
-### Probes configuration
+### OpenAI API configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| startupProbe | object | `{}` | Probe for startup of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| enableOpenaiApi | bool | `true` | Enables the use of OpenAI APIs |
+| openaiApiKey | string | `""` | OpenAI API key. Set via secret reference in production |
+| openaiBaseApiUrl | string | `""` | OpenAI base API URL. Left empty; routing is handled by privacy-proxy via extraEnvVars |
+| ollamaUrlsFromExtraEnv | bool | `true` | Instructs the chart to skip rendering OLLAMA_BASE_URLS; set explicitly via extraEnvVars |
+| ollamaUrls | list | `[]` | Additional Ollama API endpoints |
 
-### Logging configuration
+### Privacy Proxy configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| logging.components.audio | string | `""` | Set the log level for the Audio processing component |
-| logging.components.comfyui | string | `""` | Set the log level for the ComfyUI Integration component |
-| logging.components.config | string | `""` | Set the log level for the Configuration Management component |
-| logging.components.db | string | `""` | Set the log level for the Database Operations (Peewee) component |
-| logging.components.images | string | `""` | Set the log level for the Image Generation component |
-| logging.components.main | string | `""` | Set the log level for the Main Application Execution component |
-| logging.components.models | string | `""` | Set the log level for the Model Management component |
-| logging.components.ollama | string | `""` | Set the log level for the Ollama Backend Integration component |
-| logging.components.openai | string | `""` | Set the log level for the OpenAI API Integration component |
-| logging.components.rag | string | `""` | Set the log level for the Retrieval-Augmented Generation (RAG) component |
-| logging.components.webhook | string | `""` | Set the log level for the Authentication Webhook component |
-| logging.level | string | `""` | Set the global log level ["notset", "debug", "info" (default), "warning", "error", "critical"] |
+| privacyProxy.enabled | bool | `true` | Enable the privacy-proxy deployment |
+| privacyProxy.image.repository | string | `"harbor.enclaive.cloud/garnetdemo/privacy-proxy"` | Privacy-proxy image repository |
+| privacyProxy.image.tag | string | `""` | Image tag (leave empty when using digest) |
+| privacyProxy.image.digest | string | `"sha256:..."` | Immutable image digest for production deployments |
+| privacyProxy.image.pullPolicy | string | `"IfNotPresent"` | Image pull policy |
+| privacyProxy.ollamaUrl | string | `'http://{{ .Release.Name }}-ollama:11434'` | Upstream Ollama URL |
+| privacyProxy.openaiApiUrl | string | `"https://api.openai.com/v1"` | Upstream OpenAI API URL |
+| privacyProxy.replicaCount | int | `1` | Number of replicas |
+| privacyProxy.resources | object | `{limits: {memory: 10Gi, cpu: "2"}}` | Resource requests and limits |
+
+### Garnet Dashboard configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| garnetDashboard.enabled | bool | `true` | Enable the garnet-dashboard deployment |
+| garnetDashboard.image.repository | string | `"harbor.enclaive.cloud/garnetdemo/garnet-dashboard"` | Dashboard image repository |
+| garnetDashboard.image.tag | string | `"latest"` | Image tag |
+| garnetDashboard.dockerSocket.enabled | bool | `true` | Mount the Docker socket for container monitoring |
+| garnetDashboard.dockerSocket.path | string | `"/var/run/docker.sock"` | Path to the Docker socket on the host |
+| garnetDashboard.resources | object | `{limits: {memory: 256Mi, cpu: "500m"}}` | Resource requests and limits |
+
+### Garnet Secrets configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| garnetSecrets.create | bool | `false` | Let the chart create and manage the Secret |
+| garnetSecrets.existingSecret | string | `""` | Name of a pre-existing Secret to use |
+| garnetSecrets.keys.redisUrl | string | `"redis-url"` | Key name for the Redis URL inside the secret |
 
 ### External Tools configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
-| ollama.fullnameOverride | string | `""` | Override the Ollama subchart name. If not set, uses the release name with '-ollama' suffix for multiple instance support |
-| ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
-| ollamaUrlsFromExtraEnv | bool | `false` | Disables taking Ollama Urls from `ollamaUrls`  list |
-| pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
-| pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
-| pipelines.fullnameOverride | string | `""` | Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support |
-| terminals.enabled | bool | `false` | Enable the terminals subchart (operator + orchestrator) |
-| tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
-
-### Persistence configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| persistence.accessModes | list | `["ReadWriteOnce"]` | If using multiple replicas, you must update accessModes to ReadWriteMany |
-| persistence.annotations | object | `{}` | Additional annotations to add to the PVC |
-| persistence.enabled | bool | `true` | Enable persistence using PVC for Open WebUI data |
-| persistence.existingClaim | string | `""` | Use existingClaim if you want to re-use an existing Open WebUI PVC instead of creating a new one |
-| persistence.labels | object | `{}` | Additional labels to add to the PVC |
-| persistence.provider | string | `"local"` | Sets the storage provider, availables values are `local`, `s3`, `gcs` or `azure` |
-| persistence.selector | object | `{}` | Selector to match to get the volume bound to the claim |
-| persistence.size | string | `"2Gi"` | Size of the Open WebUI PVC |
-| persistence.storageClass | string | `""` | Storage class of the Open WebUI PVC |
-| persistence.subPath | string | `""` | Subdirectory of Open WebUI PVC to mount. Useful if root directory is not empty. |
-
-### Azure Storage configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| persistence.azure.container | string | `""` | Sets the container name for Azure Storage |
-| persistence.azure.endpointUrl | string | `""` | Sets the endpoint URL for Azure Storage |
-| persistence.azure.key | string | `""` | Set the access key for Azure Storage (ignored if keyExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Managed Identity if run in Azure services |
-| persistence.azure.keyExistingSecret | string | `""` | Set the access key for Azure Storage from existing secret |
-| persistence.azure.keyExistingSecretKey | string | `""` | Set the access key for Azure Storage from existing secret key |
-
-### Google Cloud Storage configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| persistence.gcs.appCredentialsJson | string | `""` | Contents of Google Application Credentials JSON file (ignored if appCredentialsJsonExistingSecret is set). Optional - if not provided, credentials will be taken from the environment. User credentials if run locally and Google Metadata server if run on a Google Compute Engine. File can be generated for a service account following this guide: https://developers.google.com/workspace/guides/create-credentials#service-account |
-| persistence.gcs.appCredentialsJsonExistingSecret | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret |
-| persistence.gcs.appCredentialsJsonExistingSecretKey | string | `""` | Set the Google Application Credentials JSON file for Google Cloud Storage from existing secret key |
-| persistence.gcs.bucket | string | `""` | Sets the bucket name for Google Cloud Storage. Bucket must already exist |
-
-### Amazon S3 Storage configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| persistence.s3.accessKey | string | `""` | Sets the access key ID for S3 storage |
-| persistence.s3.accessKeyExistingAccessKey | string | `""` | Set the secret access key for S3 storage from existing k8s secret key |
-| persistence.s3.accessKeyExistingSecret | string | `""` | Set the secret access key for S3 storage from existing k8s secret |
-| persistence.s3.bucket | string | `""` | Sets the bucket name for S3 storage |
-| persistence.s3.endpointUrl | string | `""` | Sets the endpoint url for S3 storage |
-| persistence.s3.keyPrefix | string | `""` | Sets the key prefix for a S3 object |
-| persistence.s3.region | string | `""` | Sets the region name for S3 storage |
-| persistence.s3.secretKey | string | `""` | Sets the secret access key for S3 storage (ignored if secretKeyExistingSecret is set) |
-| persistence.s3.secretKeyExistingSecret | string | `""` | Set the secret key for S3 storage from existing k8s secret |
-| persistence.s3.secretKeyExistingSecretKey | string | `""` | Set the secret key for S3 storage from existing k8s secret key |
-
-### Service configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| service.annotations | object | `{}` | Additional annotations to add to the Service |
-| service.containerPort | int | `8080` | Target port for the Open WebUI container |
-| service.labels | object | `{}` | Additional custom labels to add to the Service metadata |
-| service.loadBalancerClass | string | `""` | Load balancer class to use if service type is LoadBalancer (e.g., for GKE use "gce") |
-| service.nodePort | string | `""` | Node port to use if service type is NodePort |
-| service.port | int | `80` | Port to expose Open WebUI service on |
-| service.type | string | `"ClusterIP"` | Service type to expose Open WebUI pods to cluster. Options are ClusterIP, NodePort, LoadBalancer, or ExternalName |
-
-### Service Account configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| serviceAccount.annotations | object | `{}` | Additional annotations to add to the ServiceAccount |
-| serviceAccount.automountServiceAccountToken | bool | `false` | Automount service account token for the Open WebUI pods |
-| serviceAccount.create | bool | `true` | If create is set to false, set `name` to existing service account name |
-| serviceAccount.enable | bool | `true` | Enable service account creation |
-| serviceAccount.name | string | `""` | Service account name to use. If `ServiceAccount.create` is false, this assumes an existing service account exists with the set name. If not set and `serviceAccount.create` is true, a name is generated using the fullname template. |
-
-### SSO Configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.enableGroupManagement | bool | `false` | Enable OAuth group management through access token groups claim |
-| sso.enableRoleManagement | bool | `false` | Enable OAuth role management through access token roles claim |
-| sso.enableSignup | bool | `false` | Enable account creation when logging in with OAuth (distinct from regular signup) |
-| sso.enabled | bool | `false` | **Enable SSO authentication globally** must enable to use SSO authentication |
-| sso.groupManagement.groupsClaim | string | `"groups"` | The claim that contains the groups (can be nested, e.g., user.memberOf) |
-| sso.mergeAccountsByEmail | bool | `false` | Allow logging into accounts that match email from OAuth provider (considered insecure) |
-
-### GitHub OAuth configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.github.clientExistingSecret | string | `""` | GitHub OAuth client secret from existing secret |
-| sso.github.clientExistingSecretKey | string | `""` | GitHub OAuth client secret key from existing secret |
-| sso.github.clientId | string | `""` | GitHub OAuth client ID |
-| sso.github.clientSecret | string | `""` | GitHub OAuth client secret (ignored if clientExistingSecret is set) |
-| sso.github.enabled | bool | `false` | Enable GitHub OAuth |
-
-### Google OAuth configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.google.clientExistingSecret | string | `""` | Google OAuth client secret from existing secret |
-| sso.google.clientExistingSecretKey | string | `""` | Google OAuth client secret key from existing secret |
-| sso.google.clientId | string | `""` | Google OAuth client ID |
-| sso.google.clientSecret | string | `""` | Google OAuth client secret (ignored if clientExistingSecret is set) |
-| sso.google.enabled | bool | `false` | Enable Google OAuth |
-
-### Microsoft OAuth configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.microsoft.clientExistingSecret | string | `""` | Microsoft OAuth client secret from existing secret |
-| sso.microsoft.clientExistingSecretKey | string | `""` | Microsoft OAuth client secret key from existing secret |
-| sso.microsoft.clientId | string | `""` | Microsoft OAuth client ID |
-| sso.microsoft.clientSecret | string | `""` | Microsoft OAuth client secret (ignored if clientExistingSecret is set) |
-| sso.microsoft.enabled | bool | `false` | Enable Microsoft OAuth |
-| sso.microsoft.tenantId | string | `""` | Microsoft tenant ID - use 9188040d-6c67-4c5b-b112-36a304b66dad for personal accounts |
-
-### OIDC configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.oidc.clientExistingSecret | string | `""` | OICD client secret from existing secret |
-| sso.oidc.clientExistingSecretKey | string | `""` | OIDC client secret key from existing secret |
-| sso.oidc.clientId | string | `""` | OIDC client ID |
-| sso.oidc.clientIdExistingSecretKey | string | `""` | OIDC client ID key from existing secret |
-| sso.oidc.clientSecret | string | `""` | OIDC client secret (ignored if clientExistingSecret is set) |
-| sso.oidc.enabled | bool | `false` | Enable OIDC authentication |
-| sso.oidc.existingConfig | string | `""` | OIDC configuration existing configmap |
-| sso.oidc.existingConfigProviderUrlKey | string | `""` | OIDC provider URL key in the existing configmap |
-| sso.oidc.providerName | string | `"SSO"` | Name of the provider to show on the UI |
-| sso.oidc.providerUrl | string | `""` | OIDC provider well known URL |
-| sso.oidc.scopes | string | `"openid email profile"` | Scopes to request (space-separated). |
-
-### Role management configuration
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.roleManagement.adminRoles | string | `""` | Comma-separated list of roles allowed to log in as admin (receive open webui role admin) |
-| sso.roleManagement.allowedRoles | string | `""` | Comma-separated list of roles allowed to log in (receive open webui role user) |
-| sso.roleManagement.rolesClaim | string | `"roles"` | The claim that contains the roles (can be nested, e.g., user.roles) |
-
-### SSO trusted header authentication
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| sso.trustedHeader.emailHeader | string | `""` | Header containing the user's email address |
-| sso.trustedHeader.enabled | bool | `false` | Enable trusted header authentication |
-| sso.trustedHeader.nameHeader | string | `""` | Header containing the user's name (optional, used for new user creation) |
+| ollama.enabled | bool | `true` | Deploy Ollama as a subchart |
+| ollama.fullnameOverride | string | `""` | Override the Ollama subchart resource name |
+| pipelines.enabled | bool | `false` | Deploy the Pipelines subchart |
 
 ### Websocket configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| websocket.enabled | bool | `true` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
-| websocket.existingSecret | string | `""` | Name of an existing Kubernetes secret containing the Redis URL. When set, takes precedence over `websocket.url` |
-| websocket.existingSecretKey | string | `"redis-url"` | Key within the existing secret that contains the Redis URL |
-| websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
-| websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
-| websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
-| websocket.redis.annotations | object | `{}` | Redis annotations |
-| websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
-| websocket.redis.command | list | `[]` | Redis command (overrides default) |
-| websocket.redis.containerSecurityContext | object | `{}` | Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container |
-| websocket.redis.enabled | bool | `true` | Enable redis installation |
-| websocket.redis.image.pullPolicy | string | `"IfNotPresent"` | Redis image pull policy |
+| websocket.enabled | bool | `true` | Enable WebSocket support |
+| websocket.manager | string | `"redis"` | WebSocket manager to use |
+| websocket.existingSecret | string | `""` | Existing secret containing the Redis URL |
+| websocket.existingSecretKey | string | `"redis-url"` | Key within the existing secret |
+| websocket.redis.enabled | bool | `true` | Deploy a Redis instance |
 | websocket.redis.image.repository | string | `"redis"` | Redis image repository |
 | websocket.redis.image.tag | string | `"7.4.2-alpine3.21"` | Redis image tag |
-| websocket.redis.labels | object | `{}` | Redis labels |
-| websocket.redis.podSecurityContext | object | `{}` | Redis pod security context |
-| websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
-| websocket.redis.pods.labels | object | `{}` | Redis pod labels |
-| websocket.redis.resources | object | `{}` | Redis resources |
-| websocket.redis.service.annotations | object | `{}` | Redis service annotations |
-| websocket.redis.service.containerPort | int | `6379` | Redis container/target port |
-| websocket.redis.service.labels | object | `{}` | Redis service labels |
-| websocket.redis.service.nodePort | string | `""` | Redis service node port. Valid only when type is `NodePort` |
-| websocket.redis.service.port | int | `6379` | Redis service port |
-| websocket.redis.service.portName | string | `"http"` | Redis service port name. Istio needs this to be something like `tcp-redis` |
-| websocket.redis.service.type | string | `"ClusterIP"` | Redis service type |
-| websocket.redis.tolerations | list | `[]` | Redis tolerations for pod assignment |
-| websocket.url | string | `""` | Override the Redis URL for websocket communication. If empty, automatically generates URL based on release name. Template: `redis://[:<password>@]<hostname>:<port>/<db>` |
+| websocket.redis.persistence.enabled | bool | `false` | Enable PVC for Redis data |
+| websocket.redis.persistence.size | string | `"1Gi"` | Size of the Redis PVC |
+| websocket.redis.persistence.storageClass | string | `""` | Storage class for the Redis PVC |
 
-### Other Values
+### Ingress configuration
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` | Affinity for pod assignment |
-| annotations | object | `{}` | Additional annotations to add to the Open WebUI deployment/statefulset metadata |
-| args | list | `[]` | Open WebUI container arguments (overrides default) |
-| clusterDomain | string | `"cluster.local"` | Value of cluster domain |
-| command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
-| commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
-| containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
-| copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
-| copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
-| copyAppData.resources | object | `{}` | Resource requests and limits for the Open WebUI copy-app-data init container |
-| databaseUrl | string | `""` | Configure database URL, needed to work with Postgres (example: `postgresql://<user>:<password>@<service>:<port>/<database>`), leave empty to use the default sqlite database. Alternatively, use extraEnvVars to construct the database URL by setting the `DATABASE_TYPE`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_PORT`and `DATABASE_NAME` environment variables. Each DATABASE_* var must be set or database will default to sqlite. |
-| extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
-| extraEnvVars | list | `[]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style. |
-| extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
-| extraLabels | object | `{}` | Additional custom labels to add to the Open WebUI deployment/statefulset metadata |
-| extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
-| fullnameOverride | string | `""` | Override the full resource name completely. When set, this takes precedence over nameOverride and the standard naming convention. Leave empty to use the standard naming pattern. See the "Resource Naming" section in the README for details on how resources are named. |
-| hostAliases | list | `[]` | HostAliases to be added to hosts-file of each container |
-| nameOverride | string | `""` | Override the chart name used in resource names. When set, this replaces the chart name in the generated resource names (which combine release name and chart name). Example: with nameOverride="custom" and release "prod", resources become "prod-custom" |
-| namespaceOverride | string | `""` | Provide a namespace in place of the default release namespace |
-| nodeSelector | object | `{}` | Node labels for pod assignment. |
-| podAnnotations | object | `{}` | Additional annotations to add to the Open WebUI pods |
-| podLabels | object | `{}` | Additional custom labels to add to the Open WebUI pods |
-| podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
-| priorityClassName | string | `""` | Priority class name for the Open WebUI pods |
-| replicaCount | int | `1` | Number of Open WebUI replicas |
-| resources | object | `{}` | Resource requests and limits for the Open WebUI container |
-| revisionHistoryLimit | int | `10` | Revision history limit for the workload manager (deployment). |
-| route.additionalRules | list | `[]` | Additional custom rules that can be added to the route |
-| route.annotations | object | `{}` | Annotations to add to the route |
-| route.apiVersion | string | `"gateway.networking.k8s.io/v1"` | Set the route apiVersion, e.g. gateway.networking.k8s.io/v1 or gateway.networking.k8s.io/v1alpha2 |
-| route.backendRef.group | string | `""` | API group of the backend reference. Use "" for the core API group (which contains `Service`), or "multicluster.x-k8s.io" for `ServiceImport`. |
-| route.backendRef.kind | string | `"Service"` | Kind of the backend reference, e.g. `Service` or `ServiceImport`. |
-| route.backendRef.weight | int | `1` | Weight assigned to the backend reference for traffic distribution when multiple backendRefs are present. Must be in the range 0-1,000,000. |
-| route.enabled | bool | `false` | Enables or disables the route |
-| route.filters | list | `[]` | Filters define the filters that are applied to requests that match this rule. |
-| route.hostnames | list | `[]` | Hostnames to match for the route |
-| route.httpsRedirect | bool | `false` | Enables HTTPS redirect for the route |
-| route.kind | string | `"HTTPRoute"` | Set the route kind Valid options are GRPCRoute, HTTPRoute, TCPRoute, TLSRoute, UDPRoute |
-| route.labels | object | `{}` | Labels to add to the route |
-| route.matches[0].path.type | string | `"PathPrefix"` | Path match type. Note that custom path prefix is not supported in Open WebUI, so any non-default value will break. See https://github.com/open-webui/open-webui/discussions/3431 |
-| route.matches[0].path.value | string | `"/"` | Path match value |
-| route.parentRefs | list | `[]` | References to the parent resources (e.g. Gateway) |
-| route.redirect | object | `{}` | Configuration for the HTTP-to-HTTPS redirect route (only used when httpsRedirect is true) If redirect.parentRefs is set, it will be used as-is for the redirect route's parentRefs. Otherwise, the main route's parentRefs are used with sectionName defaulting to "http". |
-| runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
-| strategy | object | `{}` | Strategy for updating the workload manager: deployment or statefulset |
-| tolerations | list | `[]` | Tolerations for pod assignment |
-| topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |
-| volumeMounts | object | `{"container":[],"initContainer":[]}` | Configure container volume mounts ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
-| volumes | list | `[]` | Configure pod volumes ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/> |
-| workload.kind | string | `""` | Workload kind to use. Options are "Deployment", "StatefulSet". If not set, the chart will determine the kind based on persistence settings. NOTE: When using Deployment with local persistence and replicaCount > 1, ensure persistence.accessModes includes ReadWriteMany (RWX). |
+| ingress.enabled | bool | `false` | Enable Ingress. Disabled by default — configure for your ingress controller |
+| ingress.class | string | `""` | Ingress class name |
+| ingress.host | string | `"chat.example.com"` | Hostname for the Ingress record |
+| ingress.tls | bool | `false` | Enable TLS |
+| ingress.annotations | object | `{}` | Ingress annotations |
 
-----------------------------------------------
+### Persistence configuration
 
-Autogenerated from chart metadata using [helm-docs](https://github.com/norwoodj/helm-docs/).
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| persistence.enabled | bool | `true` | Enable persistence for Open WebUI data |
+| persistence.size | string | `"2Gi"` | Size of the PVC |
+| persistence.storageClass | string | `""` | Storage class |
+| persistence.accessModes | list | `["ReadWriteOnce"]` | Access modes. Use ReadWriteMany for multiple replicas |
+| persistence.provider | string | `"local"` | Storage provider: `local`, `s3`, `gcs`, or `azure` |
+
+### Service configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| service.type | string | `"ClusterIP"` | Service type |
+| service.port | int | `80` | Service port |
+| service.containerPort | int | `8080` | Container port |
+
+### Probes configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| livenessProbe | object | `{}` | Liveness probe configuration |
+| readinessProbe | object | `{}` | Readiness probe configuration |
+| startupProbe | object | `{}` | Startup probe configuration |
+
+### SSO Configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| sso.enabled | bool | `false` | Enable SSO authentication globally |
+| sso.google.enabled | bool | `false` | Enable Google OAuth |
+| sso.microsoft.enabled | bool | `false` | Enable Microsoft OAuth |
+| sso.github.enabled | bool | `false` | Enable GitHub OAuth |
+| sso.oidc.enabled | bool | `false` | Enable OIDC authentication |
+
+### Logging configuration
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| logging.level | string | `""` | Global log level: `notset`, `debug`, `info`, `warning`, `error`, `critical` |
+| logging.components | object | `{}` | Per-component log level overrides |

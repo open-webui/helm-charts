@@ -1,0 +1,202 @@
+{{- if .Values.privacyProxy.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "open-webui.fullname" . }}-privacy-proxy
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "base.labels" . | nindent 4 }}
+    app.kubernetes.io/component: privacy-proxy
+    {{- with .Values.privacyProxy.extraLabels }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- with .Values.privacyProxy.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.privacyProxy.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "privacy-proxy.selectorLabels" . | nindent 6 }}
+  {{- with .Values.privacyProxy.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- include "base.labels" . | nindent 8 }}
+        {{- include "privacy-proxy.selectorLabels" . | nindent 8 }}
+        {{- with .Values.privacyProxy.podLabels }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- end }}
+      {{- with .Values.privacyProxy.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.privacyProxy.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privacyProxy.serviceAccountName }}
+      serviceAccountName: {{ . }}
+      {{- end }}
+      {{- with .Values.privacyProxy.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privacyProxy.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
+      {{- with .Values.privacyProxy.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: privacy-proxy
+          image: "{{ .Values.privacyProxy.image.repository }}{{- if .Values.privacyProxy.image.digest }}@{{ .Values.privacyProxy.image.digest }}{{- else }}:{{ .Values.privacyProxy.image.tag }}{{- end }}"
+          imagePullPolicy: {{ .Values.privacyProxy.image.pullPolicy | default "IfNotPresent" }}
+          {{- with .Values.privacyProxy.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.privacyProxy.service.containerPort | default 8080 }}
+              protocol: TCP
+          {{- with .Values.privacyProxy.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.privacyProxy.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.privacyProxy.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.privacyProxy.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: OLLAMA_URL
+              value: {{ tpl (required "privacyProxy.ollamaUrl is required" .Values.privacyProxy.ollamaUrl) . | quote }}
+            - name: OPENAI_API_URL
+              value: {{ required "privacyProxy.openaiApiUrl is required" .Values.privacyProxy.openaiApiUrl | quote }}
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "garnet.secretName" . }}
+                  key: {{ include "garnet.redisUrlKey" . }}
+            {{- with .Values.privacyProxy.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- with .Values.privacyProxy.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if or .Values.privacyProxy.persistence.enabled .Values.privacyProxy.extraVolumeMounts }}
+          volumeMounts:
+            {{- if .Values.privacyProxy.persistence.enabled }}
+            - name: data
+              mountPath: {{ .Values.privacyProxy.persistence.mountPath | default "/data" }}
+              {{- with .Values.privacyProxy.persistence.subPath }}
+              subPath: {{ . }}
+              {{- end }}
+            {{- end }}
+            {{- with .Values.privacyProxy.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- end }}
+      {{- with .Values.privacyProxy.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privacyProxy.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privacyProxy.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privacyProxy.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.privacyProxy.persistence.enabled .Values.privacyProxy.extraVolumes }}
+      volumes:
+        {{- if .Values.privacyProxy.persistence.enabled }}
+        - name: data
+          {{- if .Values.privacyProxy.persistence.existingClaim }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.privacyProxy.persistence.existingClaim }}
+          {{- else }}
+          persistentVolumeClaim:
+            claimName: {{ include "open-webui.fullname" . }}-privacy-proxy
+          {{- end }}
+        {{- end }}
+        {{- with .Values.privacyProxy.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "open-webui.fullname" . }}-privacy-proxy
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "base.labels" . | nindent 4 }}
+    app.kubernetes.io/component: privacy-proxy
+    {{- with .Values.privacyProxy.service.labels }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- with .Values.privacyProxy.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.privacyProxy.service.type | default "ClusterIP" }}
+  selector:
+    {{- include "privacy-proxy.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.privacyProxy.service.port | default 8080 }}
+      targetPort: http
+      protocol: TCP
+      {{- if and (eq (.Values.privacyProxy.service.type | default "ClusterIP") "NodePort") .Values.privacyProxy.service.nodePort }}
+      nodePort: {{ .Values.privacyProxy.service.nodePort }}
+      {{- end }}
+{{- if and .Values.privacyProxy.persistence.enabled (not .Values.privacyProxy.persistence.existingClaim) }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "open-webui.fullname" . }}-privacy-proxy
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "base.labels" . | nindent 4 }}
+    app.kubernetes.io/component: privacy-proxy
+  {{- with .Values.privacyProxy.persistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    {{- toYaml (.Values.privacyProxy.persistence.accessModes | default (list "ReadWriteOnce")) | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.privacyProxy.persistence.size | default "1Gi" }}
+  {{- with .Values.privacyProxy.persistence.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+{{- end }}
+{{- end }}

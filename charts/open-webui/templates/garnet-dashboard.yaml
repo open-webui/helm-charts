@@ -1,0 +1,134 @@
+{{- if .Values.garnetDashboard.enabled }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "open-webui.fullname" . }}-dashboard
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "base.labels" . | nindent 4 }}
+    app.kubernetes.io/component: garnet-dashboard
+    {{- with .Values.garnetDashboard.extraLabels }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
+    {{- end }}
+  {{- with .Values.garnetDashboard.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.garnetDashboard.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "base.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: garnet-dashboard
+  template:
+    metadata:
+      labels:
+        {{- include "base.labels" . | nindent 8 }}
+        {{- include "base.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: garnet-dashboard
+      {{- with .Values.garnetDashboard.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.garnetDashboard.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.garnetDashboard.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: garnet-dashboard
+          image: "{{ .Values.garnetDashboard.image.repository }}:{{ .Values.garnetDashboard.image.tag }}"
+          imagePullPolicy: {{ .Values.garnetDashboard.image.pullPolicy | default "IfNotPresent" }}
+          {{- with .Values.garnetDashboard.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.garnetDashboard.service.containerPort | default 8081 }}
+              protocol: TCP
+          {{- with .Values.garnetDashboard.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.garnetDashboard.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.garnetDashboard.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "garnet.secretName" . }}
+                  key: {{ include "garnet.redisUrlKey" . }}
+          {{- with .Values.garnetDashboard.extraEnvVars }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.garnetDashboard.extraEnvFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if .Values.garnetDashboard.dockerSocket.enabled }}
+            - name: docker-sock
+              mountPath: /var/run/docker.sock
+              readOnly: true
+            {{- end }}
+          {{- with .Values.garnetDashboard.extraVolumeMounts }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        {{- if .Values.garnetDashboard.dockerSocket.enabled }}
+        - name: docker-sock
+          hostPath:
+            path: {{ .Values.garnetDashboard.dockerSocket.path | default "/var/run/docker.sock" }}
+            type: Socket
+        {{- end }}
+      {{- with .Values.garnetDashboard.extraVolumes }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.garnetDashboard.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.garnetDashboard.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.garnetDashboard.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "open-webui.fullname" . }}-dashboard
+  namespace: {{ include "open-webui.namespace" . }}
+  labels:
+    {{- include "base.labels" . | nindent 4 }}
+    app.kubernetes.io/component: garnet-dashboard
+  {{- with .Values.garnetDashboard.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.garnetDashboard.service.type | default "ClusterIP" }}
+  selector:
+    {{- include "base.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: garnet-dashboard
+  ports:
+    - name: http
+      port: {{ .Values.garnetDashboard.service.port | default 8081 }}
+      targetPort: http
+      protocol: TCP
+{{- end }}

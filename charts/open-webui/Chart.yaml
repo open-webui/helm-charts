@@ -2,18 +2,19 @@ apiVersion: v2
 name: open-webui
 version: 14.7.0
 appVersion: 0.9.5
-home: https://www.openwebui.com/
+home: https://github.com/enclaive/garnet-helm
 icon: >-
   https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
-description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋"
+description: "Garnet: Privacy-aware AI chat platform built on Open WebUI"
 keywords:
   - llm
   - chat
   - web-ui
   - open-webui
+  - privacy
+  - garnet
 sources:
-  - https://github.com/open-webui/helm-charts
-  - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+  - https://github.com/enclaive/garnet-helm
   - https://github.com/otwld/ollama-helm/
   - https://hub.docker.com/r/ollama/ollama
 annotations:
@@ -33,11 +34,3 @@ dependencies:
       - child: service
         parent: pipelines.service
     condition: pipelines.enabled
-  - name: tika
-    repository: https://apache.jfrog.io/artifactory/tika
-    version: ">=2.9.0"
-    condition: tika.enabled
-  - name: terminals
-    repository: https://helm.openwebui.com
-    version: ">=0.4.0"
-    condition: terminals.enabled

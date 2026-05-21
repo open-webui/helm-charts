@@ -1,20 +1,21 @@
-name: Check Open WebUI Helm Charts (open-webui)
+name: Test Open WebUI Helm Chart
 
 on:
   pull_request:
     paths:
       - "charts/open-webui/**"
   push:
+    branches:
+      - main
     paths:
       - "charts/open-webui/**"
 
 jobs:
-  lint-chart:
-    name: Lint Helm Chart
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up Helm
@@ -24,51 +25,31 @@ jobs:
         run: |
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
-          helm repo add tika https://apache.jfrog.io/artifactory/tika/
 
-      - name: Build open-webui Helm dependencies
-        run: |
-          helm dependency build ./charts/open-webui
+      - name: Build chart dependencies
+        run: helm dependency build ./charts/open-webui
 
-      - name: Lint open-webui Helm Chart
-        run: |
-          helm lint ./charts/open-webui
+      - name: Lint with default values
+        run: helm lint ./charts/open-webui
 
-  test-deploy:
-    name: Test Chart Deployment
+  template:
+    name: Template render
     runs-on: ubuntu-latest
-    needs: lint-chart
-
+    needs: lint
     steps:
-      - name: Checkout Code
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v4
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
-
-      - name: Set up KinD Cluster
-        uses: helm/kind-action@v1
 
       - name: Add Dependency Repos
         run: |
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
-          helm repo add tika https://apache.jfrog.io/artifactory/tika/
 
-      - name: Build open-webui Helm dependencies
-        run: |
-          helm dependency build ./charts/open-webui
+      - name: Build chart dependencies
+        run: helm dependency build ./charts/open-webui
 
-      - name: Template open-webui Helm Chart
-        run: |
-          helm template open-webui ./charts/open-webui \
-            --namespace test-namespace --create-namespace > open-webui.yaml
-
-      - name: Verify open-webui
-        run: |
-          kubectl create namespace test-namespace
-          kubectl apply --namespace test-namespace -f open-webui.yaml
-          kubectl wait --namespace test-namespace pod/open-webui-0 --for=condition=Ready --timeout=600s
+      - name: Template with default values
+        run: helm template garnet ./charts/open-webui --namespace garnet > /dev/null

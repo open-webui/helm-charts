@@ -6,7 +6,31 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v14.7.0]
+## [v14.7.0] - 2026-05-20
+
+### Added
+
+- **Privacy Proxy component** (`privacy-proxy.yaml`) — new Deployment + Service for the Garnet privacy-proxy, controlled by `privacyProxy.enabled`. Includes full production-grade support: probes, resources, strategy, securityContext, affinity, tolerations, topologySpreadConstraints, persistence, extraEnvVars, extraEnvFrom, extraVolumes/VolumeMounts
+- **Garnet Dashboard component** (`garnet-dashboard.yaml`) — new Deployment + Service for the Garnet monitoring dashboard, controlled by `garnetDashboard.enabled`. Docker socket access is configurable via `garnetDashboard.dockerSocket.enabled/path`
+- **Garnet Secrets template** (`garnet-secrets.yaml`) — optional chart-managed Secret for sensitive values. Set `garnetSecrets.create: false` and `garnetSecrets.existingSecret` to bring your own secret
+- **Redis persistence** — websocket Redis deployment now mounts a PVC (`websocket.redis.persistence.*`) to persist AOF data, matching the `redis-data` volume in docker-compose
+- **New helpers** in `_helpers.tpl`:
+  - `garnet.secretName` — resolves to `existingSecret` or the chart-managed secret name
+  - `garnet.redisUrlKey` — configurable key name inside the secret
+  - `garnet.privacyProxyUrl` — release-name-aware privacy-proxy service URL
+  - `privacy-proxy.selectorLabels` — selector labels for the privacy-proxy component
+- **`values-garnet.yaml`** — production values overlay with full parity to `docker-compose.yml` + `.env`. All LLM traffic routed through privacy-proxy; Caddy replaced by ingress controller with cert-manager TLS
+- **`Chart.yaml`** — removed `tika` and `terminals` dependencies (unavailable upstream versions)
+
+### Changed
+
+- `websocket-redis.yaml` — `volumeMounts` and `volumes` for Redis data are now always rendered (not gated on `readOnlyRootFilesystem`); volume source is PVC when `persistence.enabled`, otherwise `emptyDir`
+- All LLM routing in `values-garnet.yaml` uses `ollamaUrlsFromExtraEnv: true` with explicit `OLLAMA_BASE_URLS` set via `extraEnvVars`, matching docker-compose `OLLAMA_BASE_URL=http://privacy-proxy:8080`
+
+### Fixed
+
+- Privacy-proxy `OLLAMA_URL` value evaluated via `tpl` to support release-name-aware template expressions in values
+
 
 ### Changed
 
