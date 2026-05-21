@@ -40,7 +40,7 @@ ollamaUrls: []
 
 # -- Disables taking Ollama Urls from `ollamaUrls`  list
 # @section -- External Tools configuration
-ollamaUrlsFromExtraEnv: true
+ollamaUrlsFromExtraEnv: false
 
 pipelines:
   # -- Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines
@@ -582,16 +582,7 @@ openaiApiKeysExistingSecretKey: ""
 databaseUrl: ""
 
 # -- Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style.
-extraEnvVars:
-  # Route all Ollama and OpenAI traffic through the privacy-proxy
-  - name: OLLAMA_BASE_URLS
-    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080'
-  - name: OPENAI_API_BASE_URL
-    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080/openai'
-  - name: FORCE_OPENAI_BASE_URL
-    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080/openai'
-  - name: FORCE_OLLAMA_BASE_URL
-    value: 'http://{{ include "open-webui.fullname" . }}-privacy-proxy:8080'
+extraEnvVars: []
 
 # -- Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates)
 commonEnvVars: []
