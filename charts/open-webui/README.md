@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 14.8.0](https://img.shields.io/badge/Version-14.8.0-informational?style=flat-square) ![AppVersion: 0.9.6](https://img.shields.io/badge/AppVersion-0.9.6-informational?style=flat-square)
+![Version: 14.9.0](https://img.shields.io/badge/Version-14.9.0-informational?style=flat-square) ![AppVersion: 0.9.6](https://img.shields.io/badge/AppVersion-0.9.6-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -332,14 +332,14 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | websocket.enabled | bool | `true` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.existingSecret | string | `""` | Name of an existing Kubernetes secret containing the Redis URL. When set, takes precedence over `websocket.url` |
 | websocket.existingSecretKey | string | `"redis-url"` | Key within the existing secret that contains the Redis URL |
-| websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default) |
+| websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: `redis` (default). Set to an empty string (`""`) to use Open WebUI's built-in in-memory manager instead, in which case no Redis is required and neither `REDIS_URL` nor `WEBSOCKET_REDIS_URL` are set (also set `websocket.redis.enabled` to `false` to skip deploying the bundled Redis). Note: the in-memory manager only works with a single replica. |
 | websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
 | websocket.redis.command | list | `[]` | Redis command (overrides default) |
 | websocket.redis.containerSecurityContext | object | `{}` | Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container |
-| websocket.redis.enabled | bool | `true` | Enable redis installation |
+| websocket.redis.enabled | bool | `true` | Enable deployment of the bundled Redis used by the `redis` websocket manager. Set to `false` when using an external Redis or when `websocket.manager` is empty (in-memory manager) |
 | websocket.redis.image.pullPolicy | string | `"IfNotPresent"` | Redis image pull policy |
 | websocket.redis.image.repository | string | `"redis"` | Redis image repository |
 | websocket.redis.image.tag | string | `"7.4.2-alpine3.21"` | Redis image tag |

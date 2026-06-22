@@ -67,7 +67,7 @@ websocket:
   # -- Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT`
   # @section -- Websocket configuration
   enabled: true
-  # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: redis (default)
+  # -- Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: `redis` (default). Set to an empty string (`""`) to use Open WebUI's built-in in-memory manager instead, in which case no Redis is required and neither `REDIS_URL` nor `WEBSOCKET_REDIS_URL` are set (also set `websocket.redis.enabled` to `false` to skip deploying the bundled Redis). Note: the in-memory manager only works with a single replica.
   # @section -- Websocket configuration
   manager: redis
   # -- Override the Redis URL for websocket communication. If empty, automatically generates URL based on release name. Template: `redis://[:<password>@]<hostname>:<port>/<db>`
@@ -83,7 +83,7 @@ websocket:
   # @section -- Websocket configuration
   nodeSelector: {}
   redis:
-    # -- Enable redis installation
+    # -- Enable deployment of the bundled Redis used by the `redis` websocket manager. Set to `false` when using an external Redis or when `websocket.manager` is empty (in-memory manager)
     # @section -- Websocket configuration
     enabled: true
     # -- Redis labels
