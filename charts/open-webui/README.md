@@ -332,7 +332,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | websocket.enabled | bool | `true` | Enables websocket support in Open WebUI with env `ENABLE_WEBSOCKET_SUPPORT` |
 | websocket.existingSecret | string | `""` | Name of an existing Kubernetes secret containing the Redis URL. When set, takes precedence over `websocket.url` |
 | websocket.existingSecretKey | string | `"redis-url"` | Key within the existing secret that contains the Redis URL |
-| websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: `redis` (default). Set to an empty string (`""`) to use Open WebUI's built-in in-memory manager instead, in which case no Redis is required and neither `REDIS_URL` nor `WEBSOCKET_REDIS_URL` are set (also set `websocket.redis.enabled` to `false` to skip deploying the bundled Redis). Note: the in-memory manager only works with a single replica. |
+| websocket.manager | string | `"redis"` | Specifies the websocket manager to use with env `WEBSOCKET_MANAGER`: `redis` (default). Set to an empty string (`""`) to use Open WebUI's built-in in-memory manager, in which case no Redis is required. Set `websocket.redis.enabled` to `false` to skip deploying the bundled Redis. Note: the in-memory manager only works with a single replica, see https://docs.openwebui.com/getting-started/advanced-topics/scaling/#step-2--add-redis for more details. |
 | websocket.nodeSelector | object | `{}` | Node selector for websocket pods |
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
