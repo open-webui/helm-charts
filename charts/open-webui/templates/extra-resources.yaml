@@ -1,6 +1,10 @@
 {{- if .Values.extraResources }}
 {{- range .Values.extraResources }}
 ---
-{{ toYaml . | nindent 0 }}
+{{- if typeIs "string" . }}
+  {{- tpl . $ }}
+{{- else }}
+  {{- tpl (toYaml .) $ }}
+{{- end }}
 {{- end }}
 {{- end }}
