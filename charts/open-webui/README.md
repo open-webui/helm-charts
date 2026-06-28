@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 14.10.0](https://img.shields.io/badge/Version-14.10.0-informational?style=flat-square) ![AppVersion: 0.9.6](https://img.shields.io/badge/AppVersion-0.9.6-informational?style=flat-square)
+![Version: 14.11.0](https://img.shields.io/badge/Version-14.11.0-informational?style=flat-square) ![AppVersion: 0.9.6](https://img.shields.io/badge/AppVersion-0.9.6-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -234,6 +234,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | service.annotations | object | `{}` | Additional annotations to add to the Service |
+| service.appProtocol | string | `""` | App protocol for the service port (e.g., "kubernetes.io/ws" for WebSocket) |
 | service.containerPort | int | `8080` | Target port for the Open WebUI container |
 | service.labels | object | `{}` | Additional custom labels to add to the Service metadata |
 | service.loadBalancerClass | string | `""` | Load balancer class to use if service type is LoadBalancer (e.g., for GKE use "gce") |
