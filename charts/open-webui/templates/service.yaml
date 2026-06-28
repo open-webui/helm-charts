@@ -21,6 +21,9 @@ spec:
     name: http
     port: {{ .Values.service.port }}
     targetPort: http
+    {{- if .Values.service.appProtocol }}
+    appProtocol: {{ .Values.service.appProtocol | quote }}
+    {{- end }}
     {{- if .Values.service.nodePort }}
     nodePort: {{ .Values.service.nodePort | int }}
     {{- end }}
@@ -33,4 +36,3 @@ spec:
   {{- if and (eq .Values.service.type "LoadBalancer") (.Values.service.loadBalancerIP) }}
   loadBalancerIP: {{ .Values.service.loadBalancerIP }}
   {{- end }}
-  

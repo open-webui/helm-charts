@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v14.11.0]
+
+### Added
+
+- Add `service.appProtocol` value to set the [`appProtocol`](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) on the Service's `http` port (e.g. `kubernetes.io/ws` for WebSocket), so load balancers and ingress controllers that key off `appProtocol` can route Open WebUI's WebSocket traffic correctly. Defaults to `""` (unset), preserving existing behavior.
+
 ## [v14.10.0]
 
 ### Changed
