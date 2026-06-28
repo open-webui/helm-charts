@@ -16,10 +16,18 @@ spec:
         {{- include "terminals.operator.labels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "terminals.serviceAccountName" . }}
+      {{- with .Values.operator.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: operator
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
+          {{- with .Values.operator.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.operator.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

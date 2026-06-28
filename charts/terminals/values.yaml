@@ -52,6 +52,25 @@ operator:
     limits:
       cpu: 200m
       memory: 256Mi
+  # -- Configure pod security context for the operator pod
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  podSecurityContext:
+    {}
+    # runAsNonRoot: true  # verify image supports non-root before enabling
+    # runAsUser: 65534
+    # fsGroup: 65534
+  # -- Configure container security context for the operator container
+  containerSecurityContext:
+    {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #     - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: false  # upstream image runs as root; set true only with a non-root image
+    # runAsUser: 65534
+    # seccompProfile:
+    #   type: RuntimeDefault
 
 # --------------------------------------------------------------------------
 # Orchestrator (FastAPI service that proxies / provisions terminals)
@@ -82,3 +101,48 @@ orchestrator:
     limits:
       cpu: 200m
       memory: 256Mi
+  # -- Configure pod security context for the orchestrator pod
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+  podSecurityContext:
+    {}
+    # runAsNonRoot: true  # verify image supports non-root before enabling
+    # runAsUser: 65534
+    # fsGroup: 65534
+  # -- Configure container security context for the orchestrator container
+  containerSecurityContext:
+    {}
+    # allowPrivilegeEscalation: false
+    # capabilities:
+    #   drop:
+    #     - ALL
+    # readOnlyRootFilesystem: false
+    # runAsNonRoot: false  # upstream image runs as root; set true only with a non-root image
+    # runAsUser: 65534
+    # seccompProfile:
+    #   type: RuntimeDefault
+
+# --------------------------------------------------------------------------
+# Network Policy
+# --------------------------------------------------------------------------
+networkPolicy:
+  # -- Enable NetworkPolicy resources to restrict inter-pod traffic.
+  # When enabled, the orchestrator is reachable only from pods in the same
+  # namespace and terminal pods can communicate only with the orchestrator.
+  enabled: false
+  # -- Label selector matching terminal pods spawned by the operator.
+  # Must align with the labels the terminals-operator actually applies.
+  terminalPodSelector:
+    app.kubernetes.io/component: terminal
+  operator:
+    # -- Custom egress rules for the operator pod
+    egress: []
+  orchestrator:
+    # -- Custom ingress rules for the orchestrator pod
+    ingress: []
+    # -- Custom egress rules for the orchestrator pod
+    egress: []
+  terminals:
+    # -- Custom ingress rules for terminal pods
+    ingress: []
+    # -- Custom egress rules for terminal pods
+    egress: []

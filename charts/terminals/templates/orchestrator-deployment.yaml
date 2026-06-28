@@ -16,10 +16,18 @@ spec:
         {{- include "terminals.orchestrator.labels" . | nindent 8 }}
     spec:
       serviceAccountName: {{ include "terminals.serviceAccountName" . }}
+      {{- with .Values.orchestrator.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: orchestrator
           image: "{{ .Values.orchestrator.image.repository }}:{{ .Values.orchestrator.image.tag }}"
           imagePullPolicy: {{ .Values.orchestrator.image.pullPolicy }}
+          {{- with .Values.orchestrator.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           ports:
             - containerPort: {{ .Values.orchestrator.service.containerPort }}
               protocol: TCP

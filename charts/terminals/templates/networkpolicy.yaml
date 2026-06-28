@@ -1,0 +1,120 @@
+{{- if .Values.networkPolicy.enabled }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "terminals.fullname" . }}-operator
+  namespace: {{ include "terminals.namespace" . }}
+  labels:
+    {{- include "terminals.operator.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "terminals.operator.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress: []
+  egress:
+    {{- if .Values.networkPolicy.operator.egress }}
+    {{- toYaml .Values.networkPolicy.operator.egress | nindent 4 }}
+    {{- else }}
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+    {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "terminals.fullname" . }}-orchestrator
+  namespace: {{ include "terminals.namespace" . }}
+  labels:
+    {{- include "terminals.orchestrator.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "terminals.orchestrator.selectorLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    {{- if .Values.networkPolicy.orchestrator.ingress }}
+    {{- toYaml .Values.networkPolicy.orchestrator.ingress | nindent 4 }}
+    {{- else }}
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ include "terminals.namespace" . }}
+    {{- end }}
+  egress:
+    {{- if .Values.networkPolicy.orchestrator.egress }}
+    {{- toYaml .Values.networkPolicy.orchestrator.egress | nindent 4 }}
+    {{- else }}
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- toYaml .Values.networkPolicy.terminalPodSelector | nindent 14 }}
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+    {{- end }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "terminals.fullname" . }}-terminals
+  namespace: {{ include "terminals.namespace" . }}
+  labels:
+    {{- include "terminals.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      {{- toYaml .Values.networkPolicy.terminalPodSelector | nindent 6 }}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    {{- if .Values.networkPolicy.terminals.ingress }}
+    {{- toYaml .Values.networkPolicy.terminals.ingress | nindent 4 }}
+    {{- else }}
+    - from:
+        - podSelector:
+            matchLabels:
+              {{- include "terminals.orchestrator.selectorLabels" . | nindent 14 }}
+    {{- end }}
+  egress:
+    {{- if .Values.networkPolicy.terminals.egress }}
+    {{- toYaml .Values.networkPolicy.terminals.egress | nindent 4 }}
+    {{- else }}
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - to:
+        - podSelector:
+            matchLabels:
+              {{- include "terminals.orchestrator.selectorLabels" . | nindent 14 }}
+    {{- end }}
+{{- end }}
