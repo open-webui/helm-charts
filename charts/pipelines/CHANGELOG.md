@@ -5,6 +5,12 @@ All notable changes to the Pipelines Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.0]
+
+### Changed
+
+- `extraResources` entries are now rendered through Helm's `tpl`, so you can reference release metadata and values inside them (e.g. `namespace: "{{ .Release.Namespace }}"`) and pass raw-string entries in addition to structured objects. Existing entries that contain literal `{{`/`}}` must now be escaped, for example `{{ "{{" }}`.
+
 ## [0.11.0]
 
 ### Added

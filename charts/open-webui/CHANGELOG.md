@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v14.10.0]
+
+### Changed
+
+- `extraResources` entries are now rendered through Helm's `tpl`, so you can reference release metadata and values inside them (e.g. `namespace: "{{ .Release.Namespace }}"`) and pass raw-string entries in addition to structured objects. This aligns `extraResources` with the rest of the chart, where user-supplied blocks are already templated. Existing entries that contain literal `{{`/`}}` (e.g. Prometheus alert rules, Grafana dashboards) must now be escaped, for example `{{ "{{" }}`.
+
 ## [v14.9.0]
 
 ### Fixed
