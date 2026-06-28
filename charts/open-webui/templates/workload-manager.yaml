@@ -301,8 +301,11 @@ spec:
         - name: "ENABLE_WEBSOCKET_SUPPORT"
           value: {{ ternary "True" "False" .Values.websocket.enabled | quote }}
         {{- if .Values.websocket.enabled }}
+        {{- if .Values.websocket.manager }}
         - name: "WEBSOCKET_MANAGER"
-          value: {{ .Values.websocket.manager | default "redis" | quote }}
+          value: {{ .Values.websocket.manager | quote }}
+        {{- end }}
+        {{- if eq .Values.websocket.manager "redis" }}
         - name: "REDIS_URL"
         {{- if .Values.websocket.existingSecret }}
           valueFrom:
@@ -320,6 +323,7 @@ spec:
               key: {{ .Values.websocket.existingSecretKey | default "redis-url" }}
         {{- else }}
           value: {{ include "websocket.redis.url" . | quote }}
+        {{- end }}
         {{- end }}
         {{- end }}
         {{- if .Values.databaseUrl }}

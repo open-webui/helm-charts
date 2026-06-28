@@ -6,6 +6,20 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v14.9.0]
+
+### Fixed
+
+- Allow enabling websockets without Redis. Previously, setting `websocket.enabled: true` always injected `WEBSOCKET_MANAGER` (defaulting an empty value to `redis`) along with `REDIS_URL` and `WEBSOCKET_REDIS_URL`, even when `websocket.redis.enabled: false`, so the in-memory websocket manager could not be used. Now `WEBSOCKET_MANAGER` is only set when `websocket.manager` is non-empty, and `REDIS_URL`/`WEBSOCKET_REDIS_URL` are only set when `websocket.manager` is `redis`. Set `websocket.manager: ""` (and `websocket.redis.enabled: false`) to run Open WebUI's built-in in-memory manager with no Redis. The default behaviour is unchanged.
+
+## [v14.8.0]
+
+### Changed
+Updated chart appVersion to v0.9.6.
+
+### Fixed
+Updated `terminals` subchart dependency to `>=0.4.0` after a failed release on the last attempt. The Open WebUI chart was mistakenly updated to use the `v0.4.0` sub-chart version before it had released, which led to release failures for both charts.
+
 ## [v14.7.0]
 
 ### Changed
