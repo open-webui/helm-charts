@@ -5,6 +5,21 @@ All notable changes to the Terminals Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.5.0]
+
+### Added
+- `operator.podSecurityContext` and `operator.containerSecurityContext` values to
+  harden the operator pod ([#404](https://github.com/open-webui/helm-charts/issues/404)).
+- `orchestrator.podSecurityContext` and `orchestrator.containerSecurityContext` values
+  to harden the orchestrator pod ([#404](https://github.com/open-webui/helm-charts/issues/404)).
+- `networkPolicy.enabled` toggle plus per-component ingress/egress configuration.
+  When enabled, three NetworkPolicy resources are created:
+  - **operator** – deny all ingress; egress to Kubernetes API server and DNS only.
+  - **orchestrator** – ingress from same namespace; egress to terminal pods, API server, and DNS.
+  - **terminals** – ingress from orchestrator only; egress to orchestrator and DNS only.
+  Set `networkPolicy.terminals.egress: [{}]` to permit unrestricted outbound access
+  from terminal pods.
+
 ## [v0.4.0]
 
 ### Fixed
