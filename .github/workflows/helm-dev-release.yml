@@ -10,6 +10,10 @@ on:
     types:
       - open-webui-dev-image-published
 
+concurrency:
+  group: helm-dev-release
+  cancel-in-progress: false
+
 jobs:
   release-dev-chart:
     permissions:
@@ -68,14 +72,57 @@ jobs:
             --set postgresql.enabled=false \
             | grep -q "image: ghcr.io/open-webui/open-webui:dev"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
-        with:
-          skip_existing: true
-          packages_with_index: true
-          charts_dir: .cr-dev-charts
+      - name: Package dev chart
+        run: |
+          mkdir -p .cr-release-packages
+          helm package .cr-dev-charts/open-webui --destination .cr-release-packages
+
+      - name: Publish dev chart release
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="${{ steps.chart.outputs.version }}"
+          package=".cr-release-packages/open-webui-${version}.tgz"
+          tag="open-webui-${version}"
+
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            echo "Release ${tag} already exists"
+          else
+            gh release create "${tag}" "${package}" \
+              --title "${tag}" \
+              --notes "Dev Open WebUI Helm chart for ghcr.io/open-webui/open-webui:dev." \
+              --prerelease
+          fi
+
+      - name: Checkout Helm index
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: .cr-index
+
+      - name: Update Helm index
+        run: |
+          set -euo pipefail
+
+          version="${{ steps.chart.outputs.version }}"
+          package="open-webui-${version}.tgz"
+
+          cp ".cr-release-packages/${package}" .cr-index/
+
+          cd .cr-index
+          helm repo index . --merge index.yaml
+
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git add index.yaml "${package}"
+
+          if git diff --cached --quiet; then
+            echo "Helm index already contains ${package}"
+            exit 0
+          fi
+
+          git commit -m "chore(dev): release open-webui ${{ steps.chart.outputs.version }}"
+          git push
 
       - name: Login to GitHub Container Registry
         run: |
