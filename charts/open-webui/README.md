@@ -377,6 +377,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | extraEnvFrom | list | `[]` | Env vars added from configmap or secret to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: `extraEnvVars` will take precedence over the value from `extraEnvFrom`) |
 | extraEnvVars | list | `[]` | Env vars added to the Open WebUI deployment. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration. Variables can be defined as list or map style. |
 | extraInitContainers | list | `[]` | Additional init containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/init-containers/> |
+| extraContainers | list | `[]` | Additional containers to add to the deployment/statefulset ref: <https://kubernetes.io/docs/concepts/workloads/pods/#how-pods-manage-multiple-containers> |
 | extraLabels | object | `{}` | Additional custom labels to add to the Open WebUI deployment/statefulset metadata |
 | extraResources | list | `[]` | Extra resources to deploy with Open WebUI |
 | fullnameOverride | string | `""` | Override the full resource name completely. When set, this takes precedence over nameOverride and the standard naming convention. Leave empty to use the standard naming pattern. See the "Resource Naming" section in the README for details on how resources are named. |
