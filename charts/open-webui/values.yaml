@@ -626,6 +626,16 @@ extraInitContainers: []
 #   - name: data
 #     mountPath: /data
 
+# -- Additional sidecar containers to add to the deployment/statefulset, alongside the main Open WebUI container
+# ref: <https://kubernetes.io/docs/concepts/workloads/pods/#how-pods-manage-multiple-containers>
+extraContainers: []
+# - name: custom-sidecar
+#   image: busybox:latest
+#   command: ['sh', '-c', 'while true; do echo sidecar running; sleep 30; done']
+#   volumeMounts:
+#   - name: data
+#     mountPath: /data
+
 # -- Configure pod volumes
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/>
 volumes: []

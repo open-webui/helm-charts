@@ -478,6 +478,9 @@ spec:
           {{- tpl (toYaml .Values.extraEnvFrom) . | nindent 8 }}
         {{- end }}
         tty: true
+      {{- with .Values.extraContainers }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- tpl (toYaml .) $ | nindent 8 }}
