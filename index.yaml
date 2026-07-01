@@ -5,7 +5,54 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: dev
-    created: "2026-07-01T01:36:10.449311816Z"
+    created: "2026-07-01T05:20:48.814563547Z"
+    dependencies:
+    - condition: ollama.enabled
+      import-values:
+      - child: service
+        parent: ollama.service
+      name: ollama
+      repository: https://otwld.github.io/ollama-helm/
+      version: '>=0.24.0'
+    - condition: pipelines.enabled
+      import-values:
+      - child: service
+        parent: pipelines.service
+      name: pipelines
+      repository: https://helm.openwebui.com
+      version: '>=0.10.1'
+    - condition: tika.enabled
+      name: tika
+      repository: https://apache.jfrog.io/artifactory/tika
+      version: '>=2.9.0'
+    - condition: terminals.enabled
+      name: terminals
+      repository: https://helm.openwebui.com
+      version: '>=0.4.0'
+    description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions
+      \U0001F44B"
+    digest: d75f7709f865685f682494507d982e5932f9ef1d103f727fe9a9dc382c16bb0e
+    home: https://www.openwebui.com/
+    icon: https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
+    keywords:
+    - llm
+    - chat
+    - web-ui
+    - open-webui
+    name: open-webui
+    sources:
+    - https://github.com/open-webui/helm-charts
+    - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+    - https://github.com/otwld/ollama-helm/
+    - https://hub.docker.com/r/ollama/ollama
+    urls:
+    - open-webui-15.1.1-dev.11.1.tgz
+    version: 15.1.1-dev.11.1
+  - annotations:
+      licenses: MIT
+    apiVersion: v2
+    appVersion: dev
+    created: "2026-07-01T05:20:48.807101386Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -52,7 +99,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: dev
-    created: "2026-07-01T01:36:10.477804509Z"
+    created: "2026-07-01T05:20:48.843911328Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -99,7 +146,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: dev
-    created: "2026-07-01T01:36:10.470821089Z"
+    created: "2026-07-01T05:20:48.835488021Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -146,7 +193,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: dev
-    created: "2026-07-01T01:36:10.463796379Z"
+    created: "2026-07-01T05:20:48.827978101Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -193,7 +240,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: dev
-    created: "2026-07-01T01:36:10.456867247Z"
+    created: "2026-07-01T05:20:48.821330223Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -240,7 +287,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.10.1
-    created: "2026-07-01T01:36:10.44245714Z"
+    created: "2026-07-01T05:20:48.799643652Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -287,7 +334,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.10.0
-    created: "2026-07-01T01:36:10.435351803Z"
+    created: "2026-07-01T05:20:48.792359878Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -334,7 +381,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.6
-    created: "2026-07-01T01:36:10.372575702Z"
+    created: "2026-07-01T05:20:48.725796045Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -381,7 +428,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.6
-    created: "2026-07-01T01:36:10.365489297Z"
+    created: "2026-07-01T05:20:48.718167814Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -428,7 +475,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.6
-    created: "2026-07-01T01:36:10.42809691Z"
+    created: "2026-07-01T05:20:48.784979033Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -475,7 +522,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.6
-    created: "2026-07-01T01:36:10.42096395Z"
+    created: "2026-07-01T05:20:48.777950515Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -522,7 +569,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.5
-    created: "2026-07-01T01:36:10.414519314Z"
+    created: "2026-07-01T05:20:48.770957248Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -569,7 +616,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.5
-    created: "2026-07-01T01:36:10.407093542Z"
+    created: "2026-07-01T05:20:48.763903436Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -616,7 +663,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.5
-    created: "2026-07-01T01:36:10.4010156Z"
+    created: "2026-07-01T05:20:48.756511484Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -663,7 +710,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.4
-    created: "2026-07-01T01:36:10.394043411Z"
+    created: "2026-07-01T05:20:48.749710336Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -710,7 +757,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.3
-    created: "2026-07-01T01:36:10.38659531Z"
+    created: "2026-07-01T05:20:48.742476001Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -757,7 +804,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.2
-    created: "2026-07-01T01:36:10.379558975Z"
+    created: "2026-07-01T05:20:48.735402912Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -804,7 +851,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.1
-    created: "2026-07-01T01:36:10.358518721Z"
+    created: "2026-07-01T05:20:48.711072867Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -851,7 +898,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.9.0
-    created: "2026-07-01T01:36:10.352293711Z"
+    created: "2026-07-01T05:20:48.705821493Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -898,7 +945,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.346080109Z"
+    created: "2026-07-01T05:20:48.69837267Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -945,7 +992,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.34011607Z"
+    created: "2026-07-01T05:20:48.693057696Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -992,7 +1039,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.334107755Z"
+    created: "2026-07-01T05:20:48.686551509Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1039,7 +1086,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.327667497Z"
+    created: "2026-07-01T05:20:48.680054203Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1086,7 +1133,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.321240376Z"
+    created: "2026-07-01T05:20:48.673376935Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1133,7 +1180,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.314591377Z"
+    created: "2026-07-01T05:20:48.667032334Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1180,7 +1227,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.308244664Z"
+    created: "2026-07-01T05:20:48.660574987Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1227,7 +1274,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.302071995Z"
+    created: "2026-07-01T05:20:48.654403754Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1274,7 +1321,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.295845966Z"
+    created: "2026-07-01T05:20:48.648337094Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1321,7 +1368,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.12
-    created: "2026-07-01T01:36:10.23805493Z"
+    created: "2026-07-01T05:20:48.588166299Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1364,7 +1411,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.11
-    created: "2026-07-01T01:36:10.23242425Z"
+    created: "2026-07-01T05:20:48.582945974Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1407,7 +1454,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.11
-    created: "2026-07-01T01:36:10.227020166Z"
+    created: "2026-07-01T05:20:48.576992329Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1450,7 +1497,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.10
-    created: "2026-07-01T01:36:10.221845114Z"
+    created: "2026-07-01T05:20:48.571076498Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1493,7 +1540,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.9
-    created: "2026-07-01T01:36:10.289626087Z"
+    created: "2026-07-01T05:20:48.641364404Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1536,7 +1583,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.8
-    created: "2026-07-01T01:36:10.284345414Z"
+    created: "2026-07-01T05:20:48.63363157Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1579,7 +1626,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.8
-    created: "2026-07-01T01:36:10.27890903Z"
+    created: "2026-07-01T05:20:48.627944506Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1622,7 +1669,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.7
-    created: "2026-07-01T01:36:10.272870682Z"
+    created: "2026-07-01T05:20:48.62269353Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1665,7 +1712,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.6
-    created: "2026-07-01T01:36:10.266918799Z"
+    created: "2026-07-01T05:20:48.617162659Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1708,7 +1755,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.5
-    created: "2026-07-01T01:36:10.261462558Z"
+    created: "2026-07-01T05:20:48.611259277Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1751,7 +1798,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.4
-    created: "2026-07-01T01:36:10.255381968Z"
+    created: "2026-07-01T05:20:48.605241968Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1794,7 +1841,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.3
-    created: "2026-07-01T01:36:10.249674669Z"
+    created: "2026-07-01T05:20:48.599417514Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1837,7 +1884,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.2
-    created: "2026-07-01T01:36:10.243902181Z"
+    created: "2026-07-01T05:20:48.593709819Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1880,7 +1927,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.1
-    created: "2026-07-01T01:36:10.215706399Z"
+    created: "2026-07-01T05:20:48.564892377Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1923,7 +1970,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.1
-    created: "2026-07-01T01:36:10.209634268Z"
+    created: "2026-07-01T05:20:48.559065645Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -1966,7 +2013,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.0
-    created: "2026-07-01T01:36:10.203839362Z"
+    created: "2026-07-01T05:20:48.553497426Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2009,7 +2056,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.0
-    created: "2026-07-01T01:36:10.198066713Z"
+    created: "2026-07-01T05:20:48.547400332Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2052,7 +2099,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.0
-    created: "2026-07-01T01:36:10.192178813Z"
+    created: "2026-07-01T05:20:48.541732216Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2095,7 +2142,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.8.0
-    created: "2026-07-01T01:36:10.18647998Z"
+    created: "2026-07-01T05:20:48.535641088Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2138,7 +2185,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.7.2
-    created: "2026-07-01T01:36:10.180980458Z"
+    created: "2026-07-01T05:20:48.530114944Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2181,7 +2228,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.7.2
-    created: "2026-07-01T01:36:10.175557109Z"
+    created: "2026-07-01T05:20:48.525336532Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2224,7 +2271,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.7.1
-    created: "2026-07-01T01:36:10.169946363Z"
+    created: "2026-07-01T05:20:48.519657473Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2267,7 +2314,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.7.0
-    created: "2026-07-01T01:36:10.165323729Z"
+    created: "2026-07-01T05:20:48.513950772Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2310,7 +2357,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.43
-    created: "2026-07-01T01:36:11.679850575Z"
+    created: "2026-07-01T05:20:50.05972956Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2353,7 +2400,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.43
-    created: "2026-07-01T01:36:11.637139452Z"
+    created: "2026-07-01T05:20:50.01591063Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2396,7 +2443,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.43
-    created: "2026-07-01T01:36:11.631078559Z"
+    created: "2026-07-01T05:20:50.009585372Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2439,7 +2486,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.42
-    created: "2026-07-01T01:36:11.625435283Z"
+    created: "2026-07-01T05:20:50.00389751Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2482,7 +2529,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.41
-    created: "2026-07-01T01:36:11.619979473Z"
+    created: "2026-07-01T05:20:49.997810918Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2525,7 +2572,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.41
-    created: "2026-07-01T01:36:11.609794937Z"
+    created: "2026-07-01T05:20:49.986852359Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2568,7 +2615,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.40
-    created: "2026-07-01T01:36:11.60414741Z"
+    created: "2026-07-01T05:20:49.981227233Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2611,7 +2658,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.39
-    created: "2026-07-01T01:36:11.59855065Z"
+    created: "2026-07-01T05:20:49.975590562Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2654,7 +2701,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.38
-    created: "2026-07-01T01:36:11.593701383Z"
+    created: "2026-07-01T05:20:49.970783511Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2697,7 +2744,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.37
-    created: "2026-07-01T01:36:11.587688519Z"
+    created: "2026-07-01T05:20:49.964420059Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2740,7 +2787,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.36
-    created: "2026-07-01T01:36:11.581774995Z"
+    created: "2026-07-01T05:20:49.958478511Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2783,7 +2830,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.35
-    created: "2026-07-01T01:36:11.576332129Z"
+    created: "2026-07-01T05:20:49.952967839Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2826,7 +2873,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.34
-    created: "2026-07-01T01:36:11.571597299Z"
+    created: "2026-07-01T05:20:49.948223736Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2869,7 +2916,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.34
-    created: "2026-07-01T01:36:11.565739965Z"
+    created: "2026-07-01T05:20:49.942362861Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2912,7 +2959,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.34
-    created: "2026-07-01T01:36:11.560159563Z"
+    created: "2026-07-01T05:20:49.936406724Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2955,7 +3002,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.34
-    created: "2026-07-01T01:36:11.554510506Z"
+    created: "2026-07-01T05:20:49.931096678Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -2998,7 +3045,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.33
-    created: "2026-07-01T01:36:11.550030518Z"
+    created: "2026-07-01T05:20:49.926126912Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3041,7 +3088,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.33
-    created: "2026-07-01T01:36:11.544075042Z"
+    created: "2026-07-01T05:20:49.920010528Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3084,7 +3131,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.32
-    created: "2026-07-01T01:36:11.673746851Z"
+    created: "2026-07-01T05:20:50.053596778Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3127,7 +3174,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.32
-    created: "2026-07-01T01:36:11.66824748Z"
+    created: "2026-07-01T05:20:50.047824478Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3170,7 +3217,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.31
-    created: "2026-07-01T01:36:11.662870647Z"
+    created: "2026-07-01T05:20:50.04232506Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3213,7 +3260,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.30
-    created: "2026-07-01T01:36:11.65835844Z"
+    created: "2026-07-01T05:20:50.037690631Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3256,7 +3303,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.29
-    created: "2026-07-01T01:36:11.652678181Z"
+    created: "2026-07-01T05:20:50.031700004Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3299,7 +3346,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.28
-    created: "2026-07-01T01:36:11.646888558Z"
+    created: "2026-07-01T05:20:50.025958101Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3342,7 +3389,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.27
-    created: "2026-07-01T01:36:11.641783613Z"
+    created: "2026-07-01T05:20:50.020498391Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3385,7 +3432,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.26
-    created: "2026-07-01T01:36:11.615445004Z"
+    created: "2026-07-01T05:20:49.993274422Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3428,7 +3475,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.26
-    created: "2026-07-01T01:36:11.538466049Z"
+    created: "2026-07-01T05:20:49.913888113Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3471,7 +3518,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.26
-    created: "2026-07-01T01:36:11.533059301Z"
+    created: "2026-07-01T05:20:49.908081673Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3514,7 +3561,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.26
-    created: "2026-07-01T01:36:11.528287298Z"
+    created: "2026-07-01T05:20:49.902678075Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3557,7 +3604,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.25
-    created: "2026-07-01T01:36:11.522236905Z"
+    created: "2026-07-01T05:20:49.898096144Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3600,7 +3647,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.24
-    created: "2026-07-01T01:36:11.516566374Z"
+    created: "2026-07-01T05:20:49.892210874Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3643,7 +3690,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.23
-    created: "2026-07-01T01:36:11.511032969Z"
+    created: "2026-07-01T05:20:49.886517329Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3686,7 +3733,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.22
-    created: "2026-07-01T01:36:11.506620939Z"
+    created: "2026-07-01T05:20:49.881268497Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3729,7 +3776,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.500847245Z"
+    created: "2026-07-01T05:20:49.876728434Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3772,7 +3819,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.495212995Z"
+    created: "2026-07-01T05:20:49.871059154Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3815,7 +3862,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.489426848Z"
+    created: "2026-07-01T05:20:49.865177172Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3858,7 +3905,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.484444052Z"
+    created: "2026-07-01T05:20:49.860550375Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3901,7 +3948,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.249582615Z"
+    created: "2026-07-01T05:20:49.619665775Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -3955,7 +4002,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.23348857Z"
+    created: "2026-07-01T05:20:49.602876796Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4009,7 +4056,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.218305599Z"
+    created: "2026-07-01T05:20:49.587934647Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4063,7 +4110,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.18
-    created: "2026-07-01T01:36:11.202039823Z"
+    created: "2026-07-01T05:20:49.570063068Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4117,7 +4164,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.17
-    created: "2026-07-01T01:36:11.186777006Z"
+    created: "2026-07-01T05:20:49.553102312Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4171,7 +4218,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.16
-    created: "2026-07-01T01:36:11.170326649Z"
+    created: "2026-07-01T05:20:49.53647824Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4225,7 +4272,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.16
-    created: "2026-07-01T01:36:11.154642886Z"
+    created: "2026-07-01T05:20:49.520219295Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4279,7 +4326,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.15
-    created: "2026-07-01T01:36:11.139532908Z"
+    created: "2026-07-01T05:20:49.504937151Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4333,7 +4380,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.15
-    created: "2026-07-01T01:36:11.123592343Z"
+    created: "2026-07-01T05:20:49.489143292Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4387,7 +4434,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.14
-    created: "2026-07-01T01:36:11.107230787Z"
+    created: "2026-07-01T05:20:49.472803074Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4441,7 +4488,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.13
-    created: "2026-07-01T01:36:11.081465716Z"
+    created: "2026-07-01T05:20:49.44586082Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4495,7 +4542,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.12
-    created: "2026-07-01T01:36:11.065606091Z"
+    created: "2026-07-01T05:20:49.430944864Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4549,7 +4596,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.11
-    created: "2026-07-01T01:36:11.051289345Z"
+    created: "2026-07-01T05:20:49.415118175Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4603,7 +4650,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.10
-    created: "2026-07-01T01:36:11.033761889Z"
+    created: "2026-07-01T05:20:49.399339287Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4657,7 +4704,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.9
-    created: "2026-07-01T01:36:11.017242185Z"
+    created: "2026-07-01T05:20:49.383613319Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4711,7 +4758,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.7
-    created: "2026-07-01T01:36:11.001414661Z"
+    created: "2026-07-01T05:20:49.36773474Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4765,7 +4812,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.7
-    created: "2026-07-01T01:36:10.9861177Z"
+    created: "2026-07-01T05:20:49.351653292Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4819,7 +4866,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.7
-    created: "2026-07-01T01:36:10.969757093Z"
+    created: "2026-07-01T05:20:49.334903096Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4873,7 +4920,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.7
-    created: "2026-07-01T01:36:10.953434397Z"
+    created: "2026-07-01T05:20:49.319304004Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4927,7 +4974,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.6
-    created: "2026-07-01T01:36:10.938110427Z"
+    created: "2026-07-01T05:20:49.303781952Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -4981,7 +5028,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.6
-    created: "2026-07-01T01:36:11.478919921Z"
+    created: "2026-07-01T05:20:49.854848564Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5035,7 +5082,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.6
-    created: "2026-07-01T01:36:11.464005465Z"
+    created: "2026-07-01T05:20:49.838081082Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5089,7 +5136,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.6
-    created: "2026-07-01T01:36:11.450638569Z"
+    created: "2026-07-01T05:20:49.822981095Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5147,7 +5194,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.6
-    created: "2026-07-01T01:36:11.395390806Z"
+    created: "2026-07-01T05:20:49.765827025Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5205,7 +5252,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.5
-    created: "2026-07-01T01:36:11.338887291Z"
+    created: "2026-07-01T05:20:49.709959001Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5263,7 +5310,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.5
-    created: "2026-07-01T01:36:11.279756762Z"
+    created: "2026-07-01T05:20:49.650499857Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5317,7 +5364,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.4
-    created: "2026-07-01T01:36:11.265471912Z"
+    created: "2026-07-01T05:20:49.635383129Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5371,7 +5418,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.4
-    created: "2026-07-01T01:36:11.091604382Z"
+    created: "2026-07-01T05:20:49.457237044Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5420,7 +5467,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.1
-    created: "2026-07-01T01:36:10.922899099Z"
+    created: "2026-07-01T05:20:49.287978632Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5469,7 +5516,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.6.0
-    created: "2026-07-01T01:36:10.91155389Z"
+    created: "2026-07-01T05:20:49.277364587Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5518,7 +5565,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.20
-    created: "2026-07-01T01:36:10.887256499Z"
+    created: "2026-07-01T05:20:49.252138883Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5567,7 +5614,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.20
-    created: "2026-07-01T01:36:10.877183503Z"
+    created: "2026-07-01T05:20:49.242192084Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5616,7 +5663,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.20
-    created: "2026-07-01T01:36:10.867174252Z"
+    created: "2026-07-01T05:20:49.232569575Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5665,7 +5712,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.16
-    created: "2026-07-01T01:36:10.857118938Z"
+    created: "2026-07-01T05:20:49.222360031Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5714,7 +5761,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.16
-    created: "2026-07-01T01:36:10.848508176Z"
+    created: "2026-07-01T05:20:49.211139639Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5767,7 +5814,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.16
-    created: "2026-07-01T01:36:10.800464644Z"
+    created: "2026-07-01T05:20:49.163044177Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5820,7 +5867,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.16
-    created: "2026-07-01T01:36:10.750114044Z"
+    created: "2026-07-01T05:20:49.110547091Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5869,7 +5916,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.16
-    created: "2026-07-01T01:36:10.736437844Z"
+    created: "2026-07-01T05:20:49.097065254Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5918,7 +5965,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.16
-    created: "2026-07-01T01:36:10.726122504Z"
+    created: "2026-07-01T05:20:49.087202583Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -5967,7 +6014,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.15
-    created: "2026-07-01T01:36:10.715339318Z"
+    created: "2026-07-01T05:20:49.077658553Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6016,7 +6063,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.14
-    created: "2026-07-01T01:36:10.706092508Z"
+    created: "2026-07-01T05:20:49.068085705Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6065,7 +6112,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.14
-    created: "2026-07-01T01:36:10.695702783Z"
+    created: "2026-07-01T05:20:49.057879577Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6114,7 +6161,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.14
-    created: "2026-07-01T01:36:10.68492518Z"
+    created: "2026-07-01T05:20:49.046883924Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6163,7 +6210,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.13
-    created: "2026-07-01T01:36:10.675570608Z"
+    created: "2026-07-01T05:20:49.037358599Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6212,7 +6259,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.12
-    created: "2026-07-01T01:36:10.666580541Z"
+    created: "2026-07-01T05:20:49.027127391Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6261,7 +6308,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.12
-    created: "2026-07-01T01:36:10.657423304Z"
+    created: "2026-07-01T05:20:49.01580385Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6310,7 +6357,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.11
-    created: "2026-07-01T01:36:10.647942741Z"
+    created: "2026-07-01T05:20:49.006238292Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6359,7 +6406,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.10
-    created: "2026-07-01T01:36:10.638262751Z"
+    created: "2026-07-01T05:20:48.996698507Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6408,7 +6455,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.10
-    created: "2026-07-01T01:36:10.627746727Z"
+    created: "2026-07-01T05:20:48.986702474Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6457,7 +6504,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.4
-    created: "2026-07-01T01:36:10.901576875Z"
+    created: "2026-07-01T05:20:49.266147436Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6506,7 +6553,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.4
-    created: "2026-07-01T01:36:10.891773365Z"
+    created: "2026-07-01T05:20:49.256366544Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6548,7 +6595,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.4
-    created: "2026-07-01T01:36:10.739543464Z"
+    created: "2026-07-01T05:20:49.101208736Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6590,7 +6637,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.4
-    created: "2026-07-01T01:36:10.617068393Z"
+    created: "2026-07-01T05:20:48.976243398Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6632,7 +6679,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.3
-    created: "2026-07-01T01:36:10.613842528Z"
+    created: "2026-07-01T05:20:48.97314364Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6674,7 +6721,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.3
-    created: "2026-07-01T01:36:10.609796785Z"
+    created: "2026-07-01T05:20:48.96887022Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6716,7 +6763,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.5.2
-    created: "2026-07-01T01:36:10.605064256Z"
+    created: "2026-07-01T05:20:48.965117855Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6758,7 +6805,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.7
-    created: "2026-07-01T01:36:10.601984805Z"
+    created: "2026-07-01T05:20:48.961639924Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6800,7 +6847,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.7
-    created: "2026-07-01T01:36:10.597677139Z"
+    created: "2026-07-01T05:20:48.957598956Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6842,7 +6889,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.7
-    created: "2026-07-01T01:36:10.593793021Z"
+    created: "2026-07-01T05:20:48.954582276Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6884,7 +6931,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.6
-    created: "2026-07-01T01:36:10.590689916Z"
+    created: "2026-07-01T05:20:48.950517027Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6926,7 +6973,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.4
-    created: "2026-07-01T01:36:10.586962644Z"
+    created: "2026-07-01T05:20:48.947486191Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -6968,7 +7015,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.3
-    created: "2026-07-01T01:36:10.583954576Z"
+    created: "2026-07-01T05:20:48.942967038Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7010,7 +7057,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.2
-    created: "2026-07-01T01:36:10.580056426Z"
+    created: "2026-07-01T05:20:48.93910585Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7052,7 +7099,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.2
-    created: "2026-07-01T01:36:10.577089264Z"
+    created: "2026-07-01T05:20:48.936069052Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7094,7 +7141,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.2
-    created: "2026-07-01T01:36:10.57268614Z"
+    created: "2026-07-01T05:20:48.932132263Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7136,7 +7183,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.4.1
-    created: "2026-07-01T01:36:10.569530376Z"
+    created: "2026-07-01T05:20:48.929059648Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7178,7 +7225,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.35
-    created: "2026-07-01T01:36:10.565121371Z"
+    created: "2026-07-01T05:20:48.924363368Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7220,7 +7267,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.35
-    created: "2026-07-01T01:36:10.561808945Z"
+    created: "2026-07-01T05:20:48.920312759Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7258,7 +7305,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.35
-    created: "2026-07-01T01:36:10.557770001Z"
+    created: "2026-07-01T05:20:48.918519637Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7296,7 +7343,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.35
-    created: "2026-07-01T01:36:10.55427831Z"
+    created: "2026-07-01T05:20:48.916583966Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7334,7 +7381,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.32
-    created: "2026-07-01T01:36:10.550984388Z"
+    created: "2026-07-01T05:20:48.914768262Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7372,7 +7419,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.32
-    created: "2026-07-01T01:36:10.547471557Z"
+    created: "2026-07-01T05:20:48.911880598Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7410,7 +7457,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.30
-    created: "2026-07-01T01:36:10.544529886Z"
+    created: "2026-07-01T05:20:48.910122002Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7448,7 +7495,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.24
-    created: "2026-07-01T01:36:10.542768366Z"
+    created: "2026-07-01T05:20:48.908335462Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7486,7 +7533,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.24
-    created: "2026-07-01T01:36:10.541054004Z"
+    created: "2026-07-01T05:20:48.906539495Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7524,7 +7571,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.24
-    created: "2026-07-01T01:36:10.523102923Z"
+    created: "2026-07-01T05:20:48.88824735Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7562,7 +7609,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.23
-    created: "2026-07-01T01:36:10.520217824Z"
+    created: "2026-07-01T05:20:48.885497081Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7600,7 +7647,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.22
-    created: "2026-07-01T01:36:10.518444162Z"
+    created: "2026-07-01T05:20:48.88370972Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7638,7 +7685,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.21
-    created: "2026-07-01T01:36:10.516641795Z"
+    created: "2026-07-01T05:20:48.881873697Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7676,7 +7723,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.19
-    created: "2026-07-01T01:36:10.514836423Z"
+    created: "2026-07-01T05:20:48.880051941Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7714,7 +7761,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.18
-    created: "2026-07-01T01:36:10.512074388Z"
+    created: "2026-07-01T05:20:48.877370782Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7752,7 +7799,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.17
-    created: "2026-07-01T01:36:10.510265009Z"
+    created: "2026-07-01T05:20:48.875586527Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7790,7 +7837,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.16
-    created: "2026-07-01T01:36:10.508489182Z"
+    created: "2026-07-01T05:20:48.873802112Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7828,7 +7875,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.15
-    created: "2026-07-01T01:36:10.506674773Z"
+    created: "2026-07-01T05:20:48.871997238Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7866,7 +7913,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.14
-    created: "2026-07-01T01:36:10.503978244Z"
+    created: "2026-07-01T05:20:48.86950408Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7904,7 +7951,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.13
-    created: "2026-07-01T01:36:10.539232281Z"
+    created: "2026-07-01T05:20:48.904358894Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7942,7 +7989,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.13
-    created: "2026-07-01T01:36:10.536246705Z"
+    created: "2026-07-01T05:20:48.902005919Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -7980,7 +8027,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.13
-    created: "2026-07-01T01:36:10.534486868Z"
+    created: "2026-07-01T05:20:48.90019349Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8018,7 +8065,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.13
-    created: "2026-07-01T01:36:10.532770603Z"
+    created: "2026-07-01T05:20:48.898461584Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8056,7 +8103,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.13
-    created: "2026-07-01T01:36:10.531065348Z"
+    created: "2026-07-01T05:20:48.896643645Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8094,7 +8141,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.13
-    created: "2026-07-01T01:36:10.528237533Z"
+    created: "2026-07-01T05:20:48.893573064Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8132,7 +8179,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.9
-    created: "2026-07-01T01:36:10.526555752Z"
+    created: "2026-07-01T05:20:48.891806963Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8170,7 +8217,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.3.9
-    created: "2026-07-01T01:36:10.524859895Z"
+    created: "2026-07-01T05:20:48.890032697Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8208,7 +8255,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.8
-    created: "2026-07-01T01:36:10.50216667Z"
+    created: "2026-07-01T05:20:48.867532349Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8246,7 +8293,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.8
-    created: "2026-07-01T01:36:10.500823903Z"
+    created: "2026-07-01T05:20:48.866071895Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8284,7 +8331,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.8
-    created: "2026-07-01T01:36:10.486123817Z"
+    created: "2026-07-01T05:20:48.851057776Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8322,7 +8369,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.8
-    created: "2026-07-01T01:36:10.499444366Z"
+    created: "2026-07-01T05:20:48.864672015Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8360,7 +8407,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.8
-    created: "2026-07-01T01:36:10.49794212Z"
+    created: "2026-07-01T05:20:48.863262666Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8398,7 +8445,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.7
-    created: "2026-07-01T01:36:10.495550173Z"
+    created: "2026-07-01T05:20:48.861166123Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8436,7 +8483,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.6
-    created: "2026-07-01T01:36:10.494133196Z"
+    created: "2026-07-01T05:20:48.859588996Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8474,7 +8521,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.5
-    created: "2026-07-01T01:36:10.492827498Z"
+    created: "2026-07-01T05:20:48.858170941Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8512,7 +8559,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.4
-    created: "2026-07-01T01:36:10.491502062Z"
+    created: "2026-07-01T05:20:48.856667827Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8550,7 +8597,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.4
-    created: "2026-07-01T01:36:10.490110483Z"
+    created: "2026-07-01T05:20:48.855167858Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8588,7 +8635,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: v0.3.4
-    created: "2026-07-01T01:36:10.487484949Z"
+    created: "2026-07-01T05:20:48.853217419Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8626,7 +8673,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.2.5
-    created: "2026-07-01T01:36:10.484721167Z"
+    created: "2026-07-01T05:20:48.849694705Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8664,7 +8711,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.2.4
-    created: "2026-07-01T01:36:10.483267342Z"
+    created: "2026-07-01T05:20:48.848343386Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8702,7 +8749,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: latest
-    created: "2026-07-01T01:36:10.481884579Z"
+    created: "2026-07-01T05:20:48.846922968Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8733,7 +8780,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: latest
-    created: "2026-07-01T01:36:10.479734594Z"
+    created: "2026-07-01T05:20:48.845921699Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8764,7 +8811,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: latest
-    created: "2026-07-01T01:36:10.478766686Z"
+    created: "2026-07-01T05:20:48.844910321Z"
     dependencies:
     - condition: ollama.enabled
       import-values:
@@ -8795,7 +8842,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: latest
-    created: "2026-07-01T01:36:10.159124811Z"
+    created: "2026-07-01T05:20:48.507933159Z"
     description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions
       \U0001F44B"
     digest: 23581dc6ffcb7bc83c17b00af40c3d6d55035243a6e1511cb170450032a1ef5c
@@ -8818,7 +8865,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.683212674Z"
+    created: "2026-07-01T05:20:50.063187345Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 073a4e146d85e4717874ef43bbb90ccf7c37673a297c728b13bdb523f97c52d9
     home: https://github.com/open-webui/pipelines
@@ -8838,7 +8885,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.682783112Z"
+    created: "2026-07-01T05:20:50.062725284Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: ff77b2585cf5c391b1f49fb0981435dd1a786e5d1c24781fa8aa4314ff5ab3bc
     home: https://github.com/open-webui/pipelines
@@ -8858,7 +8905,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.682328262Z"
+    created: "2026-07-01T05:20:50.062237515Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: c390da9f52b1925fe76deadf2ad26194c2f01b309be47a0c36498ca10c401227
     home: https://github.com/open-webui/pipelines
@@ -8878,7 +8925,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.681908388Z"
+    created: "2026-07-01T05:20:50.061796984Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 2671aa4191f18450ddcb1f4e9feaea308055eb7197d76ffc2080d81991eb3657
     home: https://github.com/open-webui/pipelines
@@ -8898,7 +8945,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.686945546Z"
+    created: "2026-07-01T05:20:50.067723391Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 8407a4866ee13a7915b4319332b861b64522bfa5f10884728c836e45c69acc2a
     home: https://github.com/open-webui/pipelines
@@ -8918,7 +8965,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.685933105Z"
+    created: "2026-07-01T05:20:50.067313727Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 61724c6d323b3d52bd5de736bd81dd695f0097f50b77baee776b8030e37fef3f
     home: https://github.com/open-webui/pipelines
@@ -8938,7 +8985,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.685498764Z"
+    created: "2026-07-01T05:20:50.066894736Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 60cfc8fd1a8110273ce36571acfee57222c8b8f4ab2b6923bb7d9c8fcbdbb20b
     home: https://github.com/open-webui/pipelines
@@ -8958,7 +9005,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.685081855Z"
+    created: "2026-07-01T05:20:50.066490893Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 9fda0da3e236107a8999840a79c9ec72b069efb689630d50aa8076530e0822ea
     home: https://github.com/open-webui/pipelines
@@ -8978,7 +9025,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.684699621Z"
+    created: "2026-07-01T05:20:50.065999848Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: d66626cbc3a2cebbd2558272f93fa1801f45593d8bb440cf3e1fe216093749b7
     home: https://github.com/open-webui/pipelines
@@ -8998,7 +9045,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.684310124Z"
+    created: "2026-07-01T05:20:50.065576158Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: f1b9bda835ef1718891b4426de9c5735aeab1208228d2b32f9258c723e6f4b71
     home: https://github.com/open-webui/pipelines
@@ -9018,7 +9065,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.683945082Z"
+    created: "2026-07-01T05:20:50.064896614Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: c19b09b23f2899d0ac37f12d87ca2647b4085034ada41d614ff5cce8407a6a4a
     home: https://github.com/open-webui/pipelines
@@ -9038,7 +9085,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.683586141Z"
+    created: "2026-07-01T05:20:50.063970708Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: 8e58c86ca53fdb197cd7fc774d8d847c7084f431c4631571fa472cbaa73150d5
     home: https://github.com/open-webui/pipelines
@@ -9078,7 +9125,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.681508611Z"
+    created: "2026-07-01T05:20:50.061378934Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: ef881ac67e7e7e74bfe91c9dceaf53281534adc73aca62a8435b09cfdacf1d91
     home: https://github.com/open-webui/pipelines
@@ -9098,7 +9145,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.681157245Z"
+    created: "2026-07-01T05:20:50.061025956Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: aa1c2b83170ab127a36c721f0de90c350757e17563690bab3f5541b07130656f
     home: https://github.com/open-webui/pipelines
@@ -9118,7 +9165,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.680821227Z"
+    created: "2026-07-01T05:20:50.06069513Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: ab13acb3869193ec3fcdea3c0ff59e5ef85d997322bd7b2444cdbfce998709cc
     home: https://github.com/open-webui/pipelines
@@ -9138,7 +9185,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.680491912Z"
+    created: "2026-07-01T05:20:50.060379141Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: e2584e0c9e820091b9477084ca08d5ab41a8ee1df4845aad75cff54f4605ae31
     home: https://github.com/open-webui/pipelines
@@ -9158,7 +9205,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: alpha
-    created: "2026-07-01T01:36:11.680161595Z"
+    created: "2026-07-01T05:20:50.060047082Z"
     description: 'Pipelines: UI-Agnostic OpenAI API Plugin Framework'
     digest: ec41aee9dab5e32ff65dc01fb93b033df79ddd712a2c44ea5e9ee56c05286b4c
     home: https://github.com/open-webui/pipelines
@@ -9179,7 +9226,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.0.3
-    created: "2026-07-01T01:36:11.690071Z"
+    created: "2026-07-01T05:20:50.069630466Z"
     description: 'Terminals: Kubernetes operator and orchestrator for per-user Open
       Terminal instances'
     digest: 65edd5d901730d5b3a609438b6b1d30b51c430721c986e2275ab17bed363e022
@@ -9201,7 +9248,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.0.3
-    created: "2026-07-01T01:36:11.689588389Z"
+    created: "2026-07-01T05:20:50.069135413Z"
     description: 'Terminals: Kubernetes operator and orchestrator for per-user Open
       Terminal instances'
     digest: 9502625f0bb63a36fd2488cb71b9c5bc362b81a06612d4395c7e7e46e5ea4bed
@@ -9223,7 +9270,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.0.3
-    created: "2026-07-01T01:36:11.688770601Z"
+    created: "2026-07-01T05:20:50.06875288Z"
     description: 'Terminals: Kubernetes operator and orchestrator for per-user Open
       Terminal instances'
     digest: 7932536e35e77afe799e381835c01fb23b362bf6a2d83e2e23b3056c1013de25
@@ -9245,7 +9292,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-07-01T01:36:11.688211918Z"
+    created: "2026-07-01T05:20:50.068411143Z"
     description: 'Open Terminal: Kubernetes operator and orchestrator for per-user
       terminal instances'
     digest: afac9289cd483632f63e6ffc626617d3e6ea63bbb669e26ad96e1840fbefd8e0
@@ -9266,7 +9313,7 @@ entries:
       licenses: MIT
     apiVersion: v2
     appVersion: 0.1.0
-    created: "2026-07-01T01:36:11.687783287Z"
+    created: "2026-07-01T05:20:50.068044549Z"
     description: 'Open Terminal: Kubernetes operator and orchestrator for per-user
       terminal instances'
     digest: d2ffc2c7e2909b43cb928088f9b49fefc9e6627070d62db108ba7bfa17c32ecf
@@ -9283,4 +9330,4 @@ entries:
     urls:
     - terminals-0.1.0.tgz
     version: 0.1.0
-generated: "2026-07-01T01:36:10.158595112Z"
+generated: "2026-07-01T05:20:48.507364025Z"
