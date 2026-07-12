@@ -1,0 +1,200 @@
+# -- Enable the OIKB subchart (consumed by the parent chart's condition; harmless standalone)
+enabled: false
+
+# -- Override the chart name
+nameOverride: ""
+# -- Override the fully qualified name
+fullnameOverride: ""
+# -- Override the namespace for combined charts
+namespaceOverride: ""
+# -- Cluster domain used to build in-cluster service URLs
+clusterDomain: cluster.local
+
+# -- Runtime model: `daemon` (long-running HTTP service + internal scheduler) or `cronjob` (one-shot sync)
+mode: daemon
+
+image:
+  # -- OIKB image repository
+  repository: ghcr.io/open-webui/oikb
+  # -- Image tag (defaults to the chart appVersion when empty)
+  tag: ""
+  # -- Image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Image pull secrets for private registries
+imagePullSecrets: []
+
+# -- Number of daemon replicas (daemon mode only)
+replicaCount: 1
+
+# --------------------------------------------------------------------------
+# OIKB configuration (.oikb.yaml)
+# --------------------------------------------------------------------------
+# -- Inline OIKB configuration rendered into a Secret and mounted as .oikb.yaml.
+# Carries connector credentials, so it is stored as a Secret (not a ConfigMap).
+# Values support `${VAR}` interpolation against the container environment.
+config: {}
+# -- Mount inline config as a Secret at this path (OIKB reads .oikb.yaml from its workdir /app)
+configMountPath: /app/.oikb.yaml
+# -- Use an existing Secret containing the .oikb.yaml config instead of rendering `config`
+existingConfigSecret: ""
+# -- Key within `existingConfigSecret` holding the config file
+existingConfigSecretKey: ".oikb.yaml"
+
+# --------------------------------------------------------------------------
+# Open WebUI connectivity
+# --------------------------------------------------------------------------
+# -- Open WebUI base URL (OPEN_WEBUI_URL). Required for standalone installs; derived
+# from the release when bundled under the open-webui parent chart.
+openWebuiUrl: ""
+# -- Explicit Open WebUI API key (OPEN_WEBUI_API_KEY). When set, disables the bootstrap Job.
+openWebuiApiKey: ""
+# -- Use an existing Secret for the Open WebUI API key. When set, disables the bootstrap Job.
+existingSecret: ""
+# -- Key within `existingSecret` holding the Open WebUI API key
+existingSecretKey: "open-webui-api-key"
+
+# -- OIKB daemon API key (OIKB_API_KEY) securing the daemon's own endpoints.
+# Random value generated when empty in daemon mode.
+apiKey: ""
+
+# -- LOG_FORMAT value (e.g. "json"); omitted when empty
+logFormat: ""
+
+# --------------------------------------------------------------------------
+# Daemon service
+# --------------------------------------------------------------------------
+service:
+  # -- Service type (daemon mode)
+  type: ClusterIP
+  # -- Service port
+  port: 8080
+  # -- Container port OIKB listens on
+  containerPort: 8080
+  # -- Extra service annotations
+  annotations: {}
+  # -- Extra service labels
+  labels: {}
+
+# -- Path to the OIKB OpenAPI spec, used when registering OIKB as an Open WebUI tool server
+toolServerOpenapiPath: openapi.json
+
+# --------------------------------------------------------------------------
+# Metrics
+# --------------------------------------------------------------------------
+metrics:
+  serviceMonitor:
+    # -- Create a Prometheus Operator ServiceMonitor scraping /metrics (daemon mode)
+    enabled: false
+    # -- Scrape interval
+    interval: 30s
+    # -- Extra labels for the ServiceMonitor (e.g. Prometheus release selector)
+    labels: {}
+
+# --------------------------------------------------------------------------
+# Automated Open WebUI API key provisioning (see spec §7)
+# --------------------------------------------------------------------------
+bootstrapApiKey:
+  # -- Provision the Open WebUI API key automatically via a post-install/upgrade Job
+  # when no explicit key (openWebuiApiKey/existingSecret) is set.
+  enabled: true
+  # -- Admin email used to sign in to Open WebUI (case 3). When bundled and OWUI is
+  # deployed fresh by the same release, this can reuse the parent's WEBUI_ADMIN_EMAIL.
+  adminEmail: ""
+  # -- Admin password (case 3)
+  adminPassword: ""
+  # -- Use an existing Secret for admin credentials instead of adminEmail/adminPassword
+  adminExistingSecret: ""
+  # -- Key in `adminExistingSecret` holding the admin email
+  adminExistingSecretEmailKey: admin-email
+  # -- Key in `adminExistingSecret` holding the admin password
+  adminExistingSecretPasswordKey: admin-password
+  # -- Force regeneration of the key (POST) instead of reusing an existing one (GET)
+  regenerate: false
+  # -- Seconds to wait for Open WebUI to become ready before failing
+  readyTimeoutSeconds: 300
+  image:
+    # -- Image for the bootstrap Job (needs curl; talks to OWUI and the Kubernetes API)
+    repository: curlimages/curl
+    # -- Bootstrap Job image tag
+    tag: "8.11.1"
+    # -- Bootstrap Job image pull policy
+    pullPolicy: IfNotPresent
+
+# --------------------------------------------------------------------------
+# CronJob (mode: cronjob)
+# --------------------------------------------------------------------------
+cronjob:
+  # -- Cron schedule for one-shot syncs
+  schedule: "0 * * * *"
+  # -- Container command
+  command: ["oikb", "sync"]
+  # -- Extra arguments appended to the command (e.g. source + --kb-id)
+  args: []
+  # -- Concurrency policy
+  concurrencyPolicy: Forbid
+  # -- Retained successful jobs
+  successfulJobsHistoryLimit: 3
+  # -- Retained failed jobs
+  failedJobsHistoryLimit: 1
+  # -- Pod restart policy
+  restartPolicy: OnFailure
+
+# -- Resource requests/limits for the OIKB container
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# -- Pod security context (upstream image may run as root; verify before enabling non-root)
+# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+podSecurityContext:
+  {}
+  # runAsNonRoot: true
+  # fsGroup: 65534
+
+# -- Container security context
+containerSecurityContext:
+  {}
+  # allowPrivilegeEscalation: false
+  # readOnlyRootFilesystem: false
+  # capabilities:
+  #   drop:
+  #     - ALL
+
+# -- Extra pod annotations
+podAnnotations: {}
+# -- Extra pod labels
+podLabels: {}
+# -- Node selector
+nodeSelector: {}
+# -- Tolerations
+tolerations: []
+# -- Affinity
+affinity: {}
+# -- Topology spread constraints
+topologySpreadConstraints: []
+
+serviceAccount:
+  # -- Create a ServiceAccount for the workload
+  create: true
+  # -- ServiceAccount name (defaults to the fullname)
+  name: ""
+  # -- ServiceAccount annotations
+  annotations: {}
+  # -- Automount the ServiceAccount token
+  automountServiceAccountToken: false
+
+# -- Additional environment variables for the OIKB container (e.g. connector credentials)
+extraEnvVars: []
+# -- Additional volume mounts
+volumeMounts: []
+# -- Additional volumes
+volumes: []
+# -- Additional init containers
+extraInitContainers: []
+# -- Extra manifests to deploy with the chart
+extraResources: []

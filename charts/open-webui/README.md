@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 15.2.0](https://img.shields.io/badge/Version-15.2.0-informational?style=flat-square) ![AppVersion: 0.10.2](https://img.shields.io/badge/AppVersion-0.10.2-informational?style=flat-square)
+![Version: 15.3.0](https://img.shields.io/badge/Version-15.3.0-informational?style=flat-square) ![AppVersion: 0.10.2](https://img.shields.io/badge/AppVersion-0.10.2-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -95,6 +95,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | Repository | Name | Version |
 |------------|------|---------|
 | https://apache.jfrog.io/artifactory/tika | tika | >=2.9.0 |
+| https://helm.openwebui.com | oikb | >=0.1.0 |
 | https://helm.openwebui.com | pipelines | >=0.10.1 |
 | https://helm.openwebui.com | terminals | >=0.4.0 |
 | https://otwld.github.io/ollama-helm/ | ollama | >=0.24.0 |
@@ -170,6 +171,8 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| oikb.enabled | bool | `false` | Enable the OIKB knowledge-base sync subchart |
+| oikb.registerToolServer | bool | `true` | Register the OIKB daemon as an Open WebUI tool server (daemon mode only) |
 | ollama.enabled | bool | `true` | Automatically install Ollama Helm chart from https://otwld.github.io/ollama-helm/. Use [Helm Values](https://github.com/otwld/ollama-helm/#helm-values) to configure |
 | ollama.fullnameOverride | string | `""` | Override the Ollama subchart name. If not set, uses the release name with '-ollama' suffix for multiple instance support |
 | ollamaUrls | list | `[]` | A list of Ollama API endpoints. These can be added in lieu of automatically installing the Ollama Helm chart, or in addition to it. |
@@ -179,6 +182,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | pipelines.fullnameOverride | string | `""` | Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support |
 | terminals.enabled | bool | `false` | Enable the terminals subchart (operator + orchestrator) |
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
+| toolServerConnections | list | `[]` | External OpenAPI tool-server connections exposed to Open WebUI via TOOL_SERVER_CONNECTIONS. Subchart integrations (e.g. OIKB) append their own entries; declare additional tool servers here rather than via extraEnvVars. |
 
 ### Persistence configuration
 

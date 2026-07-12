@@ -467,6 +467,28 @@ spec:
         - name: "TERMINAL_SERVER_CONNECTIONS"
           value: '[{"id":"terminals","name":"Terminals","enabled":true,"url":"{{ include "terminals.serviceEndpoint" . }}","key":"$(TERMINALS_API_KEY)","auth_type":"bearer","config":{"access_grants":[{"principal_type":"user","principal_id":"*","permission":"read"}]}}]'
         {{- end }}
+        {{- $oikbActive := and .Values.oikb.enabled .Values.oikb.registerToolServer (eq (.Values.oikb.mode | default "daemon") "daemon") }}
+        {{- $userSetsToolServers := false }}
+        {{- range (concat (.Values.extraEnvVars | default (list)) (.Values.commonEnvVars | default (list))) }}
+        {{- if eq (.name | default "") "TOOL_SERVER_CONNECTIONS" }}{{- $userSetsToolServers = true }}{{- end }}
+        {{- end }}
+        {{- if $oikbActive }}
+        - name: "OIKB_API_KEY"
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "open-webui.oikb.secretName" . }}
+              key: oikb-api-key
+        {{- end }}
+        {{- if not $userSetsToolServers }}
+        {{- $conns := .Values.toolServerConnections | default (list) }}
+        {{- if $oikbActive }}
+        {{- $conns = append $conns (dict "type" "openapi" "url" (include "oikb.serviceEndpoint" .) "path" (.Values.oikb.toolServerOpenapiPath | default "openapi.json") "auth_type" "bearer" "key" "$(OIKB_API_KEY)" "config" (dict "enable" true) "info" (dict "id" "oikb" "name" "OIKB" "description" "Open WebUI Knowledge Base sync")) }}
+        {{- end }}
+        {{- if $conns }}
+        - name: "TOOL_SERVER_CONNECTIONS"
+          value: {{ toJson $conns | quote }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.extraEnvVars }}
           {{- include "open-webui.env" (dict "envVars" .Values.extraEnvVars "root" .) | nindent 8 }}
         {{- end }}

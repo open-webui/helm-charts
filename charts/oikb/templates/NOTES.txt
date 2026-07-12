@@ -1,0 +1,32 @@
+OIKB has been deployed in "{{ .Values.mode }}" mode as {{ include "oikb.fullname" . }}.
+
+Open WebUI URL: {{ include "oikb.openWebuiUrl" . }}
+
+{{- if include "oikb.bootstrapActive" . }}
+
+API key: automatic. A post-install Job signs in to Open WebUI as
+{{ .Values.bootstrapApiKey.adminEmail | default "(from adminExistingSecret)" }} and stores
+an API key in Secret "{{ include "oikb.owuiKeySecretName" . }}".
+Requirements on the Open WebUI side:
+  * ENABLE_API_KEYS=true
+  * The admin account must exist (fresh installs: set WEBUI_ADMIN_EMAIL/WEBUI_ADMIN_PASSWORD).
+Until the Job completes, the OIKB pod stays in CreateContainerConfigError (waiting for the key) — this is expected.
+{{- else if .Values.existingSecret }}
+
+API key: using existing Secret "{{ .Values.existingSecret }}" (key "{{ .Values.existingSecretKey }}").
+{{- else if .Values.openWebuiApiKey }}
+
+API key: using the value provided in `openWebuiApiKey`.
+{{- else }}
+
+WARNING: no Open WebUI API key configured and the bootstrap Job is disabled.
+Set `openWebuiApiKey`, `existingSecret`, or enable `bootstrapApiKey`.
+{{- end }}
+
+{{- if eq .Values.mode "daemon" }}
+
+Daemon service: {{ include "oikb.fullname" . }}:{{ .Values.service.port }} (HTTP, /metrics, /health).
+{{- else }}
+
+CronJob schedule: {{ .Values.cronjob.schedule }}
+{{- end }}

@@ -1,0 +1,34 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+## Runtime modes
+
+- `mode: daemon` (default): long-running HTTP service (`oikb daemon`) with an internal
+  scheduler, `/health`, `/health/ready`, `/metrics`, and an OpenAPI tool-server interface.
+- `mode: cronjob`: a one-shot `oikb sync` on a schedule.
+
+## Open WebUI API key
+
+OIKB needs an Open WebUI API key (`OPEN_WEBUI_API_KEY`). Provide it one of three ways:
+
+1. `openWebuiApiKey` / `existingSecret` — explicit key you already minted.
+2. `bootstrapApiKey.enabled` (default) with a fresh Open WebUI where
+   `WEBUI_ADMIN_EMAIL` / `WEBUI_ADMIN_PASSWORD` and `ENABLE_API_KEYS=true` are set — the
+   chart provisions the key automatically.
+3. `bootstrapApiKey.adminEmail` / `adminPassword` — provision against an existing Open
+   WebUI you point `openWebuiUrl` at.
+
+## Bundled under open-webui
+
+When bundled as a subchart of `open-webui`, `OPEN_WEBUI_URL` is derived from the release
+name (`http://<release>-open-webui...`). If the parent chart sets `fullnameOverride`, this
+derivation will not match the actual Open WebUI Service name — set `oikb.openWebuiUrl`
+explicitly in that case.
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

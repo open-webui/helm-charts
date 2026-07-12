@@ -1,0 +1,119 @@
+{{- if include "oikb.bootstrapActive" . }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "oikb.fullname" . }}-bootstrap
+  namespace: {{ include "oikb.namespace" . }}
+  labels:
+    {{- include "oikb.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 6
+  template:
+    metadata:
+      labels:
+        {{- include "oikb.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "oikb.fullname" . }}-bootstrap
+      restartPolicy: Never
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: bootstrap
+          image: "{{ .Values.bootstrapApiKey.image.repository }}:{{ .Values.bootstrapApiKey.image.tag }}"
+          imagePullPolicy: {{ .Values.bootstrapApiKey.image.pullPolicy }}
+          env:
+            - name: OWUI_URL
+              value: {{ include "oikb.openWebuiUrl" . | quote }}
+            - name: SECRET_NAME
+              value: {{ include "oikb.owuiKeySecretName" . | quote }}
+            - name: SECRET_KEY
+              value: {{ .Values.existingSecretKey | quote }}
+            - name: NAMESPACE
+              value: {{ include "oikb.namespace" . | quote }}
+            - name: READY_TIMEOUT
+              value: {{ .Values.bootstrapApiKey.readyTimeoutSeconds | quote }}
+            - name: REGENERATE
+              value: {{ .Values.bootstrapApiKey.regenerate | quote }}
+            {{- if .Values.bootstrapApiKey.adminExistingSecret }}
+            - name: ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bootstrapApiKey.adminExistingSecret }}
+                  key: {{ .Values.bootstrapApiKey.adminExistingSecretEmailKey }}
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bootstrapApiKey.adminExistingSecret }}
+                  key: {{ .Values.bootstrapApiKey.adminExistingSecretPasswordKey }}
+            {{- else }}
+            - name: ADMIN_EMAIL
+              value: {{ required "bootstrapApiKey.adminEmail is required when the bootstrap Job is active and no explicit key is set" .Values.bootstrapApiKey.adminEmail | quote }}
+            - name: ADMIN_PASSWORD
+              value: {{ required "bootstrapApiKey.adminPassword is required when the bootstrap Job is active and no explicit key is set" .Values.bootstrapApiKey.adminPassword | quote }}
+            {{- end }}
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              api="https://kubernetes.default.svc"
+              sa=/var/run/secrets/kubernetes.io/serviceaccount
+              ktoken="$(cat $sa/token)"
+
+              echo "Waiting up to ${READY_TIMEOUT}s for Open WebUI at ${OWUI_URL} ..."
+              deadline=$(( $(date +%s) + READY_TIMEOUT ))
+              until curl -sf "${OWUI_URL}/health" >/dev/null; do
+                [ "$(date +%s)" -ge "$deadline" ] && echo "Open WebUI not ready in time" && exit 1
+                sleep 5
+              done
+
+              esc() { printf '%s' "$1" | sed -e 's/\\/\\\\/g' -e 's/"/\\"/g'; }
+              ADMIN_EMAIL_JSON=$(esc "$ADMIN_EMAIL")
+              ADMIN_PASSWORD_JSON=$(esc "$ADMIN_PASSWORD")
+
+              echo "Signing in ..."
+              signin=$(curl -sf -X POST "${OWUI_URL}/api/v1/auths/signin" \
+                -H 'Content-Type: application/json' \
+                -d "{\"email\":\"${ADMIN_EMAIL_JSON}\",\"password\":\"${ADMIN_PASSWORD_JSON}\"}")
+              jwt=$(printf '%s' "$signin" | grep -o '"token":"[^"]*"' | head -n1 | sed 's/.*":"//;s/"$//')
+              [ -n "$jwt" ] || { echo "signin failed"; exit 1; }
+
+              key=""
+              if [ "$REGENERATE" != "true" ]; then
+                existing=$(curl -sf "${OWUI_URL}/api/v1/auths/api_key" -H "Authorization: Bearer ${jwt}" || true)
+                key=$(printf '%s' "$existing" | grep -o '"api_key":"[^"]*"' | head -n1 | sed 's/.*":"//;s/"$//')
+              fi
+              if [ -z "$key" ]; then
+                echo "Generating API key ..."
+                created=$(curl -sf -X POST "${OWUI_URL}/api/v1/auths/api_key" -H "Authorization: Bearer ${jwt}")
+                key=$(printf '%s' "$created" | grep -o '"api_key":"[^"]*"' | head -n1 | sed 's/.*":"//;s/"$//')
+              fi
+              [ -n "$key" ] || { echo "could not obtain API key (is ENABLE_API_KEYS=true?)"; exit 1; }
+
+              b64=$(printf '%s' "$key" | base64 | tr -d '\n')
+              echo "Writing key to secret ${SECRET_NAME} ..."
+              code=$(curl -s -o /dev/null -w '%{http_code}' \
+                --cacert "$sa/ca.crt" -H "Authorization: Bearer ${ktoken}" \
+                -X PATCH -H 'Content-Type: application/merge-patch+json' \
+                "${api}/api/v1/namespaces/${NAMESPACE}/secrets/${SECRET_NAME}" \
+                -d "{\"data\":{\"${SECRET_KEY}\":\"${b64}\"}}")
+              if [ "$code" = "404" ]; then
+                echo "Secret missing; creating ..."
+                curl -sf --cacert "$sa/ca.crt" -H "Authorization: Bearer ${ktoken}" \
+                  -X POST -H 'Content-Type: application/json' \
+                  "${api}/api/v1/namespaces/${NAMESPACE}/secrets" \
+                  -d "{\"metadata\":{\"name\":\"${SECRET_NAME}\"},\"data\":{\"${SECRET_KEY}\":\"${b64}\"}}" >/dev/null
+              elif [ "$code" != "200" ]; then
+                echo "secret patch failed with HTTP ${code}"; exit 1
+              fi
+              echo "Done."
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

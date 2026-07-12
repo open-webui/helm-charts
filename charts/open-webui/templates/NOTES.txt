@@ -75,3 +75,12 @@ This interface allows you to easily interact with local AI models.
 4. Cleanup:
   - Uninstall the deployment:
       helm uninstall {{ .Release.Name }} -n {{ .Release.Namespace }}
+{{- if .Values.oikb.enabled }}
+
+OIKB knowledge-base sync is enabled.
+{{- if .Values.oikb.registerToolServer }} It is registered as an Open WebUI tool server (TOOL_SERVER_CONNECTIONS).{{- end }}
+Provide an Open WebUI API key for OIKB via oikb.openWebuiApiKey / oikb.existingSecret,
+or let oikb.bootstrapApiKey provision one (set WEBUI_ADMIN_EMAIL/WEBUI_ADMIN_PASSWORD and
+ENABLE_API_KEYS=true so it can mint the key on a fresh Open WebUI).
+{{- if .Values.fullnameOverride }} Note: because fullnameOverride is set, you must set oikb.openWebuiUrl explicitly so OIKB can reach Open WebUI.{{- end }}
+{{- end }}
