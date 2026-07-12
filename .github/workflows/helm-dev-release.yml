@@ -43,6 +43,7 @@ jobs:
 
           mkdir -p .cr-dev-charts
           cp -R "${chart_path}" .cr-dev-charts/open-webui
+          cp -R charts/oikb .cr-dev-charts/oikb
 
           perl -0pi -e "s/^version: .*/version: ${dev_version}/m; s/^appVersion: .*/appVersion: dev/m" \
             .cr-dev-charts/open-webui/Chart.yaml

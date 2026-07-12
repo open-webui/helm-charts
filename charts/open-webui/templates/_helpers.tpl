@@ -258,6 +258,46 @@ Get the terminals API key secret name (parent chart helper)
 {{- end }}
 
 {{/*
+Create the in-cluster service endpoint URL for the OIKB daemon subchart
+*/}}
+{{- define "oikb.serviceEndpoint" -}}
+{{- if .Values.oikb.enabled -}}
+{{- $clusterDomain := .Values.clusterDomain -}}
+{{- $oikbPort := (.Values.oikb.service.port | default 8080) | toString -}}
+{{- $oikbName := "" -}}
+{{- if .Values.oikb.fullnameOverride -}}
+{{- $oikbName = .Values.oikb.fullnameOverride -}}
+{{- else -}}
+{{- $chartName := default "oikb" .Values.oikb.nameOverride -}}
+{{- if contains $chartName .Release.Name -}}
+{{- $oikbName = .Release.Name -}}
+{{- else -}}
+{{- $oikbName = printf "%s-%s" .Release.Name $chartName -}}
+{{- end -}}
+{{- end -}}
+{{- printf "http://%s.%s.svc.%s:%s" $oikbName (.Release.Namespace) $clusterDomain $oikbPort -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the OIKB daemon-key Secret name (parent chart helper)
+*/}}
+{{- define "open-webui.oikb.secretName" -}}
+{{- $oikbName := "" -}}
+{{- if .Values.oikb.fullnameOverride -}}
+{{- $oikbName = .Values.oikb.fullnameOverride -}}
+{{- else -}}
+{{- $chartName := default "oikb" .Values.oikb.nameOverride -}}
+{{- if contains $chartName .Release.Name -}}
+{{- $oikbName = .Release.Name -}}
+{{- else -}}
+{{- $oikbName = printf "%s-%s" .Release.Name $chartName -}}
+{{- end -}}
+{{- end -}}
+{{- printf "%s-api-key" $oikbName -}}
+{{- end }}
+
+{{/*
 Validate SSO ClientSecret to be set literally or via Secret
 */}}
 {{- define "sso.validateClientSecret" -}}
