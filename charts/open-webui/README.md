@@ -177,6 +177,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | pipelines.enabled | bool | `true` | Automatically install Pipelines chart to extend Open WebUI functionality using Pipelines: https://github.com/open-webui/pipelines |
 | pipelines.extraEnvVars | list | `[]` | This section can be used to pass required environment variables to your pipelines (e.g. Langfuse hostname) |
 | pipelines.fullnameOverride | string | `""` | Override the Pipelines subchart name. If not set, uses the release name with '-pipelines' suffix for multiple instance support |
+| pipelines.resources | object | `{}` | Resource requests/limits for the Pipelines subchart container. See the [pipelines chart's values.yaml](https://github.com/open-webui/helm-charts/blob/main/charts/pipelines/values.yaml) for the full field. |
 | terminals.enabled | bool | `false` | Enable the terminals subchart (operator + orchestrator) |
 | tika.enabled | bool | `false` | Automatically install Apache Tika to extend Open WebUI |
 
