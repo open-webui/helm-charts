@@ -24,6 +24,11 @@ spec:
         - name: operator
           image: "{{ .Values.operator.image.repository }}:{{ .Values.operator.image.tag }}"
           imagePullPolicy: {{ .Values.operator.image.pullPolicy }}
+          env:
+            {{- range $key, $value := .Values.operator.extraEnvs }}
+            - name: {{ $key }}
+              value: {{ (tpl $value $) | quote }}
+            {{- end }}
           {{- with .Values.operator.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
