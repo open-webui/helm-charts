@@ -72,6 +72,18 @@ operator:
     # seccompProfile:
     #   type: RuntimeDefault
 
+  extraEnvs: []
+    # - TERMINALS_WORKERS: "5"
+    # - TERMINALS_KUBERNETES_TOLERATIONS: '
+    #     [
+    #       {
+    #         "key": "example_key", 
+    #         "operator": "Equal", 
+    #         "value": "example_value", 
+    #         "effect": "NoSchedule"
+    #       }
+    #     ]'
+
 # --------------------------------------------------------------------------
 # Orchestrator (FastAPI service that proxies / provisions terminals)
 # --------------------------------------------------------------------------
@@ -120,6 +132,8 @@ orchestrator:
     # runAsUser: 65534
     # seccompProfile:
     #   type: RuntimeDefault
+
+  extraEnvs: []
 
 # --------------------------------------------------------------------------
 # Network Policy
