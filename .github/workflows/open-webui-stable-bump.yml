@@ -10,6 +10,9 @@ on:
     types:
       - open-webui-release-published
 
+env:
+  HELM_DOCS_VERSION: "1.14.2"
+
 jobs:
   bump-chart:
     permissions:
@@ -23,56 +26,57 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v4
 
-      - name: Update chart metadata
-        id: chart
+      - name: Bump chart metadata
+        id: bump
         env:
           INPUT_APP_VERSION: ${{ github.event.inputs.app_version }}
           PAYLOAD_APP_VERSION: ${{ github.event.client_payload.app_version }}
         run: |
           set -euo pipefail
-
           app_version="${PAYLOAD_APP_VERSION:-${INPUT_APP_VERSION:-}}"
-          app_version="${app_version#v}"
-
-          if ! [[ "${app_version}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Expected app version like 0.6.19, got '${app_version}'" >&2
+          if [ -z "${app_version}" ]; then
+            echo "No app_version provided via workflow input or dispatch payload" >&2
             exit 1
           fi
+          chmod +x scripts/bump-owui-chart.sh
+          scripts/bump-owui-chart.sh \
+            --app-version "${app_version}" \
+            --chart-dir charts/open-webui \
+            --github-output "${GITHUB_OUTPUT}"
 
-          chart_path="charts/open-webui/Chart.yaml"
-          current_app_version="$(awk '/^appVersion:/ { print $2; exit }' "${chart_path}")"
-          current_app_version="${current_app_version#v}"
+      - name: Install helm-docs
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          curl -sSLo /tmp/helm-docs.tar.gz \
+            "https://github.com/norwoodj/helm-docs/releases/download/v${HELM_DOCS_VERSION}/helm-docs_${HELM_DOCS_VERSION}_Linux_x86_64.tar.gz"
+          tar -xzf /tmp/helm-docs.tar.gz -C /tmp helm-docs
+          sudo mv /tmp/helm-docs /usr/local/bin/helm-docs
+          helm-docs --version
 
-          echo "app_version=${app_version}" >> "${GITHUB_OUTPUT}"
-
-          if [ "${current_app_version}" = "${app_version}" ]; then
-            echo "skip=true" >> "${GITHUB_OUTPUT}"
-            echo "Chart already targets Open WebUI ${app_version}"
-            exit 0
-          fi
-
-          current_chart_version="$(awk '/^version:/ { print $2; exit }' "${chart_path}")"
-          IFS='.' read -r major minor patch_extra <<< "${current_chart_version}"
-          patch="${patch_extra%%[-+]*}"
-          next_chart_version="${major}.${minor}.$((patch + 1))"
-
-          perl -0pi -e "s/^version: .*/version: ${next_chart_version}/m; s/^appVersion: .*/appVersion: ${app_version}/m" \
-            "${chart_path}"
-
-          echo "chart_version=${next_chart_version}" >> "${GITHUB_OUTPUT}"
-          echo "skip=false" >> "${GITHUB_OUTPUT}"
+      - name: Regenerate chart README
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          helm-docs --chart-search-root charts/open-webui
+          # Determinism safety net: stage first run, second run must produce no further diff.
+          git add charts/open-webui/README.md
+          helm-docs --chart-search-root charts/open-webui
+          git diff --exit-code charts/open-webui/README.md
 
       - name: Add Dependency Repos
-        if: steps.chart.outputs.skip != 'true'
+        if: steps.bump.outputs.skip != 'true'
         run: |
+          set -euo pipefail
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
           helm repo add tika https://apache.jfrog.io/artifactory/tika/
           helm repo add bitnami https://charts.bitnami.com/bitnami
 
       - name: Validate chart
-        if: steps.chart.outputs.skip != 'true'
+        if: steps.bump.outputs.skip != 'true'
         run: |
+          set -euo pipefail
           helm dependency build ./charts/open-webui
           helm lint ./charts/open-webui
           helm package ./charts/open-webui --destination /tmp/open-webui-chart
@@ -84,17 +88,48 @@ jobs:
             --set tika.enabled=false \
             --set redis-cluster.enabled=false \
             --set postgresql.enabled=false \
-            | grep -q "image: ghcr.io/open-webui/open-webui:${{ steps.chart.outputs.app_version }}"
+            | grep -q "image: ghcr.io/open-webui/open-webui:${{ steps.bump.outputs.app_version }}"
+
+      - name: Compose PR content
+        id: pr
+        if: steps.bump.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          {
+            echo "body<<PR_BODY_EOF"
+            echo "Updates the Open WebUI Helm chart for the published Open WebUI release."
+            echo ""
+            echo "- Open WebUI app version: \`${{ steps.bump.outputs.app_version }}\`"
+            echo "- Chart version: \`${{ steps.bump.outputs.chart_version }}\` (${{ steps.bump.outputs.bump_type }} bump)"
+            echo "- Upstream release notes: https://github.com/open-webui/open-webui/releases/tag/v${{ steps.bump.outputs.app_version }}"
+            echo ""
+            if [ "${{ steps.bump.outputs.is_breaking }}" = "true" ]; then
+              echo "> ⚠️ **Breaking (0.x major) release.** Open WebUI 0.x minor bumps often carry migrations and irreversible changes. Review upstream notes before upgrading."
+              echo ""
+            fi
+            echo "Checklist:"
+            echo "- [x] helm-docs regenerated (\`charts/open-webui/README.md\`)"
+            echo "- [x] CHANGELOG.md updated"
+            echo "PR_BODY_EOF"
+          } >> "${GITHUB_OUTPUT}"
+          if [ "${{ steps.bump.outputs.is_breaking }}" = "true" ]; then
+            echo "commit_body=BREAKING CHANGE: Open WebUI ${{ steps.bump.outputs.app_version }} is a 0.x major release; chart bumped to a new major version." >> "${GITHUB_OUTPUT}"
+          else
+            echo "commit_body=" >> "${GITHUB_OUTPUT}"
+          fi
 
       - name: Create pull request
-        if: steps.chart.outputs.skip != 'true'
+        if: steps.bump.outputs.skip != 'true'
         uses: peter-evans/create-pull-request@v7
         with:
-          branch: automation/open-webui-${{ steps.chart.outputs.app_version }}
-          commit-message: "chore(open-webui): upgrade open-webui to v${{ steps.chart.outputs.app_version }}"
-          title: "chore(open-webui): upgrade open-webui to v${{ steps.chart.outputs.app_version }}"
-          body: |
-            Updates the Open WebUI Helm chart for the published Open WebUI release.
+          branch: automation/open-webui-${{ steps.bump.outputs.app_version }}
+          add-paths: |
+            charts/open-webui/Chart.yaml
+            charts/open-webui/CHANGELOG.md
+            charts/open-webui/README.md
+          commit-message: |
+            chore(open-webui): upgrade open-webui to v${{ steps.bump.outputs.app_version }}
 
-            - Open WebUI app version: `${{ steps.chart.outputs.app_version }}`
-            - Chart version: `${{ steps.chart.outputs.chart_version }}`
+            ${{ steps.pr.outputs.commit_body }}
+          title: "chore(open-webui): upgrade open-webui to v${{ steps.bump.outputs.app_version }}"
+          body: ${{ steps.pr.outputs.body }}
