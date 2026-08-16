@@ -72,8 +72,10 @@ is_newer() { # returns 0 if $1 > $2 (numeric semver fields)
   local a1 a2 a3 b1 b2 b3
   IFS='.' read -r a1 a2 a3 <<< "$1"
   IFS='.' read -r b1 b2 b3 <<< "$2"
-  if [ "$a1" -ne "$b1" ]; then [ "$a1" -gt "$b1" ]; return; fi
-  if [ "$a2" -ne "$b2" ]; then [ "$a2" -gt "$b2" ]; return; fi
+  if [ "$a1" -gt "$b1" ]; then return 0; fi
+  if [ "$a1" -lt "$b1" ]; then return 1; fi
+  if [ "$a2" -gt "$b2" ]; then return 0; fi
+  if [ "$a2" -lt "$b2" ]; then return 1; fi
   [ "$a3" -gt "$b3" ]
 }
 
@@ -123,6 +125,11 @@ entry_file="$(mktemp)"
   fi
   echo ""
 } > "${entry_file}"
+
+if ! grep -q '^## \[' "${changelog}"; then
+  echo "CHANGELOG.md has no '## [' heading — cannot insert entry" >&2
+  exit 1
+fi
 
 awk -v entry_file="${entry_file}" '
   BEGIN { inserted = 0 }

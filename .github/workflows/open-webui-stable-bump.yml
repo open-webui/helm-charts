@@ -66,6 +66,7 @@ jobs:
       - name: Add Dependency Repos
         if: steps.bump.outputs.skip != 'true'
         run: |
+          set -euo pipefail
           helm repo add ollama https://otwld.github.io/ollama-helm/
           helm repo add open-webui https://helm.openwebui.com/
           helm repo add tika https://apache.jfrog.io/artifactory/tika/
@@ -74,6 +75,7 @@ jobs:
       - name: Validate chart
         if: steps.bump.outputs.skip != 'true'
         run: |
+          set -euo pipefail
           helm dependency build ./charts/open-webui
           helm lint ./charts/open-webui
           helm package ./charts/open-webui --destination /tmp/open-webui-chart
