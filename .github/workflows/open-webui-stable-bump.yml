@@ -59,7 +59,8 @@ jobs:
         run: |
           set -euo pipefail
           helm-docs --chart-search-root charts/open-webui
-          # Determinism safety net: a second run must produce no further diff.
+          # Determinism safety net: stage first run, second run must produce no further diff.
+          git add charts/open-webui/README.md
           helm-docs --chart-search-root charts/open-webui
           git diff --exit-code charts/open-webui/README.md
 
