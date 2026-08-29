@@ -154,7 +154,8 @@ spec:
         - name: "ENABLE_OLLAMA_API"
           value: "False"
         {{- end }}
-        {{- if and .Values.enableOpenaiApi .Values.openaiBaseApiUrl (not .Values.openaiBaseApiUrls) (not .Values.pipelines.enabled) }}
+        {{- if .Values.enableOpenaiApi }}
+        {{- if .Values.openaiBaseApiUrl (not .Values.openaiBaseApiUrls) (not .Values.pipelines.enabled) }}
         # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
         - name: "OPENAI_API_BASE_URL"
           value: {{ tpl .Values.openaiBaseApiUrl . | quote }}
@@ -169,7 +170,7 @@ spec:
           value: {{ .Values.openaiApiKey | quote }}
         {{- end }}
         {{- end }}
-        {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrl .Values.pipelines.enabled (not .Values.openaiBaseApiUrls) }}
+        {{- else if and .Values.openaiBaseApiUrl .Values.pipelines.enabled (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and OpenAI API value is set, use OPENAI_API_BASE_URLS with combined values
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ tpl .Values.openaiBaseApiUrl . }}"
@@ -184,7 +185,7 @@ spec:
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
         {{- end }}
         {{- end }}
-        {{- else if and .Values.enableOpenaiApi .Values.pipelines.enabled (not .Values.openaiBaseApiUrl) (not .Values.openaiBaseApiUrls) }}
+        {{- else if and .Values.pipelines.enabled (not .Values.openaiBaseApiUrl) (not .Values.openaiBaseApiUrls) }}
         # If Pipelines is enabled and no OpenAI API values are set, set OPENAI_API_BASE_URL to the Pipelines server endpoint
         - name: "OPENAI_API_BASE_URL"
           value: {{ include "pipelines.serviceEndpoint" . | quote }}
@@ -199,7 +200,7 @@ spec:
           value: {{ .Values.openaiApiKey | quote }}
         {{- end }}
         {{- end }}
-        {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
+        {{- else if and .Values.openaiBaseApiUrls .Values.pipelines.enabled }}
         # If OpenAI API value(s) set and Pipelines is enabled, use OPENAI_API_BASE_URLS to support all the endpoints in the chart
         - name: "OPENAI_API_BASE_URLS"
           value: "{{ include "pipelines.serviceEndpoint" . }};{{ join ";" .Values.openaiBaseApiUrls }}"
@@ -214,7 +215,7 @@ spec:
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
         {{- end }}
         {{- end }}
-        {{- else if and .Values.enableOpenaiApi .Values.openaiBaseApiUrls (not .Values.pipelines.enabled) }}
+        {{- else if and .Values.openaiBaseApiUrls (not .Values.pipelines.enabled) }}
         # If OpenAI API value(s) set and Pipelines is disabled, use OPENAI_API_BASE_URLS without Pipelines endpoint
         - name: "OPENAI_API_BASE_URLS"
           value: {{ join ";" .Values.openaiBaseApiUrls | quote }}
@@ -229,7 +230,7 @@ spec:
           value: {{ .Values.openaiApiKeys | join ";" | quote }}
         {{- end }}
         {{- end }}
-        {{- else if not .Values.enableOpenaiApi }}
+        {{- else }}
         - name: "ENABLE_OPENAI_API"
           value: "False"
         {{- end }}
