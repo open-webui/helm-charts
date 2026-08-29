@@ -46,7 +46,7 @@ Constructs a semicolon-separated string of Ollama API endpoint URLs from the oll
 defined in the values.yaml file
 */}}
 {{- define "ollamaUrls" -}}
-{{- if .Values.ollamaUrls }}
+{{- if and .Values.ollamaUrls .Values.ollamaUrlsFromExtraEnv }}
 {{- join ";" .Values.ollamaUrls | trimSuffix "/" }}
 {{- end }}
 {{- end }}

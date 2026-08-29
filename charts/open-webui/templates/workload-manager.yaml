@@ -145,8 +145,9 @@ spec:
         - name: WEBUI_URL
           value: {{ include "open-webui.url" . | quote }}
         {{- end }}
-        {{- if .Values.ollamaUrlsFromExtraEnv}}
-        {{- else if or .Values.ollamaUrls .Values.ollama.enabled }}
+        {{- if or .Values.ollamaUrlsFromExtraEnv .Values.ollama.enabled }}
+        - name: "ENABLE_OLLAMA_API"
+          value: "True"
         - name: "OLLAMA_BASE_URLS"
           value: {{ include "ollamaBaseUrls" . | quote }}
         {{- else }}
