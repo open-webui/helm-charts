@@ -155,8 +155,9 @@ spec:
           value: "False"
         {{- end }}
         {{- if .Values.enableOpenaiApi }}
-        {{- if .Values.openaiBaseApiUrl (not .Values.openaiBaseApiUrls) (not .Values.pipelines.enabled) }}
-        # If only an OpenAI API value is set, set it to OPENAI_API_BASE_URL
+        - name: "ENABLE_OPENAI_API"
+          value: "True"
+        {{- if and .Values.openaiBaseApiUrl (not .Values.openaiBaseApiUrls) (not .Values.pipelines.enabled) }}
         - name: "OPENAI_API_BASE_URL"
           value: {{ tpl .Values.openaiBaseApiUrl . | quote }}
         {{- if or .Values.openaiApiKey .Values.openaiApiKeyExistingSecret }}
