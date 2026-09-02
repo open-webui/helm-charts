@@ -6,6 +6,21 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v16.3.0]
+
+### Changed
+- Updated chart appVersion to v0.11.3.
+
+## [v16.2.0]
+
+### Changed
+- Updated chart appVersion to v0.11.2.
+
+## [v16.1.0]
+
+### Changed
+- Updated chart appVersion to v0.11.1.
+
 ## [v16.0.0]
 
 ### Changed
