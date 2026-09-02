@@ -5,6 +5,18 @@ All notable changes to the Terminals Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.6.0]
+
+### Added
+- `operator.extraEnvVars` and `orchestrator.extraEnvVars` values to inject additional
+  environment variables into the operator and orchestrator deployments. Both list
+  style (`- name:` / `value:`, which also supports `valueFrom`) and map style
+  (`KEY: value`) are accepted, and string values are rendered through `tpl`
+  ([#423](https://github.com/open-webui/helm-charts/issues/423)).
+- `operator.nodeSelector`, `operator.affinity`, `operator.tolerations` and the
+  matching `orchestrator.*` values to control scheduling of the operator and
+  orchestrator pods ([#425](https://github.com/open-webui/helm-charts/issues/425)).
+
 ## [v0.5.0]
 
 ### Added

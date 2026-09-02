@@ -1,6 +1,6 @@
 # terminals
 
-![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
 
 Terminals: Kubernetes operator and orchestrator for per-user Open Terminal instances
 
@@ -31,17 +31,25 @@ Terminals: Kubernetes operator and orchestrator for per-user Open Terminal insta
 | networkPolicy.terminalPodSelector | object | `{"app.kubernetes.io/component":"terminal"}` | Label selector matching terminal pods spawned by the operator. Must align with the labels the terminals-operator actually applies. |
 | networkPolicy.terminals.egress | list | `[]` | Custom egress rules for terminal pods |
 | networkPolicy.terminals.ingress | list | `[]` | Custom ingress rules for terminal pods |
-| operator | object | `{"containerSecurityContext":{},"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals-operator","tag":"latest"},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}}` | ------------------------------------------------------------------------ |
+| operator | object | `{"affinity":{},"containerSecurityContext":{},"extraEnvVars":[],"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals-operator","tag":"latest"},"nodeSelector":{},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"64Mi"}},"tolerations":[]}` | ------------------------------------------------------------------------ |
+| operator.affinity | object | `{}` | Affinity rules for operator pod assignment |
 | operator.containerSecurityContext | object | `{}` | Configure container security context for the operator container |
+| operator.extraEnvVars | list | `[]` | Env vars added to the operator deployment. Can be defined as list or map style. List style entries are passed through as-is, so `valueFrom` is supported. String values are rendered through `tpl`. |
+| operator.nodeSelector | object | `{}` | Node labels for operator pod assignment |
 | operator.podSecurityContext | object | `{}` | Configure pod security context for the operator pod ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
-| orchestrator | object | `{"backend":"kubernetes-operator","containerSecurityContext":{},"idleTimeoutMinutes":30,"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals","tag":"latest"},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}},"service":{"containerPort":8080,"port":8080,"type":"ClusterIP"},"terminalImage":"ghcr.io/open-webui/open-terminal:latest","terminalImagePullPolicy":"IfNotPresent"}` | ------------------------------------------------------------------------ |
+| operator.tolerations | list | `[]` | Tolerations for operator pod assignment |
+| orchestrator | object | `{"affinity":{},"backend":"kubernetes-operator","containerSecurityContext":{},"extraEnvVars":[],"idleTimeoutMinutes":30,"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals","tag":"latest"},"nodeSelector":{},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}},"service":{"containerPort":8080,"port":8080,"type":"ClusterIP"},"terminalImage":"ghcr.io/open-webui/open-terminal:latest","terminalImagePullPolicy":"IfNotPresent","tolerations":[]}` | ------------------------------------------------------------------------ |
+| orchestrator.affinity | object | `{}` | Affinity rules for orchestrator pod assignment |
 | orchestrator.backend | string | `"kubernetes-operator"` | Backend type: kubernetes-operator, kubernetes, docker, local, static |
 | orchestrator.containerSecurityContext | object | `{}` | Configure container security context for the orchestrator container |
+| orchestrator.extraEnvVars | list | `[]` | Env vars added to the orchestrator deployment. Can be defined as list or map style. List style entries are passed through as-is, so `valueFrom` is supported. String values are rendered through `tpl`. |
 | orchestrator.idleTimeoutMinutes | int | `30` | Idle timeout in minutes for spawned terminal pods (0 = disabled) |
+| orchestrator.nodeSelector | object | `{}` | Node labels for orchestrator pod assignment |
 | orchestrator.podSecurityContext | object | `{}` | Configure pod security context for the orchestrator pod ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | orchestrator.resources | object | `{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}}` | Resource requests/limits for the orchestrator pod itself |
 | orchestrator.terminalImage | string | `"ghcr.io/open-webui/open-terminal:latest"` | Default image for spawned terminal pods |
 | orchestrator.terminalImagePullPolicy | string | `"IfNotPresent"` | Pull policy for the terminal image inside spawned pods |
+| orchestrator.tolerations | list | `[]` | Tolerations for orchestrator pod assignment |
 | terminalDefaults | object | `{"persistence":{"enabled":true,"size":"1Gi","storageClass":""}}` | ------------------------------------------------------------------------ Defaults applied to Terminal custom resources when fields are omitted. These values are baked into the CRD's openAPIV3Schema defaults. |
 | terminalDefaults.persistence.enabled | bool | `true` | Enable a PVC for each terminal by default |
 | terminalDefaults.persistence.size | string | `"1Gi"` | Default PVC size for each terminal |
