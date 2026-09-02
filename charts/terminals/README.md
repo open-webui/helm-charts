@@ -34,7 +34,7 @@ Terminals: Kubernetes operator and orchestrator for per-user Open Terminal insta
 | operator | object | `{"affinity":{},"containerSecurityContext":{},"extraEnvVars":[],"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals-operator","tag":"latest"},"nodeSelector":{},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"64Mi"}},"tolerations":[]}` | ------------------------------------------------------------------------ |
 | operator.affinity | object | `{}` | Affinity rules for operator pod assignment |
 | operator.containerSecurityContext | object | `{}` | Configure container security context for the operator container |
-| operator.extraEnvVars | list | `[]` | Env vars added to the operator deployment. Can be defined as list or map style. List style entries are passed through as-is, so `valueFrom` is supported. String values are rendered through `tpl`. |
+| operator.extraEnvVars | list | `[]` | Env vars added to the operator deployment. Can be defined as list or map style. |
 | operator.nodeSelector | object | `{}` | Node labels for operator pod assignment |
 | operator.podSecurityContext | object | `{}` | Configure pod security context for the operator pod ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | operator.tolerations | list | `[]` | Tolerations for operator pod assignment |
@@ -42,7 +42,7 @@ Terminals: Kubernetes operator and orchestrator for per-user Open Terminal insta
 | orchestrator.affinity | object | `{}` | Affinity rules for orchestrator pod assignment |
 | orchestrator.backend | string | `"kubernetes-operator"` | Backend type: kubernetes-operator, kubernetes, docker, local, static |
 | orchestrator.containerSecurityContext | object | `{}` | Configure container security context for the orchestrator container |
-| orchestrator.extraEnvVars | list | `[]` | Env vars added to the orchestrator deployment. Can be defined as list or map style. List style entries are passed through as-is, so `valueFrom` is supported. String values are rendered through `tpl`. |
+| orchestrator.extraEnvVars | list | `[]` | Env vars added to the orchestrator deployment. Can be defined as list or map style. |
 | orchestrator.idleTimeoutMinutes | int | `30` | Idle timeout in minutes for spawned terminal pods (0 = disabled) |
 | orchestrator.nodeSelector | object | `{}` | Node labels for orchestrator pod assignment |
 | orchestrator.podSecurityContext | object | `{}` | Configure pod security context for the orchestrator pod ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
