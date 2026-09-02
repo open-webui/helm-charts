@@ -5,6 +5,12 @@ All notable changes to the Pipelines Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.12.1]
+
+### Fixed
+
+- The `PersistentVolumeClaim` created when `persistence.enabled` is `true` now carries the full set of common chart labels (`helm.sh/chart`, `app.kubernetes.io/version`, `app.kubernetes.io/managed-by`, `app.kubernetes.io/name`) instead of only the selector labels, making it consistent with every other resource in the chart.
+
 ## [0.12.0]
 
 ### Changed

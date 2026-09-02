@@ -6,6 +6,11 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v16.3.1]
+
+### Fixed
+- The `PersistentVolumeClaim` created when `persistence.enabled` is `true` now carries the full set of common chart labels (`helm.sh/chart`, `app.kubernetes.io/version`, `app.kubernetes.io/managed-by`, `app.kubernetes.io/name`) instead of only the selector labels, making it consistent with every other resource in the chart.
+
 ## [v16.3.0]
 
 ### Changed

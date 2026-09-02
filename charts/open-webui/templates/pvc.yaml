@@ -5,7 +5,7 @@ metadata:
   name: {{ include "open-webui.fullname" . }}
   namespace: {{ include "open-webui.namespace" . }}
   labels:
-    {{- include "open-webui.selectorLabels" . | nindent 4 }}
+    {{- include "open-webui.labels" . | nindent 4 }}
   {{- with .Values.persistence.labels }}
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
