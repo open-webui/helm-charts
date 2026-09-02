@@ -51,6 +51,9 @@ spec:
                   key: api-key
             - name: TERMINALS_IDLE_TIMEOUT_MINUTES
               value: {{ .Values.orchestrator.idleTimeoutMinutes | quote }}
+            {{- if .Values.orchestrator.extraEnvVars }}
+            {{- include "terminals.env" (dict "envVars" .Values.orchestrator.extraEnvVars "root" .) | nindent 12 }}
+            {{- end }}
           readinessProbe:
             httpGet:
               path: /health

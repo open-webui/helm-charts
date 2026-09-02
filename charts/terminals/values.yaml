@@ -72,10 +72,22 @@ operator:
     # seccompProfile:
     #   type: RuntimeDefault
 
-  affinity: {}
-  tolerations: []
+  # -- Env vars added to the operator deployment. Can be defined as list or map style.
+  extraEnvVars: []
+    # List style:
+    # - name: TERMINALS_WORKERS
+    #   value: "5"
+    # - name: TERMINALS_KUBERNETES_TOLERATIONS
+    #   value: '[{"key":"example_key","operator":"Equal","value":"example_value","effect":"NoSchedule"}]'
+    # Map style:
+    # TERMINALS_WORKERS: "5"
 
+  # -- Node labels for operator pod assignment
   nodeSelector: {}
+  # -- Affinity rules for operator pod assignment
+  affinity: {}
+  # -- Tolerations for operator pod assignment
+  tolerations: []
 
 # --------------------------------------------------------------------------
 # Orchestrator (FastAPI service that proxies / provisions terminals)
@@ -126,10 +138,15 @@ orchestrator:
     # seccompProfile:
     #   type: RuntimeDefault
 
-  affinity: {}
-  tolerations: []
+  # -- Env vars added to the orchestrator deployment. Can be defined as list or map style.
+  extraEnvVars: []
 
+  # -- Node labels for orchestrator pod assignment
   nodeSelector: {}
+  # -- Affinity rules for orchestrator pod assignment
+  affinity: {}
+  # -- Tolerations for orchestrator pod assignment
+  tolerations: []
 
 # --------------------------------------------------------------------------
 # Network Policy

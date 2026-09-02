@@ -90,3 +90,26 @@ API key secret name
 {{ include "terminals.fullname" . }}-api-key
 {{- end -}}
 {{- end -}}
+
+{{/*
+Render environment variables from either map or list style values.
+Usage: include "terminals.env" (dict "envVars" .Values.operator.extraEnvVars "root" .)
+*/}}
+{{- define "terminals.env" -}}
+{{- $root := .root -}}
+{{- $envVars := .envVars -}}
+{{- if kindIs "map" $envVars }}
+  {{- range $key, $val := $envVars }}
+- name: {{ $key }}
+    {{- if kindIs "map" $val }}
+      {{- tpl (toYaml $val) $root | nindent 2 }}
+    {{- else if kindIs "string" $val }}
+  value: {{ tpl $val $root | quote }}
+    {{- else }}
+  value: {{ $val | quote }}
+    {{- end }}
+  {{- end }}
+{{- else }}
+  {{- tpl (toYaml $envVars) $root }}
+{{- end }}
+{{- end -}}
