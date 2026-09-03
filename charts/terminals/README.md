@@ -1,6 +1,6 @@
 # terminals
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
 
 Terminals: Kubernetes operator and orchestrator for per-user Open Terminal instances
 
@@ -38,14 +38,16 @@ Terminals: Kubernetes operator and orchestrator for per-user Open Terminal insta
 | operator.nodeSelector | object | `{}` | Node labels for operator pod assignment |
 | operator.podSecurityContext | object | `{}` | Configure pod security context for the operator pod ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
 | operator.tolerations | list | `[]` | Tolerations for operator pod assignment |
-| orchestrator | object | `{"affinity":{},"backend":"kubernetes-operator","containerSecurityContext":{},"extraEnvVars":[],"idleTimeoutMinutes":30,"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals","tag":"latest"},"nodeSelector":{},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}},"service":{"containerPort":8080,"port":8080,"type":"ClusterIP"},"terminalImage":"ghcr.io/open-webui/open-terminal:latest","terminalImagePullPolicy":"IfNotPresent","tolerations":[]}` | ------------------------------------------------------------------------ |
+| orchestrator | object | `{"affinity":{},"backend":"kubernetes-operator","containerSecurityContext":{},"extraEnvVars":[],"idleTimeoutMinutes":30,"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals","tag":"latest"},"livenessProbe":{"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":5,"periodSeconds":15},"nodeSelector":{},"podSecurityContext":{},"readinessProbe":{"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":3,"periodSeconds":10},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}},"service":{"containerPort":8080,"port":8080,"type":"ClusterIP"},"terminalImage":"ghcr.io/open-webui/open-terminal:latest","terminalImagePullPolicy":"IfNotPresent","tolerations":[]}` | ------------------------------------------------------------------------ |
 | orchestrator.affinity | object | `{}` | Affinity rules for orchestrator pod assignment |
 | orchestrator.backend | string | `"kubernetes-operator"` | Backend type: kubernetes-operator, kubernetes, docker, local, static |
 | orchestrator.containerSecurityContext | object | `{}` | Configure container security context for the orchestrator container |
 | orchestrator.extraEnvVars | list | `[]` | Env vars added to the orchestrator deployment. Can be defined as list or map style. |
 | orchestrator.idleTimeoutMinutes | int | `30` | Idle timeout in minutes for spawned terminal pods (0 = disabled) |
+| orchestrator.livenessProbe | object | `{"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":5,"periodSeconds":15}` | Liveness probe for the orchestrator container. Set to null to disable. |
 | orchestrator.nodeSelector | object | `{}` | Node labels for orchestrator pod assignment |
 | orchestrator.podSecurityContext | object | `{}` | Configure pod security context for the orchestrator pod ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/ |
+| orchestrator.readinessProbe | object | `{"httpGet":{"path":"/health","port":8080},"initialDelaySeconds":3,"periodSeconds":10}` | Readiness probe for the orchestrator container. Set to null to disable. |
 | orchestrator.resources | object | `{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"128Mi"}}` | Resource requests/limits for the orchestrator pod itself |
 | orchestrator.terminalImage | string | `"ghcr.io/open-webui/open-terminal:latest"` | Default image for spawned terminal pods |
 | orchestrator.terminalImagePullPolicy | string | `"IfNotPresent"` | Pull policy for the terminal image inside spawned pods |

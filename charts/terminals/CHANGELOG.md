@@ -5,6 +5,14 @@ All notable changes to the Terminals Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.7.0]
+
+### Added
+- `orchestrator.readinessProbe` and `orchestrator.livenessProbe` values to configure
+  (or disable, via `null`) the orchestrator's health probes. Previously these were
+  hardcoded and too aggressive for slower nodes such as Raspberry Pi, causing the
+  orchestrator to be repeatedly killed ([#415](https://github.com/open-webui/helm-charts/issues/415)).
+
 ## [v0.6.0]
 
 ### Added
