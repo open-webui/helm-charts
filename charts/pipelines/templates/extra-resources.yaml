@@ -2,9 +2,9 @@
 {{- range .Values.extraResources }}
 ---
 {{- if typeIs "string" . }}
-  {{- tpl . $ }}
+{{ tpl . $ }}
 {{- else }}
-  {{- tpl (toYaml .) $ }}
+{{ tpl (toYaml .) $ }}
 {{- end }}
 {{- end }}
 {{- end }}
