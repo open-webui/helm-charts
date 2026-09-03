@@ -344,15 +344,23 @@ Usage: {{ include "open-webui.hasCustomWebUIUrl" . }}
 {{- end -}}
 
 {{- /*
-Constructs a string containing the URLs of the Open WebUI based on the ingress configuration
-used to populate the variable WEBUI_URL  
+Constructs a string containing the URL of the Open WebUI based on the ingress
+or Gateway API route configuration, used to populate the variable WEBUI_URL
 */ -}}
 {{- define "open-webui.url" -}}
-  {{- $proto := "http" -}}
-  {{- if .Values.ingress.tls }}
-    {{- $proto = "https" -}}
+  {{- if .Values.ingress.enabled }}
+    {{- $proto := "http" -}}
+    {{- if .Values.ingress.tls }}
+      {{- $proto = "https" -}}
+    {{- end }}
+    {{- printf "%s://%s" $proto .Values.ingress.host }}
+  {{- else if and .Values.route.enabled .Values.route.hostnames }}
+    {{- $proto := "http" -}}
+    {{- if .Values.route.httpsRedirect }}
+      {{- $proto = "https" -}}
+    {{- end }}
+    {{- printf "%s://%s" $proto (first .Values.route.hostnames) }}
   {{- end }}
-  {{- printf "%s://%s" $proto .Values.ingress.host }}
 {{- end }}
 
 {{/*
