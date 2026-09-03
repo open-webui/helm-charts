@@ -6,6 +6,11 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v16.5.0]
+
+### Changed
+- Bumped subchart dependency versions: `ollama` 1.70.0 → 1.79.0, `pipelines` 0.12.0 → 0.12.2, `terminals` 0.5.0 → 0.7.0.
+
 ## [v16.4.0]
 
 ### Added
