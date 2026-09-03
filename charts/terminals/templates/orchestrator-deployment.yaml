@@ -54,18 +54,14 @@ spec:
             {{- if .Values.orchestrator.extraEnvVars }}
             {{- include "terminals.env" (dict "envVars" .Values.orchestrator.extraEnvVars "root" .) | nindent 12 }}
             {{- end }}
+          {{- with .Values.orchestrator.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.orchestrator.service.containerPort }}
-            initialDelaySeconds: 3
-            periodSeconds: 10
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.orchestrator.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.orchestrator.service.containerPort }}
-            initialDelaySeconds: 5
-            periodSeconds: 15
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- with .Values.orchestrator.resources }}
           resources:
             {{- toYaml . | nindent 12 }}

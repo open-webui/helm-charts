@@ -110,6 +110,20 @@ orchestrator:
   terminalImagePullPolicy: IfNotPresent
   # -- Idle timeout in minutes for spawned terminal pods (0 = disabled)
   idleTimeoutMinutes: 30
+  # -- Readiness probe for the orchestrator container. Set to null to disable.
+  readinessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 3
+    periodSeconds: 10
+  # -- Liveness probe for the orchestrator container. Set to null to disable.
+  livenessProbe:
+    httpGet:
+      path: /health
+      port: 8080
+    initialDelaySeconds: 5
+    periodSeconds: 15
   # -- Resource requests/limits for the orchestrator pod itself
   resources:
     requests:
