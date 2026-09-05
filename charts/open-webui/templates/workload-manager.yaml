@@ -58,7 +58,7 @@ spec:
       initContainers:
       - name: copy-app-data
         {{- with .Values.image }}
-        image: {{ .repository }}:{{ include "open-webui.tag" $ }}
+        image: "{{ .repository }}{{- if .digest }}@{{ .digest }}{{- else }}:{{ include "open-webui.tag" $ }}{{- end }}"
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
         command:
@@ -101,7 +101,7 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         {{- with .Values.image }}
-        image: {{ .repository }}:{{ include "open-webui.tag" $ }}
+        image: "{{ .repository }}{{- if .digest }}@{{ .digest }}{{- else }}:{{ include "open-webui.tag" $ }}{{- end }}"
         imagePullPolicy: {{ .pullPolicy }}
         {{- end }}
         {{- with .Values.command }}
