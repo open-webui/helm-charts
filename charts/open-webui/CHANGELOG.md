@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v16.7.0]
+
+### Added
+- Allow `extraInitContainers` to be a string
+- Allow templating in `extraInitContainers` and `podAnnotations`
+
 ## [v16.6.0]
 
 ### Changed
