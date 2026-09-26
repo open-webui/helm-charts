@@ -45,7 +45,7 @@ spec:
         {{- end }}
       {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -83,8 +83,12 @@ spec:
         {{- with .Values.volumeMounts.initContainer }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
-      {{- with .Values.extraInitContainers }}
-      {{- toYaml . | nindent 6 }}
+      {{- if .Values.extraInitContainers }}
+      {{- if typeIs "string" .Values.extraInitContainers }}
+      {{- tpl .Values.extraInitContainers $ | nindent 6 }}
+      {{- else }}
+      {{- tpl (toYaml .Values.extraInitContainers) $ | nindent 6 }}
+      {{- end }}
       {{- end }}
       enableServiceLinks: false
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
