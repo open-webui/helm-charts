@@ -410,6 +410,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | route.redirect | object | `{}` | Configuration for the HTTP-to-HTTPS redirect route (only used when httpsRedirect is true) If redirect.parentRefs is set, it will be used as-is for the redirect route's parentRefs. Otherwise, the main route's parentRefs are used with sectionName defaulting to "http". |
 | route.timeouts | object | `{}` | Timeouts for the route's default rule (requires Gateway API v1.0+) |
 | runtimeClassName | string | `""` | Configure runtime class ref: <https://kubernetes.io/docs/concepts/containers/runtime-class/> |
+| setReplicas | bool | `true` | Set the replica value, ensure `false` when using auto-scaling |
 | strategy | object | `{}` | Strategy for updating the workload manager: deployment or statefulset |
 | tolerations | list | `[]` | Tolerations for pod assignment |
 | topologySpreadConstraints | list | `[]` | Topology Spread Constraints for pod assignment |

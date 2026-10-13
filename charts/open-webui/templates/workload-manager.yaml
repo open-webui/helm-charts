@@ -17,7 +17,9 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
+  {{- if .Values.setReplicas }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   {{- if eq $kind "Deployment" }}
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   {{- end }}
