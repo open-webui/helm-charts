@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 17.0.0](https://img.shields.io/badge/Version-17.0.0-informational?style=flat-square) ![AppVersion: 0.12.0](https://img.shields.io/badge/AppVersion-0.12.0-informational?style=flat-square)
+![Version: 17.1.0](https://img.shields.io/badge/Version-17.1.0-informational?style=flat-square) ![AppVersion: 0.12.0](https://img.shields.io/badge/AppVersion-0.12.0-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -145,9 +145,9 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| livenessProbe | object | `{}` | Probe for liveness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| readinessProbe | object | `{}` | Probe for readiness of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
-| startupProbe | object | `{}` | Probe for startup of the Open WebUI container ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| livenessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/health","port":"http"},"periodSeconds":20,"timeoutSeconds":5}` | Probe for liveness of the Open WebUI container. Set to `null` to disable. ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| readinessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/ready","port":"http"},"periodSeconds":10,"timeoutSeconds":5}` | Probe for readiness of the Open WebUI container (`/ready`). Set to `null` to disable. ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
+| startupProbe | object | `{"failureThreshold":30,"httpGet":{"path":"/ready","port":"http"},"periodSeconds":10,"timeoutSeconds":5}` | Probe for startup of the Open WebUI container (`/ready`). Set to `null` to disable. ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes> |
 
 ### Logging configuration
 

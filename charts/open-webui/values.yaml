@@ -238,39 +238,38 @@ serviceAccount:
   # @section -- Service Account configuration
   automountServiceAccountToken: false
 
-# -- Probe for liveness of the Open WebUI container
+# -- Probe for liveness of the Open WebUI container. Set to `null` to disable.
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
 # @section -- Probes configuration
-livenessProbe: {}
-# livenessProbe:
-#   httpGet:
-#     path: /health
-#     port: http
-#   failureThreshold: 1
-#   periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  periodSeconds: 20
+  failureThreshold: 3
+  timeoutSeconds: 5
 
-# -- Probe for readiness of the Open WebUI container
+# -- Probe for readiness of the Open WebUI container (`/ready`). Set to `null` to disable.
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
 # @section -- Probes configuration
-readinessProbe: {}
-# readinessProbe:
-#   httpGet:
-#     path: /health/db
-#     port: http
-#   failureThreshold: 1
-#   periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+  periodSeconds: 10
+  failureThreshold: 3
+  timeoutSeconds: 5
 
-# -- Probe for startup of the Open WebUI container
+# -- Probe for startup of the Open WebUI container (`/ready`). Set to `null` to disable.
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes>
 # @section -- Probes configuration
-startupProbe: {}
-# startupProbe:
-#   httpGet:
-#     path: /health
-#     port: http
-#   initialDelaySeconds: 30
-#   periodSeconds: 5
-#   failureThreshold: 20
+startupProbe:
+  httpGet:
+    path: /ready
+    port: http
+  periodSeconds: 10
+  failureThreshold: 30
+  timeoutSeconds: 5
 
 # -- Resource requests and limits for the Open WebUI container
 resources: {}
