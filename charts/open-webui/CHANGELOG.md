@@ -6,6 +6,12 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v17.1.0]
+
+### Added
+
+- Default `livenessProbe` (`/health`), `readinessProbe` and `startupProbe` (both `/ready`) for the Open WebUI container; previously no probes were defined (all `{}`). `/health` is a bare status check ([code](https://github.com/open-webui/open-webui/blob/v0.12.0/backend/open_webui/main.py#L3044-L3046)), while `/ready` ([code](https://github.com/open-webui/open-webui/blob/v0.12.0/backend/open_webui/main.py#L3049-L3088)) additionally gates on startup completion and live database/Redis pings. Set a probe to `null` (e.g. `--set readinessProbe=null`) to disable it.
+
 ## [v17.0.0]
 
 ### Changed
