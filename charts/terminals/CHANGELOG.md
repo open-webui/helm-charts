@@ -5,6 +5,16 @@ All notable changes to the Terminals Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.7.1]
+
+### Fixed
+- Default `networkPolicy.terminalPodSelector` now matches the labels terminal pods
+  actually get (`app.kubernetes.io/managed-by: terminals` and
+  `app.kubernetes.io/part-of: open-terminal`). The previous default
+  (`app.kubernetes.io/component: terminal`) is never set by the operator or the
+  orchestrator, so with `networkPolicy.enabled: true` the terminal policy selected
+  no pods ([#454](https://github.com/open-webui/helm-charts/issues/454)).
+
 ## [v0.7.0]
 
 ### Added
