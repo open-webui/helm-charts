@@ -5,6 +5,16 @@ All notable changes to the Terminals Helm chart will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.7.1]
+
+### Fixed
+- Terminal CRD schema now declares `contextId`, `env`, `podTemplate`, `restricted`,
+  `podSecurityContext` and `containerSecurityContext`, matching the CRD shipped with
+  the terminals operator. Previously the API server silently pruned these fields from
+  Terminal resources, so the orchestrator's terminal environment (for example
+  `OPEN_TERMINAL_SYSTEM_PROMPT`), per-chat contexts and security settings never reached
+  the terminal pods ([#442](https://github.com/open-webui/helm-charts/issues/442)).
+
 ## [v0.7.0]
 
 ### Added

@@ -33,10 +33,25 @@ spec:
                 userId:
                   type: string
                   description: Open WebUI user ID that owns this terminal.
+                contextId:
+                  type: string
+                  default: "default"
+                  description: >-
+                    Optional runtime context for separate terminal instances.
+                    v1 supports "default", "chat:<chat_id>", and
+                    "automation:<automation_id>".
                 image:
                   type: string
                   default: "ghcr.io/open-webui/open-terminal:latest"
                   description: Container image for the Open Terminal instance.
+                podTemplate:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                  description: >-
+                    Optional PodTemplate-style metadata/spec overrides merged
+                    into the generated terminal pod. Terminals-owned identity,
+                    owner reference, auth, and service wiring remain controlled
+                    by the operator.
                 resources:
                   type: object
                   properties:
@@ -64,6 +79,19 @@ spec:
                   minimum: 1
                   description: >-
                     Minutes of inactivity before the terminal pod is stopped.
+                restricted:
+                  type: boolean
+                  default: false
+                  description: >-
+                    Apply restricted Kubernetes/OpenShift-safe pod defaults.
+                podSecurityContext:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                  description: Pod securityContext copied to the terminal pod.
+                containerSecurityContext:
+                  type: object
+                  x-kubernetes-preserve-unknown-fields: true
+                  description: Container securityContext copied to the terminal container.
                 packages:
                   type: array
                   items:
@@ -76,6 +104,12 @@ spec:
                     type: string
                   default: []
                   description: Pip packages to pre-install in the terminal.
+                env:
+                  type: object
+                  additionalProperties:
+                    type: string
+                  default: {}
+                  description: Environment variables passed to the terminal container.
                 persistence:
                   type: object
                   properties:
@@ -156,4 +190,7 @@ spec:
         - name: Last Activity
           type: date
           jsonPath: .status.lastActivityAt
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
 {{- end }}

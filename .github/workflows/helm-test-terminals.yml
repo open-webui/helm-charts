@@ -54,3 +54,34 @@ jobs:
           kubectl --namespace test-namespace get deployment -l app.kubernetes.io/part-of=open-terminal
           kubectl --namespace test-namespace get service -l app.kubernetes.io/part-of=open-terminal
           kubectl --namespace test-namespace get crd terminals.openwebui.com
+
+      - name: Verify Terminal CRD keeps operator fields
+        run: |
+          kubectl wait --for=condition=Established crd/terminals.openwebui.com --timeout=60s
+          cat > terminal.yaml <<'EOF'
+          apiVersion: openwebui.com/v1alpha1
+          kind: Terminal
+          metadata:
+            name: crd-schema-check
+          spec:
+            userId: crd-schema-check
+            contextId: "chat:crd-schema-check"
+            env:
+              OPEN_TERMINAL_SYSTEM_PROMPT: check
+            restricted: true
+            podTemplate:
+              metadata:
+                labels:
+                  check: "true"
+            podSecurityContext:
+              runAsNonRoot: true
+            containerSecurityContext:
+              allowPrivilegeEscalation: false
+          EOF
+          kubectl apply --namespace test-namespace --dry-run=server -o json -f terminal.yaml \
+            | jq -c '.spec' > spec.json
+          cat spec.json
+          for field in contextId env restricted podTemplate podSecurityContext containerSecurityContext; do
+            jq -e --arg f "$field" 'has($f)' spec.json > /dev/null \
+              || { echo "spec.$field was pruned by the Terminal CRD schema"; exit 1; }
+          done
