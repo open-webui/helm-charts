@@ -4,6 +4,53 @@ entries:
   - annotations:
       licenses: MIT
     apiVersion: v2
+    appVersion: 0.13.3
+    created: "2026-11-12T05:37:35.613061287Z"
+    dependencies:
+    - condition: ollama.enabled
+      import-values:
+      - child: service
+        parent: ollama.service
+      name: ollama
+      repository: https://otwld.github.io/ollama-helm/
+      version: '>=0.24.0'
+    - condition: pipelines.enabled
+      import-values:
+      - child: service
+        parent: pipelines.service
+      name: pipelines
+      repository: https://helm.openwebui.com
+      version: '>=0.10.1'
+    - condition: tika.enabled
+      name: tika
+      repository: https://apache.jfrog.io/artifactory/tika
+      version: '>=2.9.0'
+    - condition: terminals.enabled
+      name: terminals
+      repository: https://helm.openwebui.com
+      version: '>=0.4.0'
+    description: "Open WebUI: A User-Friendly Web Interface for Chat Interactions
+      \U0001F44B"
+    digest: 64daf47e6dee6c360ac229165d5df4e9824c3e019445b8e76e581b32c4c0ca6e
+    home: https://www.openwebui.com/
+    icon: https://raw.githubusercontent.com/open-webui/open-webui/main/static/favicon.png
+    keywords:
+    - llm
+    - chat
+    - web-ui
+    - open-webui
+    name: open-webui
+    sources:
+    - https://github.com/open-webui/helm-charts
+    - https://github.com/open-webui/open-webui/pkgs/container/open-webui
+    - https://github.com/otwld/ollama-helm/
+    - https://hub.docker.com/r/ollama/ollama
+    urls:
+    - open-webui-18.3.0.tgz
+    version: 18.3.0
+  - annotations:
+      licenses: MIT
+    apiVersion: v2
     appVersion: 0.13.2
     created: "2026-11-12T05:32:05.060845009Z"
     dependencies:
@@ -47719,4 +47766,4 @@ entries:
     urls:
     - terminals-0.1.0.tgz
     version: 0.1.0
-generated: "2026-11-12T05:32:05.062567761Z"
+generated: "2026-11-12T05:37:35.616293862Z"
