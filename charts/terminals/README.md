@@ -1,6 +1,6 @@
 # terminals
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
+![Version: 0.7.1](https://img.shields.io/badge/Version-0.7.1-informational?style=flat-square) ![AppVersion: 0.0.3](https://img.shields.io/badge/AppVersion-0.0.3-informational?style=flat-square)
 
 Terminals: Kubernetes operator and orchestrator for per-user Open Terminal instances
 
@@ -23,12 +23,12 @@ Terminals: Kubernetes operator and orchestrator for per-user Open Terminal insta
 | existingSecret | string | `""` | Use an existing secret for the API key (key: api-key) |
 | fullnameOverride | string | `""` | Override the full name of the chart |
 | nameOverride | string | `""` | Override the name of the chart |
-| networkPolicy | object | `{"enabled":false,"operator":{"egress":[]},"orchestrator":{"egress":[],"ingress":[]},"terminalPodSelector":{"app.kubernetes.io/component":"terminal"},"terminals":{"egress":[],"ingress":[]}}` | ------------------------------------------------------------------------ |
+| networkPolicy | object | `{"enabled":false,"operator":{"egress":[]},"orchestrator":{"egress":[],"ingress":[]},"terminalPodSelector":{"app.kubernetes.io/managed-by":"terminals","app.kubernetes.io/part-of":"open-terminal"},"terminals":{"egress":[],"ingress":[]}}` | ------------------------------------------------------------------------ |
 | networkPolicy.enabled | bool | `false` | Enable NetworkPolicy resources to restrict inter-pod traffic. When enabled, the orchestrator is reachable only from pods in the same namespace and terminal pods can communicate only with the orchestrator. |
 | networkPolicy.operator.egress | list | `[]` | Custom egress rules for the operator pod |
 | networkPolicy.orchestrator.egress | list | `[]` | Custom egress rules for the orchestrator pod |
 | networkPolicy.orchestrator.ingress | list | `[]` | Custom ingress rules for the orchestrator pod |
-| networkPolicy.terminalPodSelector | object | `{"app.kubernetes.io/component":"terminal"}` | Label selector matching terminal pods spawned by the operator. Must align with the labels the terminals-operator actually applies. |
+| networkPolicy.terminalPodSelector | object | `{"app.kubernetes.io/managed-by":"terminals","app.kubernetes.io/part-of":"open-terminal"}` | Label selector matching terminal pods spawned by the operator. Must align with the labels the terminals-operator actually applies. |
 | networkPolicy.terminals.egress | list | `[]` | Custom egress rules for terminal pods |
 | networkPolicy.terminals.ingress | list | `[]` | Custom ingress rules for terminal pods |
 | operator | object | `{"affinity":{},"containerSecurityContext":{},"extraEnvVars":[],"image":{"pullPolicy":"IfNotPresent","repository":"ghcr.io/open-webui/terminals-operator","tag":"latest"},"nodeSelector":{},"podSecurityContext":{},"replicaCount":1,"resources":{"limits":{"cpu":"200m","memory":"256Mi"},"requests":{"cpu":"50m","memory":"64Mi"}},"tolerations":[]}` | ------------------------------------------------------------------------ |
