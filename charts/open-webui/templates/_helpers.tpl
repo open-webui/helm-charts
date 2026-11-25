@@ -119,6 +119,16 @@ app.kubernetes.io/name: {{ include "open-webui.name" . }}
 {{- end }}
 
 {{/*
+Create the base labels to include on pod templates. They leave out helm.sh/chart and
+app.kubernetes.io/version, which change on every chart or app version bump and would otherwise
+restart the pods even when nothing else in the pod template changed.
+*/}}
+{{- define "base.podLabels" -}}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/name: {{ include "open-webui.name" . }}
+{{- end }}
+
+{{/*
 Create selector labels to include on all resources
 */}}
 {{- define "base.selectorLabels" -}}
@@ -144,6 +154,14 @@ Create labels to include on chart all Open WebUI resources
 */}}
 {{- define "open-webui.labels" -}}
 {{ include "base.labels" . }}
+{{ include "open-webui.selectorLabels" . }}
+{{- end }}
+
+{{/*
+Create labels to include on Open WebUI pod templates
+*/}}
+{{- define "open-webui.podLabels" -}}
+{{ include "base.podLabels" . }}
 {{ include "open-webui.selectorLabels" . }}
 {{- end }}
 
@@ -198,6 +216,14 @@ Create labels to include on chart all websocket resources
 */}}
 {{- define "websocket.redis.labels" -}}
 {{ include "base.labels" . }}
+{{ include "websocket.redis.selectorLabels" . }}
+{{- end }}
+
+{{/*
+Create labels to include on websocket Redis pod templates
+*/}}
+{{- define "websocket.redis.podLabels" -}}
+{{ include "base.podLabels" . }}
 {{ include "websocket.redis.selectorLabels" . }}
 {{- end }}
 

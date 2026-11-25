@@ -20,7 +20,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "websocket.redis.labels" . | nindent 8 }}
+        {{- include "websocket.redis.podLabels" . | nindent 8 }}
         {{- with .Values.websocket.redis.pods.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
