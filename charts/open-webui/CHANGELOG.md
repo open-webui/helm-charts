@@ -6,6 +6,11 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v18.5.1]
+
+### Fixed
+- Pod templates of Open WebUI and the bundled websocket Redis no longer carry `helm.sh/chart` and `app.kubernetes.io/version`, so a chart release that changes neither the configuration nor the image no longer restarts the pods. Both labels stay on the Deployment/StatefulSet and other objects. Upgrading to this version restarts the pods once.
+
 ## [v18.5.0]
 
 ### Changed
