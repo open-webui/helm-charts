@@ -149,16 +149,26 @@ websocket:
     # -- Redis affinity for pod assignment
     # @section -- Websocket configuration
     affinity: {}
-    # -- Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container
+    # -- Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container.
+    # The defaults, together with `podSecurityContext`, meet the restricted Pod Security Standard. Set a key to `null` to remove a default.
     # @section -- Websocket configuration
-    containerSecurityContext: {}
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-    # -- Redis pod security context
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop:
+          - ALL
+    # -- Redis pod security context. 999:1000 is the `redis` user and group of the official image.
     # @section -- Websocket configuration
-    podSecurityContext: {}
-      # runAsUser: 999
-      # runAsGroup: 1000
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 999
+      runAsGroup: 1000
+      seccompProfile:
+        type: RuntimeDefault
+    # -- Mount a service account token into the Redis pod. Redis does not call the Kubernetes API.
+    # @section -- Websocket configuration
+    automountServiceAccountToken: false
 
 workload:
   # -- Workload kind to use. Options are "Deployment", "StatefulSet".
@@ -645,7 +655,13 @@ volumes: []
 
 # -- Configure pod security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container>
-podSecurityContext: {}
+# The Open WebUI image runs as root, so the pod can't meet the restricted Pod Security Standard without
+# the extra volumes and init containers described in https://github.com/open-webui/helm-charts/issues/363.
+# The defaults below apply what works with the image as shipped.
+# Set a key to `null` to remove a default; an empty map (`{}`) is merged with the defaults by Helm.
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
   # fsGroupChangePolicy: Always
   # sysctls: []
   # supplementalGroups: []
@@ -653,18 +669,19 @@ podSecurityContext: {}
 
 # -- Configure container security context
 # ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe>
-containerSecurityContext: {}
+# Also applies to the `copy-app-data` init container.
+containerSecurityContext:
+  allowPrivilegeEscalation: false
   # runAsUser: 1001
   # runAsGroup: 1001
   # runAsNonRoot: true
   # privileged: false
-  # allowPrivilegeEscalation: false
   # readOnlyRootFilesystem: false
+  # The image runs as root, which keeps working with all capabilities dropped, except for features that install
+  # packages at startup (for example `WEB_LOADER_ENGINE=playwright` without `PLAYWRIGHT_WS_URL`).
   # capabilities:
   #   drop:
   #     - ALL
-  # seccompProfile:
-  #   type: "RuntimeDefault"
 
 sso:
   # -- **Enable SSO authentication globally** must enable to use SSO authentication

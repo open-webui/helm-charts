@@ -6,6 +6,16 @@ All notable changes to the Open WebUI Helm chart will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v18.6.0]
+
+### Changed
+- Open WebUI pod: default `podSecurityContext.seccompProfile` to `RuntimeDefault` and `containerSecurityContext.allowPrivilegeEscalation` to `false` (also applied to the `copy-app-data` init container). The image still runs as root; see [#363](https://github.com/open-webui/helm-charts/issues/363) for running it as non-root.
+- Bundled websocket Redis: default to the restricted Pod Security Standard (`runAsNonRoot` as the image's `redis` user 999:1000, `RuntimeDefault` seccomp, no privilege escalation, all capabilities dropped, read-only root filesystem with an `emptyDir` on `/data`), and add `websocket.redis.automountServiceAccountToken` (default `false`).
+- To restore the previous behaviour, set the corresponding keys to `null`, or set `websocket.redis.automountServiceAccountToken: true`.
+
+### Fixed
+- Setting `websocket.redis.containerSecurityContext: null` no longer fails the render.
+
 ## [v18.5.0]
 
 ### Changed
