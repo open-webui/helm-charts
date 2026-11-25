@@ -1,6 +1,6 @@
 # open-webui
 
-![Version: 18.5.0](https://img.shields.io/badge/Version-18.5.0-informational?style=flat-square) ![AppVersion: 0.13.5](https://img.shields.io/badge/AppVersion-0.13.5-informational?style=flat-square)
+![Version: 18.6.0](https://img.shields.io/badge/Version-18.6.0-informational?style=flat-square) ![AppVersion: 0.13.5](https://img.shields.io/badge/AppVersion-0.13.5-informational?style=flat-square)
 
 Open WebUI: A User-Friendly Web Interface for Chat Interactions 👋
 
@@ -339,14 +339,15 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | websocket.redis.affinity | object | `{}` | Redis affinity for pod assignment |
 | websocket.redis.annotations | object | `{}` | Redis annotations |
 | websocket.redis.args | list | `[]` | Redis arguments (overrides default) |
+| websocket.redis.automountServiceAccountToken | bool | `false` | Mount a service account token into the Redis pod. Redis does not call the Kubernetes API. |
 | websocket.redis.command | list | `[]` | Redis command (overrides default) |
-| websocket.redis.containerSecurityContext | object | `{}` | Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container |
+| websocket.redis.containerSecurityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | Redis container security context (certain specs are not allowed on a pod level), if readOnlyRootFilesystem is true, an emtpyDir will be mounted on the redis container. The defaults, together with `podSecurityContext`, meet the restricted Pod Security Standard. Set a key to `null` to remove a default. |
 | websocket.redis.enabled | bool | `true` | Enable deployment of the bundled Redis used by the `redis` websocket manager. Set to `false` when using an external Redis or when `websocket.manager` is empty (in-memory manager) |
 | websocket.redis.image.pullPolicy | string | `"IfNotPresent"` | Redis image pull policy |
 | websocket.redis.image.repository | string | `"redis"` | Redis image repository |
 | websocket.redis.image.tag | string | `"7.4.2-alpine3.21"` | Redis image tag |
 | websocket.redis.labels | object | `{}` | Redis labels |
-| websocket.redis.podSecurityContext | object | `{}` | Redis pod security context |
+| websocket.redis.podSecurityContext | object | `{"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":999,"seccompProfile":{"type":"RuntimeDefault"}}` | Redis pod security context. 999:1000 is the `redis` user and group of the official image. |
 | websocket.redis.pods.annotations | object | `{}` | Redis pod annotations |
 | websocket.redis.pods.labels | object | `{}` | Redis pod labels |
 | websocket.redis.resources | object | `{}` | Redis resources |
@@ -370,7 +371,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | clusterDomain | string | `"cluster.local"` | Value of cluster domain |
 | command | list | `[]` | Open WebUI container command (overrides default entrypoint) |
 | commonEnvVars | list | `[]` | Env vars added to the Open WebUI deployment, common across environments. Most up-to-date environment variables can be found here: https://docs.openwebui.com/getting-started/env-configuration/ (caution: environment variables defined in both `extraEnvVars` and `commonEnvVars` will result in a conflict. Avoid duplicates) |
-| containerSecurityContext | object | `{}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> |
+| containerSecurityContext | object | `{"allowPrivilegeEscalation":false}` | Configure container security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-containe> Also applies to the `copy-app-data` init container. |
 | copyAppData.args | list | `[]` | Open WebUI copy-app-data init container arguments (overrides default) |
 | copyAppData.command | list | `[]` | Open WebUI copy-app-data init container command (overrides default) |
 | copyAppData.resources | object | `{}` | Resource requests and limits for the Open WebUI copy-app-data init container |
@@ -387,7 +388,7 @@ Please consult the [CHANGELOG](CHANGELOG.md) for important upgrade notes and bre
 | nodeSelector | object | `{}` | Node labels for pod assignment. |
 | podAnnotations | object | `{}` | Additional annotations to add to the Open WebUI pods |
 | podLabels | object | `{}` | Additional custom labels to add to the Open WebUI pods |
-| podSecurityContext | object | `{}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> |
+| podSecurityContext | object | `{"seccompProfile":{"type":"RuntimeDefault"}}` | Configure pod security context ref: <https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container> The Open WebUI image runs as root, so the pod can't meet the restricted Pod Security Standard without the extra volumes and init containers described in https://github.com/open-webui/helm-charts/issues/363. The defaults below apply what works with the image as shipped. Set a key to `null` to remove a default; an empty map (`{}`) is merged with the defaults by Helm. |
 | priorityClassName | string | `""` | Priority class name for the Open WebUI pods |
 | replicaCount | int | `1` | Number of Open WebUI replicas |
 | resources | object | `{}` | Resource requests and limits for the Open WebUI container |
